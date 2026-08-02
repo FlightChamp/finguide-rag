@@ -1,0 +1,15 @@
+# 세 대의 Windows 컴퓨터를 오가며 작업하므로 줄바꿈을 저장소 기준(LF)으로 통일한다.
+# 이걸 안 하면 컴퓨터가 바뀔 때마다 diff 전체가 변경으로 잡힌다.
+* text=auto eol=lf
+
+# 바이너리 명시 (git이 텍스트로 오인해 손상시키는 것을 방지)
+*.pdf binary
+*.faiss binary
+*.pkl binary
+*.npy binary
+*.png binary
+*.jpg binary
+
+# CSV는 한글이 포함되므로 텍스트로 명시
+*.csv text
+*.jsonl text

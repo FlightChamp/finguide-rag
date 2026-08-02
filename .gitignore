@@ -1,0 +1,79 @@
+# ============================================================
+# FinGuide-RAG .gitignore
+#
+# 원칙
+#  1) 재생성 가능한 산출물은 커밋하지 않는다 (인덱스, 청크, 캐시)
+#  2) 재배포 불가 원본은 커밋하지 않는다 (하나은행 문서)
+#  3) 단, 재현에 필요한 메타데이터는 반드시 커밋한다 (대장, 평가셋)
+#
+# 주의: data/raw/ 처럼 슬래시로 끝나는 패턴을 쓰면 git이 폴더 내부를
+#       탐색하지 않아 .gitkeep 예외가 동작하지 않는다.
+#       반드시 `경로/**` + `!경로/**/` 조합을 사용할 것.
+# ============================================================
+
+# ----- Python -----
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+build/
+dist/
+.eggs/
+.ipynb_checkpoints/
+
+# ----- 가상환경 -----
+.venv/
+venv/
+env/
+
+# ----- 시크릿 -----
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+credentials.json
+
+# ----- OS / IDE -----
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# ----- 캐시 / 테스트 -----
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+
+# ============================================================
+# 데이터 정책
+# ============================================================
+
+# [제외] 원본 문서 (PDF 108건 + FAQ JSONL) — 저작권상 공개 저장소 미포함
+data/raw/**
+!data/raw/**/
+!data/raw/**/.gitkeep
+
+# [제외] 벡터 인덱스 — 스크립트로 재생성 가능한 대용량 바이너리
+data/indexes/**
+!data/indexes/**/
+!data/indexes/**/.gitkeep
+
+# [제외] 중간 산출물 (파싱/청킹 결과)
+data/processed/**
+!data/processed/**/
+!data/processed/**/.gitkeep
+
+# [포함] data/registry/  — 문서 대장. 무엇을 언제 수집했는지 증명하는 근거
+# [포함] data/eval/      — 평가셋. 정량 지표 재현의 근거
+#   위 두 폴더는 제외 규칙에 걸리지 않으므로 별도 예외 선언이 불필요하다.
+
+# ----- 로그 / 실험 -----
+logs/
+*.log
+runs/
+wandb/
