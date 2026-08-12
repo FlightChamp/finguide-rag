@@ -225,10 +225,12 @@ class Chunk:
     def citation(self) -> str:
         """이 청크를 근거로 제시할 때 쓰는 출처 문자열."""
         parts = [self.doc_display_name]
-        if self.section:
+        if self.section and self.section != "FAQ":
             parts.append(self.section)
         if self.effective_date:
-            parts.append(f"({self.effective_date} 시행)")
+            # FAQ에는 시행일 개념이 없다. 수집 시점을 밝힌다.
+            label = "수집" if self.doc_type == "FAQ" else "시행"
+            parts.append(f"({self.effective_date} {label})")
         return " ".join(p for p in parts if p)
 
     @property
