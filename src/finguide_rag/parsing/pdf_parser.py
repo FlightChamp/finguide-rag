@@ -57,6 +57,20 @@ TITLE_EXCLUDE = re.compile(
     r"준법감시인|심의필|심사필|보존년한|페이지|Page|\d+\s*/\s*\d+|^\(cid:"
 )
 
+# 부제로 인정하지 않을 패턴.
+# 상품설명서 표지에는 제목 바로 아래 안내 문구가 큰 글씨로 인쇄되는
+# 경우가 많다. 이를 부제로 잡으면 출처 표시가 문장으로 오염된다.
+# 예: "이 설명서는 이용자의 서비스에 대한 이해를 돕고 약관의 중요 내용을..."
+SUBTITLE_EXCLUDE = re.compile(
+    r"이\s*(설명서|약정서|계약서)는"
+    r"|참고자료|알려드리기\s*위한|이해를\s*돕|내부통제기준"
+    r"|(합니다|입니다|한다|됩니다|바랍니다)\s*[.]?\s*$"
+)
+
+# 부제 최대 길이. 파생상품 부제가 실제로 50자를 넘는 경우가 있어
+# 넉넉히 잡는다. 예: "Target Redemption Forward – 고객이 조기종료 조건부로 외화 매도"
+SUBTITLE_MAX_LEN = 60
+
 # 문서 종류를 나타내는 키워드. 폰트 기반 결과를 교차 검증하는 데 쓴다.
 TITLE_KEYWORDS = [
     "상품설명서",
@@ -93,6 +107,26 @@ KNOWN_CATEGORIES = [
     "fx",
     "others",
 ]
+
+
+def collapse_letter_spacing(text: str) -> str:
+    """자간을 넓혀 인쇄한 제목의 공백을 제거한다.
+
+    PDF에서 '대 출 거 래 추 가 약 정 서' 처럼 글자마다 공백을 넣어
+    조판한 제목이 그대로 추출된다. 이 상태로는 검색어와 매칭되지 않고
+    출처 표시도 어색하다.
+
+    한 글자 단위로 공백이 반복되는 구간만 압축하고, 일반적인 단어
+    사이 공백은 유지한다. 예를 들어 '은행여신거래 기본약관 (가계용)'은
+    그대로 둔다.
+    """
+    # 한글 한 글자 + 공백 패턴이 3회 이상 연속되는 구간을 찾는다
+    pattern = re.compile(r"(?:[가-힣]\s){2,}[가-힣]")
+
+    def _compress(m: re.Match) -> str:
+        return m.group(0).replace(" ", "")
+
+    return pattern.sub(_compress, text)
 
 
 class PDFParser(BaseParser):
@@ -178,11 +212,22 @@ class PDFParser(BaseParser):
         title = lines[0][1]
         subtitle = lines[1][1] if len(lines) > 1 else ""
 
-        # 폰트 크기가 비슷한 줄만 부제로 인정한다.
-        # 제목이 20pt인데 다음 줄이 9pt면 그건 본문이지 부제가 아니다.
+        # 자간을 넓혀 조판한 제목의 공백을 압축한다
+        title = collapse_letter_spacing(title)
+        subtitle = collapse_letter_spacing(subtitle)
+
+        # 부제 검증
         if subtitle:
+            # 폰트 크기가 비슷한 줄만 부제로 인정한다.
+            # 제목이 20pt인데 다음 줄이 9pt면 그건 본문이지 부제가 아니다.
             ratio = lines[1][0] / lines[0][0] if lines[0][0] else 0
             if ratio < 0.7:
+                subtitle = ""
+            # 안내 문구를 부제로 잡은 경우 버린다
+            elif SUBTITLE_EXCLUDE.search(subtitle) or len(subtitle) > SUBTITLE_MAX_LEN:
+                subtitle = ""
+            # 제목과 같은 내용이면 중복이므로 버린다
+            elif re.sub(r"\s+", "", subtitle) == re.sub(r"\s+", "", title):
                 subtitle = ""
 
         # 신뢰도 판정: 공백을 무시하고 비교한다.

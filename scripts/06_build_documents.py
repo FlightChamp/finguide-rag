@@ -41,7 +41,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from finguide_rag.parsing import ParserFactory  # noqa: E402
-from finguide_rag.schema import Document, DocType, Structure  # noqa: E402
+from finguide_rag.schema import Document, DocType, Structure, TitleConfidence  # noqa: E402
 
 
 # ------------------------------------------------------------------
@@ -73,6 +73,48 @@ logging.basicConfig(
 # ------------------------------------------------------------------
 # 수집
 # ------------------------------------------------------------------
+
+
+OVERRIDES_CSV = PROJECT_ROOT / "data" / "registry" / "title_overrides.csv"
+
+
+def apply_title_overrides(documents: list[Document]) -> int:
+    """수동 제목 보정 테이블을 적용한다.
+
+    자동 추출이 실패하는 경우가 있다. 표지 제목이 이미지 폰트로 되어
+    있거나(여신거래기본약관), 문서관리번호가 제목보다 크게 인쇄된
+    경우다. 이런 문서는 규칙으로 잡을 수 없으므로 사람이 확인한
+    결과를 CSV로 관리한다.
+
+    이 파일은 git으로 추적한다. 재실행할 때마다 다시 채울 필요가
+    없고, 어떤 문서를 왜 보정했는지 기록으로 남는다.
+    """
+    if not OVERRIDES_CSV.exists():
+        return 0
+
+    overrides: dict[str, dict[str, str]] = {}
+    with OVERRIDES_CSV.open(encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            doc_id = (row.get("doc_id") or "").strip()
+            if doc_id:
+                overrides[doc_id] = row
+
+    applied = 0
+    for doc in documents:
+        row = overrides.get(doc.doc_id)
+        if not row:
+            continue
+
+        new_title = (row.get("corrected_title") or "").strip()
+        if not new_title:
+            continue
+
+        doc.title = new_title
+        doc.subtitle = (row.get("corrected_subtitle") or "").strip()
+        doc.title_confidence = TitleConfidence.MANUAL
+        applied += 1
+
+    return applied
 
 
 def build_doc_id(pdf_path: Path, doc_type: str, category: str, seq: int) -> str:
@@ -298,6 +340,10 @@ def main() -> None:
         sys.exit("파싱된 문서가 없습니다.")
 
     # --- 검증 및 정리 ---
+    # 제목 보정을 먼저 적용한다. display_name이 청크 메타데이터로
+    # 상속되므로 이후 단계 전에 확정되어야 한다.
+    n_overridden = apply_title_overrides(documents)
+
     # 중복 제외를 먼저 해야 버전 판정이 중복 문서에 오염되지 않는다.
     dups = verify_duplicates(documents)
     n_superseded = mark_versions(documents)

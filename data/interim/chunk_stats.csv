@@ -76,7 +76,7 @@ hana_desc_trust_011,설명서,clause,하나은행 ISA 모델포트폴리오 설�
 hana_desc_trust_012,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (중위험_포커스),7447,19,467,500
 hana_desc_trust_013,설명서,article,일임형 개인종합자산관리계좌(ISA) 계약권유문서,16902,44,462,501
 hana_terms_deposit_001,약관,article,입출금이 자유로운 예금약관,4415,11,473,501
-hana_terms_deposit_002,약관,article,제2조 실명거래,10402,26,476,501
+hana_terms_deposit_002,약관,article,예금거래 기본약관,10402,26,476,501
 hana_terms_digital_banking_001,약관,article,전자금융거래 기본약관,15083,38,474,501
 hana_terms_digital_banking_002,약관,article,마이데이터서비스 이용약관,7692,19,480,501
 hana_terms_loan_001,약관,numbered,추가약정서,3135,8,461,501
@@ -86,17 +86,17 @@ hana_terms_loan_004,약관,flat,추가약정서,592,1,592,592
 hana_terms_loan_005,약관,article,추가약정서,1151,3,436,451
 hana_terms_loan_006,약관,flat,추가약정서,948,3,369,489
 hana_terms_loan_007,약관,article,대출거래( )추가약정서,21667,56,465,499
-hana_terms_loan_008,약관,article,대 출 거 래 추 가 약 정 서,1316,4,389,497
-hana_terms_loan_009,약관,article,대 출 거 래 추 가 약 정 서,1403,4,410,493
-hana_terms_loan_010,약관,flat,이 계약서는 법령 및 내부통제기준에 따른 절차를 거쳐 제공됩니다.,121,1,121,121
+hana_terms_loan_008,약관,article,대출거래추가약정서,1316,4,389,497
+hana_terms_loan_009,약관,article,대출거래추가약정서,1403,4,410,493
+hana_terms_loan_010,약관,flat,대출거래 추가약정서,121,1,121,121
 hana_terms_loan_011,약관,article,대출거래약정서(가계용),26131,67,468,501
 hana_terms_loan_012,약관,article,대출거래약정서 담 당 책 임 자 관 리 자 부 점 장,11144,28,474,500
-hana_terms_loan_013,약관,article,수 입 대 출 거 래 약 정 서,10240,26,470,500
+hana_terms_loan_013,약관,article,대출거래약정서,10240,26,470,500
 hana_terms_loan_014,약관,article,대출거래약정서,7395,19,464,501
 hana_terms_loan_015,약관,article,대출거래약정서 (주택담보노후연금대출용),8877,22,479,499
 hana_terms_loan_016,약관,article,대출거래약정서,12089,30,480,501
-hana_terms_loan_017,약관,article,3-06-1031(6-1) (2024.10 개정),12283,32,461,499
-hana_terms_loan_018,약관,article,3-06-1030(6-1) (2024.10 개정),15567,40,466,501
+hana_terms_loan_017,약관,article,은행여신거래 기본약관,12283,32,461,499
+hana_terms_loan_018,약관,article,은행여신거래 기본약관,15567,40,466,501
 hana_terms_loan_019,약관,article,주택도시기금 내집마련 디딤돌 대출거래약정서,10468,26,479,499
 hana_terms_loan_020,약관,article,여신거래추가약정서,4187,11,453,488
 hana_terms_loan_021,약관,numbered,여신거래추가약정서,710,1,710,710
