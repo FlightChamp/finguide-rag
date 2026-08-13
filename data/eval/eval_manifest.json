@@ -1,0 +1,102 @@
+{
+  "created_at": "2026-08-13T09:54:43",
+  "total_generated": 110,
+  "final_count": 96,
+  "excluded_count": 14,
+  "generation": {
+    "method": "LLM 생성 (gpt-4.1-mini) 후 사람 검수",
+    "source": "청크에서 계층 표본 추출 (문서유형별 비중 고정)",
+    "difficulty_levels": {
+      "easy": "상품명 + 정식 용어 사용",
+      "medium": "상품명 언급, 구어체 표현",
+      "hard": "상품명·전문용어 배제, 상황만 서술"
+    },
+    "answer_labeling": "생성 근거 청크를 정답으로 하되, 상위 후보 4개를 LLM으로 판정해 실제로 답이 있는 청크를 추가. 근거 청크가 20위 밖인 경우에는 판정을 생략(검색 실패를 성공으로 왜곡하지 않기 위함)"
+  },
+  "quality_control": {
+    "automatic": [
+      "어절 겹침률 계산 (도메인 용어 제외, 0.6 초과 시 표시)",
+      "hard 난이도 용어 회피 준수 자동 검사",
+      "3개 이상 문서에 반복되는 정형 문구 청크 사전 제외"
+    ],
+    "manual_review": "의심 항목 전수 검수",
+    "exclusion_reasons": {
+      "대상 불명확": 7,
+      "질문-근거 불일치": 4,
+      "기타": 1,
+      "표현 베낌": 2
+    }
+  },
+  "composition": {
+    "by_difficulty": {
+      "medium": 46,
+      "easy": 31,
+      "hard": 19
+    },
+    "by_doc_type": {
+      "FAQ": 22,
+      "약관": 23,
+      "설명서": 51
+    },
+    "by_category": {
+      "deposit_trust": 1,
+      "deposit": 13,
+      "fx": 9,
+      "derivatives": 5,
+      "fund": 2,
+      "retirement_pension": 7,
+      "certificate": 2,
+      "loan": 21,
+      "digital_banking": 13,
+      "internet_banking": 2,
+      "login_signup": 1,
+      "trust": 6,
+      "overseas_branch_others": 2,
+      "bill_payment": 1,
+      "cd_atm": 2,
+      "others": 4,
+      "auth_otp_security_card": 2,
+      "phone_banking": 1,
+      "hana_oneq_mobile_banking": 2
+    },
+    "relevant_per_query": {
+      "1": 51,
+      "2": 27,
+      "3": 9,
+      "4": 6,
+      "5": 3
+    }
+  },
+  "limitations": [
+    "질문이 LLM으로 생성되어 실제 직원의 질의 분포와 다를 수 있음",
+    "정답 라벨의 1차 판정을 LLM이 수행했으므로 누락 가능성이 있음",
+    "정답이 여러 문서에 흩어진 경우 라벨이 완전하지 않을 수 있음",
+    "스캔본 4건은 인덱싱에서 제외되어 평가 대상이 아님"
+  ],
+  "baseline_snapshot": {
+    "model": "multilingual-e5-small",
+    "by_difficulty": {
+      "easy": {
+        "n": 31,
+        "hit": 28,
+        "recall_at_5": 0.9032
+      },
+      "medium": {
+        "n": 46,
+        "hit": 32,
+        "recall_at_5": 0.6957
+      },
+      "hard": {
+        "n": 19,
+        "hit": 13,
+        "recall_at_5": 0.6842
+      }
+    },
+    "overall_recall_at_5": 0.7604,
+    "failure_analysis": {
+      "rank_6_to_20": 19,
+      "beyond_20": 16,
+      "note": "6~20위는 재순위화로 개선 여지가 있고, 20위 밖은 질의-문서 표현 격차 문제다."
+    }
+  }
+}

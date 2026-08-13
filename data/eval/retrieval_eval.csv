@@ -1,0 +1,97 @@
+﻿query_id,question,relevant_chunk_ids,difficulty,doc_type,category,answer_hint
+q001,14살 미만 애들 현금IC카드 본인이 직접 받을 수 있어?,hana_faq_016_c001,medium,FAQ,deposit_trust,본인발급 불가 법정대리인만
+q002,하나은행 입출금 예금 이율은 바뀌면 언제부터 적용돼요?,hana_terms_deposit_002_c007,medium,약관,deposit,입출금 자유 예금은 바꾼 날부터 적용
+q003,하나은행 환전지갑에서 외화 찾을 때 신분증 꼭 가져가야 해요? 대리인은 어떻게 되나요?,hana_desc_fx_002_c003|hana_desc_fx_003_c002,medium,설명서,fx,"신분증 지참 후 수령, 대리 수령 불가"
+q005,주택청약종합저축 가입하고 청약 1순위 되려면 어느 정도 기간과 납입횟수가 필요한가요?,hana_desc_deposit_013_c015|hana_desc_deposit_013_c016,medium,설명서,deposit,가입후 기간과 납입회수 조건
+q006,Range Forward 상품은 만기 환율이 정해진 범위 밖으로 나가면 어떻게 처리되나요?,hana_desc_derivatives_011_c003|hana_desc_derivatives_011_c008,medium,설명서,derivatives,"상단환율, 하단환율로 매도"
+q007,소득공제 장기펀드를 5년 안에 중간에 해지하면 세금이 얼마나 나와요?,hana_faq_173_c001,medium,FAQ,fund,5년 미만 해지시 6.6% 추징세
+q009,하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?,hana_desc_retirement_pension_003_c039,medium,설명서,retirement_pension,가입자에게 즉시 통지
+q010,휴대폰 번호는 안 바꾸고 기기만 바꿨는데 금융인증서 클라우드 계속 쓸 수 있나요?,hana_faq_071_c001,medium,FAQ,certificate,번호 안 바꾸면 계속 이용 가능
+q011,하나은행 가계 대출받을 때 이자율은 중간에 바꿀 수 있어?,hana_terms_loan_011_c040|hana_terms_loan_011_c041|hana_terms_loan_011_c042|hana_terms_loan_011_c032|hana_terms_loan_011_c013,medium,약관,loan,이자 율 변경 원칙과 예외
+q012,하나은행 CD 수익률은 누가 어떻게 정하는 거예요?,hana_desc_loan_002_c003|hana_desc_loan_002_c018|hana_desc_loan_002_c005|hana_desc_loan_002_c017|hana_desc_loan_002_c004,medium,설명서,loan,제출기관이 산출해 협회에 제출
+q013,하나은행 기업 인터넷뱅킹에서 급여 이체는 언제까지 할 수 있나요?,hana_desc_digital_banking_001_c007,medium,설명서,digital_banking,대량/급여/예약이체 24시간(23:30~00:15 불가)
+q014,하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품 가입 후 따로 운용 방법 지시 안 하면 어떻게 돼요?,hana_desc_retirement_pension_007_c008,medium,설명서,retirement_pension,별도 의사 없으면 사전지정운용
+q015,하나은행 디폴트옵션 중립투자형 포트폴리오 2는 중간에 해지하면 원금 손실 가능성이 있나요?,hana_desc_retirement_pension_008_c022,medium,설명서,retirement_pension,원금 일부 손실 가능
+q016,하나원큐에서 특정 계좌 조회 못하게 하려면 어떻게 해?,hana_faq_089_c001,medium,FAQ,internet_banking,전자금융금지계좌 등록
+q017,하나원큐 로그인할 때 기본 로그인 방법을 바꾸려면 어떻게 해야 해요?,hana_faq_154_c001,medium,FAQ,login_signup,설정이나 인증/보안 메뉴에서 변경
+q018,기업 대출할 때 원화 금리는 어떤 기준으로 정해지나요?,hana_terms_loan_024_c007,medium,약관,loan,"91일물 CD, AAA 금융채, 코픽스"
+q019,일임형 개인종합자산관리계좌(ISA) 가입 시 투자 가능한 위험등급 모델포트폴리오 제시 기준은 무엇인가요?,hana_desc_trust_013_c008|hana_desc_trust_013_c010,easy,설명서,trust,투자자의 투자성향 분석 결과
+q020,기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,hana_desc_loan_007_c049|hana_desc_loan_007_c002|hana_desc_loan_007_c003|hana_desc_loan_007_c048,easy,설명서,loan,"운전자금대출, 시설자금대출"
+q021,Enhanced Forward라는 상품은 만기 환율이 예상과 다르게 떨어지면 어떤 위험이 있나요?,hana_desc_derivatives_009_c003|hana_desc_derivatives_009_c010,medium,설명서,derivatives,환차손 크기 무한대 위험
+q022,이자율 스왑(고객 고정금리 지급) 중도해지는 어떻게 가능한가요?,hana_desc_derivatives_007_c013|hana_desc_derivatives_001_c025|hana_desc_derivatives_007_c003,easy,설명서,derivatives,고객 요청 + 은행 동의 시
+q023,구 외환은행 프라임등급 계속 유지하려면 어떻게 해야 해요?,hana_faq_197_c001,medium,FAQ,overseas_branch_others,행복포인트 충족 요건
+q024,하나은행 이자율 스왑 상품의 위험등급과 손실범위는 어떻게 되나요?,hana_desc_derivatives_007_c001|hana_desc_derivatives_001_c027|hana_desc_derivatives_007_c017|hana_desc_derivatives_001_c030,easy,설명서,derivatives,"Ⅰ.주의 등급, 손실범위 제한적"
+q025,청년 주택드림 청약통장 가입할 때 소득 증명서류로는 어떤 게 필요한가요?,hana_desc_deposit_002_c007|hana_desc_deposit_002_c006,medium,설명서,deposit,연 5천만원 이하 신고 소득 확인 서류
+q026,하나일임형ISA 저위험포커스 모델포트폴리오가 포함한 금융상품은 원금보장이 되나요?,hana_desc_trust_005_c015|hana_desc_trust_005_c002|hana_desc_trust_003_c002,easy,설명서,trust,원금보장하지 않음
+q027,하나은행에서 전자금융 거래 내역을 못 받을 때 은행이 어떻게 알려줘야 해?,hana_terms_digital_banking_001_c029,medium,약관,digital_banking,즉시 통보하고 사유 소멸 후 제공
+q028,해외 출국 전 하나은행 전자금융사기예방서비스 설정은 어떻게 해야 하나요?,hana_faq_198_c001,easy,FAQ,overseas_branch_others,전자금융사기예방서비스 신청안함 변경
+q029,하나은행 예금 거래는 보통 어디에서 하나요?,hana_terms_deposit_002_c002|hana_terms_deposit_002_c001,medium,약관,deposit,개설한 영업점에서 거래
+q030,종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,hana_faq_193_c001,easy,FAQ,bill_payment,종합부동산세는 국세 입니다
+q031,대출일과 월 납입일이 다르면 첫 이자는 언제 내야 하나요?,hana_desc_loan_001_c012|hana_terms_loan_012_c003|hana_desc_loan_001_c011|hana_terms_loan_014_c001,hard,설명서,loan,대출일 기준 1개월 후 첫 납입일
+q032,하나 합 서비스는 몇 살 이상부터 창구에서 바로 신청할 수 있어?,hana_desc_digital_banking_004_c003|hana_desc_digital_banking_004_c002,medium,설명서,digital_banking,만 19세 이상은 대면 신청 가능
+q034,하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,hana_desc_trust_006_c013,easy,설명서,trust,3년 경과 전 해지 또는 초과 인출 시
+q035,골드바 살 때는 가격 계산할 때 수수료랑 세금 어떻게 붙어요?,hana_desc_deposit_005_c003,medium,설명서,deposit,판매가격 계산법과 부가세 별도
+q036,하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?,hana_faq_035_c001,easy,FAQ,loan,'한편넣기'는 이자 계산기간 산정법
+q037,해외에서 돈 받을 때 해외 사람이 우리 은행에 보내려면 뭘 알려줘야 해?,hana_faq_120_c001,medium,FAQ,fx,"KEB하나은행 영문명, SWIFT 등"
+q039,환전 신청을 했는데 아직 처리 안 됐어요. 이럴 때 더 신청할 수 있나요?,hana_desc_fx_006_c004|hana_desc_fx_006_c003,hard,설명서,fx,미체결 중인 경우 건수에 추가 신청 불가
+q040,일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?,hana_desc_trust_013_c022,easy,설명서,trust,계약 만료 후 수수료는 계산하지 않음
+q041,ISA 계약을 중간에 해지할 때 어떤 특별한 사유가 있어야 해지할 수 있나요?,hana_desc_trust_013_c027,medium,설명서,trust,"투자자의 사망, 해외이주 등 부득이한 사유"
+q042,하나은행 브라우저인증서 서비스는 2020년 12월 10일 이후 신규 발급이 가능한가요?,hana_faq_085_c001|hana_faq_084_c001|hana_faq_080_c001|hana_faq_086_c001,easy,FAQ,certificate,2020.12.10 서비스 중단
+q043,하나은행 카드로 해외에서 현지 돈을 찾으려면 어떤 서비스가 있나요?,hana_faq_189_c001|hana_desc_digital_banking_003_c001,medium,FAQ,cd_atm,국가간 ATM 서비스
+q045,은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?,hana_terms_loan_017_c011|hana_terms_loan_017_c012,hard,약관,loan,통지 안 하면 통지 후 7영업일
+q046,마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?,hana_terms_digital_banking_002_c017|hana_terms_digital_banking_002_c016,medium,약관,digital_banking,전자적 장치에 1개월 이상 게시 및 통지
+q047,전세자금대출에서 중도상환해약금 산정 기준은 무엇인가요?,hana_desc_loan_008_c062|hana_desc_loan_008_c063|hana_desc_loan_008_c010|hana_desc_loan_008_c011|hana_desc_loan_008_c041,easy,설명서,loan,중도상환대출금액 × ( )% × (대출잔여일수 ÷ 대출기간)
+q048,은행에서 빌린 돈을 10일 넘게 못 갚으면 어떻게 되나요?,hana_terms_loan_018_c017|hana_terms_loan_018_c014,hard,약관,loan,은행에 전부 갚아야 할 의무
+q049,사업자 주거래 우대통장 가입 후 최초 다음달까지 제공되는 수수료 우대서비스는 무엇인가요?,hana_desc_deposit_016_c004|hana_desc_deposit_016_c005,easy,설명서,deposit,"수수료 우대서비스 I, II 제공"
+q050,Enhanced Forward 상품에서 환율 변동이 평가손익에 어떤 영향을 주나요?,hana_desc_derivatives_010_c018|hana_desc_derivatives_010_c015|hana_desc_derivatives_010_c002,medium,설명서,derivatives,평가손익변동 예시
+q051,통장 없이 거래할 때 도장이나 서명은 꼭 제출해야 하나요?,hana_terms_deposit_002_c003,hard,약관,deposit,통장 발행 안 하면 신고 절차 생략
+q052,예금 토큰 전환이 제한되는 경우는 어떤 상황인가요?,hana_desc_others_002_c005|hana_desc_others_002_c004,easy,설명서,others,"피해의심거래계좌, 잔액증명서 발급 당일"
+q053,최고위험 밸런스 포트폴리오 어떤 사람한테 맞아요?,hana_desc_trust_006_c004,medium,설명서,trust,위험선호도 높은 투자자
+q054,하나은행 마이너스통장 대출 이자는 어떤 기준으로 출금되나요?,hana_faq_057_c001,easy,FAQ,loan,하루 최고 사용액 기준 출금
+q055,외화 송금한 후에 돈 보내는 걸 취소하거나 바꿀 수 있나요?,hana_desc_fx_001_c005|hana_desc_fx_001_c004,hard,설명서,fx,송금 취소 또는 변경 불가
+q056,전세자금대출 갚을 때 빚이 여러 개면 어떤 순서로 갚아요?,hana_desc_loan_008_c073,medium,설명서,loan,채무자가 지정하는 순서
+q057,"상속으로 집을 받았는데 그 집이 수도권 밖 85㎡ 이하 단독주택일 때, 다른 지역으로 이사 가면 어떤 상황이 되나요?",hana_desc_deposit_002_c033,hard,설명서,deposit,상속받은 단독주택 거주 후 이주
+q058,OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?,hana_faq_138_c003|hana_faq_138_c001|hana_faq_138_c002,easy,FAQ,auth_otp_security_card,영업점 방문하여 보정 등록
+q059,하나은행 대출 중간에 갚으면 수수료 어떻게 계산돼요?,hana_terms_loan_014_c002,medium,약관,loan,중도상환수수료율과 경과일수로 계산
+q060,제가 13살인데 해외에서 계좌를 이용하려면 ATM에서 돈을 뺄 수 있나요?,hana_desc_digital_banking_003_c005,hard,설명서,digital_banking,만 14세 이상만 가능
+q061,하나 화상상담데스크 이용 가능시간은 어떻게 되나요?,hana_desc_others_001_c002,easy,설명서,others,평일 은행 영업시간과 동일
+q062,하나은행 예금 토큰은 모바일 앱에서 어떻게 가입해요?,hana_desc_others_002_c002,medium,설명서,others,모바일 앱 가입 가능
+q063,해외에서 현지 돈을 뽑을 때 수수료가 어떻게 되나요?,hana_desc_digital_banking_005_c002|hana_desc_digital_banking_003_c002|hana_faq_183_c001,hard,설명서,digital_banking,거래건별 수수료와 0.855%
+q064,해외 ATM 출금 서비스의 1회 출금 표준한도는 얼마인가요?,hana_desc_digital_banking_003_c003|hana_desc_digital_banking_005_c003|hana_faq_183_c001|hana_desc_digital_banking_003_c004,easy,설명서,digital_banking,1회 100만원
+q065,하나은행 글로벌ATM에서 해외카드로 잔액 조회할 수 있나요?,hana_faq_190_c001,medium,FAQ,cd_atm,잔액조회 가능
+q067,폰뱅킹 신청 시 관공서 서류 제출 기준은?,hana_faq_200_c004|hana_faq_200_c001|hana_faq_200_c002,easy,FAQ,phone_banking,최근 3개월 이내 발급된 원본
+q068,저축예금 통장에 사기 의심이 생기면 거래가 어떻게 제한돼요?,hana_terms_deposit_001_c004,medium,약관,deposit,통장 명의인 거래 제한
+q069,"월급이 7000만 원 이하이고 집이 없는데, 다음 해 2월 말까지 어떤 서류를 은행에 내야 소득공제를 받을 수 있나요?",hana_desc_deposit_002_c018|hana_desc_deposit_002_c019,hard,설명서,deposit,무주택 확인서 제출
+q070,『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,hana_desc_retirement_pension_005_c009,easy,설명서,retirement_pension,다른 운용방법 선택 가능
+q071,기업전자금융 서비스에서 개인사업자가 ERP랑 연결하면 기본수수료가 얼마나 나와?,hana_desc_digital_banking_001_c006,medium,설명서,digital_banking,"ERP 연계시 월 300,000원"
+q072,내가 가입할 때 다른 사람 정보를 써서 신청하면 계약을 바로 끊나요?,hana_terms_digital_banking_002_c011|hana_terms_digital_banking_002_c012,hard,약관,digital_banking,타인의 정보를 이용해 가입신청
+q073,주택청약저축에서 선납한 금액은 언제 인정회차로 산정되나요?,hana_desc_deposit_012_c011|hana_desc_deposit_013_c014|hana_desc_deposit_013_c013,easy,설명서,deposit,약정납입일이 도래해야
+q074,하나은행 인터넷뱅킹에서 1천만원 넘게 이체하려면 어떻게 해야 하나요?,hana_faq_100_c002|hana_faq_101_c001,medium,FAQ,internet_banking,OTP 등록하고 1등급 설정
+q075,대출받은 뒤에 원금은 안 내고 이자만 낼 수 있는 기간이 있나요?,hana_desc_loan_009_c053,hard,설명서,loan,거치기간은 이자만 내는 기간
+q076,하나은행 심플이체에서 이체 내역을 수정할 수 있나요?,hana_faq_160_c001,easy,FAQ,hana_oneq_mobile_banking,등록정보 불러와 수정 가능
+q077,하나은행 가계 대출할 때 인지세는 누가 부담해요?,hana_terms_loan_011_c028,medium,약관,loan,각 50%씩 본인과 은행 부담
+q079,전세자금 대출할 때 배우자랑 합친 자산이 너무 많으면 우대금리 받을 수 없나요?,hana_terms_loan_016_c020|hana_terms_loan_016_c019,medium,약관,loan,본인 및 배우자 합산 자산 기준 초과 시 우대금리 제외
+q080,하나 합(마이데이터 서비스) 이용 시 만 14세 미만 손님의 거래 제한 내용은 무엇인가요?,hana_desc_digital_banking_004_c002,easy,설명서,digital_banking,만 14세 미만 대면·비대면 제한
+q081,"돈 빌린 사람이 약속을 안 지켜서 은행이 보증인에게 알릴 때, 은행은 얼마나 빨리 알려야 하나요?",hana_terms_loan_007_c041,hard,약관,loan,15영업일 이내 서면통지
+q082,하나은행 환전지갑 선물하기 서비스에서 하나머니 환급 절차는 어떻게 이루어지나요?,hana_desc_fx_007_c006,easy,설명서,fx,하나머니 환급 후 원화 환전 지급
+q083,내가 자급제폰에 안드로이드 10 쓰는데 스마트 간편인증이 안 돼요. 어떻게 해야 하나요?,hana_faq_124_c002|hana_faq_124_c001,medium,FAQ,auth_otp_security_card,자급제폰+안드로이드 OS 10 이용 불가
+q084,제가 대출받을 때 알려준 집 보유 수가 사실과 다르면 대출에 문제가 생기나요?,hana_terms_loan_014_c010,hard,약관,loan,임대차 현황이 사실과 다르면 대출은 기한 이익상실 처리
+q085,기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,hana_terms_loan_018_c004,medium,약관,loan,1일 단위로 계산한 지연배상금
+q086,부부 합산 소득이 7천만원 넘으면 어떤 대출을 못 받나요?,hana_terms_loan_014_c018|hana_desc_loan_009_c024,hard,약관,loan,부부합산 연소득 7천만원 이하 대상
+q087,하나은행 내 계좌이체 시 보안매체나 공동인증서 사용 여부는?,hana_faq_159_c001,easy,FAQ,hana_oneq_mobile_banking,별도 서비스 가입 없이 바로 이체 가능
+q088,제휴사 해외 ATM 출금 서비스에서 특정 제휴사 환율 적용 방식은 무엇인가요?,hana_desc_digital_banking_005_c006|hana_desc_digital_banking_005_c007,easy,설명서,digital_banking,"현지통화→USD, USD→KRW 환율 적용"
+q091,외화를 은행 외화통장에 넣으면 수수료가 어떻게 되나요?,hana_desc_fx_008_c004|hana_faq_121_c001,hard,설명서,fx,외화현찰수수료 부과
+q092,"하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품, 만기 전에 돈 찾으면 이자가 어떻게 돼요?",hana_desc_retirement_pension_007_c028,medium,설명서,retirement_pension,만기 전 해지시 중도해지이율
+q094,하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,hana_terms_digital_banking_002_c006,medium,약관,digital_banking,전송요구 때 알려줄 내용 6가지
+q095,개인형IRP에서 만기 자금 운용 지시가 없을 때 어떻게 운용되나요?,hana_desc_retirement_pension_001_c022|hana_desc_retirement_pension_001_c021|hana_desc_retirement_pension_001_c020,easy,설명서,retirement_pension,사전지정운용방법으로 만기 운용
+q096,소득공제 장기펀드 소득공제 대상자 요건은 무엇인가요?,hana_faq_182_c001,easy,FAQ,fund,총급여 8천만원 이하 가입자
+q099,은행이 서류를 잃어버리거나 다치게 하면 제가 가진 다른 증서로 빚을 갚아야 하나요?,hana_terms_loan_007_c049|hana_terms_loan_018_c031|hana_terms_loan_011_c061|hana_terms_loan_017_c025,hard,약관,loan,은행의 장부 등 기록에 의하여 갚기로
+q100,하나원큐기업 환전지갑 서비스에서 재환전 시 건당 금액이 1백만원 초과하면 어떻게 처리해야 하나요?,hana_desc_fx_005_c003,easy,설명서,fx,본인명의 하나은행 계좌로 이체 또는 영업점 방문
+q101,하나은행 제휴 환전지갑으로 외화 받을 때 직접 가서 신분증 보여줘야 하나요?,hana_desc_fx_008_c003|hana_desc_fx_002_c003|hana_desc_fx_003_c002,medium,설명서,fx,신청인 본인만 수령 가능
+q102,내 계좌에 돈이 부족하면 인터넷으로 돈 보내기가 안 되나요?,hana_terms_digital_banking_001_c017,hard,약관,digital_banking,출금자금에 미달하는 때
+q103,하나은행 저축예금에서 날짜 없는 수표가 들어오면 어떻게 처리해줘?,hana_terms_deposit_001_c007,medium,약관,deposit,날짜 없는 수표 지급
+q104,하나은행 예금 토큰 해지 시 수수료나 위약금이 발생합니까?,hana_desc_others_002_c006|hana_desc_others_002_c005,easy,설명서,others,"수수료, 위약금 등 요구 불가"
+q107,자유저축예금 이자는 언제 받을 수 있나요?,hana_terms_deposit_001_c002|hana_terms_deposit_001_c001,medium,약관,deposit,"3,6,9,12월 제3 금요일"
+q108,대출금을 제때 못 갚으면 집 팔고 남은 돈 더 내야 하나요?,hana_desc_loan_001_c037,hard,설명서,loan,담보주택 처분 회수액 이외 추가상환 요구 안 함
+q109,하나은행 디폴트옵션 안정형 포트폴리오의 투자원금 손실 가능성은 어떻게 설명되어 있나요?,hana_desc_retirement_pension_002_c021,easy,설명서,retirement_pension,원금 일부 손실 가능성
+q110,외국인도 하나은행 인터넷뱅킹으로 해외송금하려면 어떻게 해야 해?,hana_faq_117_c001|hana_faq_108_c001,medium,FAQ,fx,영업점에서 거래외국환은행 지정 등록
