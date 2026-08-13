@@ -55,7 +55,12 @@ from finguide_rag.evaluation import (  # noqa: E402
     failure_analysis,
     group_by,
 )
-from finguide_rag.retrieval import BM25Store, FusionMethod, HybridRetriever  # noqa: E402
+from finguide_rag.retrieval import (  # noqa: E402
+    BM25Store,
+    FusionMethod,
+    HybridRetriever,
+    NormalizeMethod,
+)
 
 EVAL_CSV = PROJECT_ROOT / "data" / "eval" / "retrieval_eval.csv"
 FAISS_ROOT = PROJECT_ROOT / "data" / "indexes" / "faiss"
@@ -105,20 +110,40 @@ def evaluate_config(
     return metrics, results
 
 
-def build_configs(args) -> list[tuple[str, FusionMethod, float]]:
-    """실험할 설정 목록을 만든다."""
-    configs: list[tuple[str, FusionMethod, float]] = [
-        ("dense 단독", FusionMethod.DENSE_ONLY, 1.0),
-        ("sparse 단독", FusionMethod.SPARSE_ONLY, 0.0),
+def build_configs(args) -> list[tuple[str, FusionMethod, float, NormalizeMethod]]:
+    """실험할 설정 목록을 만든다.
+
+    가중합은 정규화 방식에 민감하다. 초기 실험에서 min-max 정규화가
+    dense 점수 분포를 훼손해 베이스라인보다 나쁜 결과가 나왔으므로,
+    수정된 min-max 와 z-score 를 모두 시험한다.
+
+    RRF 도 가중치를 줄 수 있다. 순위 역수에 alpha 를 곱하는 방식이라
+    스케일 문제 없이 검색기 비중을 조절할 수 있다.
+    """
+    mm, zs = NormalizeMethod.MINMAX, NormalizeMethod.ZSCORE
+
+    configs: list[tuple[str, FusionMethod, float, NormalizeMethod]] = [
+        ("dense 단독", FusionMethod.DENSE_ONLY, 1.0, mm),
+        ("sparse 단독", FusionMethod.SPARSE_ONLY, 0.0, mm),
     ]
 
     if args.quick:
-        configs.append(("weighted α=0.5", FusionMethod.WEIGHTED, 0.5))
-    else:
-        for a in args.alphas:
-            configs.append((f"weighted α={a}", FusionMethod.WEIGHTED, a))
+        configs += [
+            ("weighted α=0.5", FusionMethod.WEIGHTED, 0.5, mm),
+            ("RRF α=0.5", FusionMethod.RRF, 0.5, mm),
+        ]
+        return configs
 
-    configs.append(("RRF", FusionMethod.RRF, 0.5))
+    for a in args.alphas:
+        configs.append((f"weighted α={a}", FusionMethod.WEIGHTED, a, mm))
+
+    if not args.no_zscore:
+        for a in args.alphas:
+            configs.append((f"weighted-z α={a}", FusionMethod.WEIGHTED, a, zs))
+
+    for a in args.rrf_alphas:
+        configs.append((f"RRF α={a}", FusionMethod.RRF, a, mm))
+
     return configs
 
 
@@ -266,6 +291,9 @@ def main() -> None:
     ap.add_argument("--model", default="e5-small", choices=list(MODELS))
     ap.add_argument("--alphas", type=float, nargs="+", default=[0.3, 0.5, 0.7],
                     help="가중합에서 시험할 dense 가중치")
+    ap.add_argument("--rrf-alphas", type=float, nargs="+", default=[0.3, 0.5, 0.7],
+                    help="RRF에서 시험할 dense 가중치")
+    ap.add_argument("--no-zscore", action="store_true", help="z-score 정규화 실험 생략")
     ap.add_argument("--quick", action="store_true", help="설정을 최소로 줄여 빠르게 확인")
     ap.add_argument("--candidate-k", type=int, default=100,
                     help="각 검색기에서 가져올 후보 수")
@@ -300,10 +328,11 @@ def main() -> None:
 
     all_results: dict[str, dict] = {}
 
-    for label, method, alpha in configs:
+    for label, method, alpha, norm in configs:
         retriever = HybridRetriever(
             embedder, faiss_store, bm25_store,
             method=method, alpha=alpha, candidate_k=args.candidate_k,
+            normalize=norm,
         )
         print(f"  [{label}] 실행 중...", end=" ", flush=True)
         metrics, results = evaluate_config(rows, retriever, label)
@@ -313,6 +342,7 @@ def main() -> None:
         all_results[label] = {
             "method": method.value,
             "alpha": alpha,
+            "normalize": norm.value,
             "overall": metrics,
             "by_difficulty": group_by(results, "difficulty", KS),
             "by_doc_type": group_by(results, "doc_type", KS),

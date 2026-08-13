@@ -1,0 +1,251 @@
+{
+  "n_chunks": 2740,
+  "vocab_size": 4335,
+  "df_threshold": 0.35,
+  "stopword_candidates": [
+    "또는",
+    "3"
+  ],
+  "top_terms": [
+    {
+      "word": "설명서",
+      "df": 1929,
+      "ratio": 0.704,
+      "in_queries": 0
+    },
+    {
+      "word": "상품",
+      "df": 1798,
+      "ratio": 0.6562,
+      "in_queries": 9
+    },
+    {
+      "word": "따르다",
+      "df": 1645,
+      "ratio": 0.6004,
+      "in_queries": 1
+    },
+    {
+      "word": "은행",
+      "df": 1616,
+      "ratio": 0.5898,
+      "in_queries": 12
+    },
+    {
+      "word": "거래",
+      "df": 1379,
+      "ratio": 0.5033,
+      "in_queries": 6
+    },
+    {
+      "word": "1",
+      "df": 1358,
+      "ratio": 0.4956,
+      "in_queries": 7
+    },
+    {
+      "word": "금융",
+      "df": 1333,
+      "ratio": 0.4865,
+      "in_queries": 5
+    },
+    {
+      "word": "대하다",
+      "df": 1305,
+      "ratio": 0.4763,
+      "in_queries": 0
+    },
+    {
+      "word": "또는",
+      "df": 1256,
+      "ratio": 0.4584,
+      "in_queries": 0
+    },
+    {
+      "word": "대출",
+      "df": 1194,
+      "ratio": 0.4358,
+      "in_queries": 15
+    },
+    {
+      "word": "3",
+      "df": 1055,
+      "ratio": 0.385,
+      "in_queries": 1
+    },
+    {
+      "word": "발생",
+      "df": 935,
+      "ratio": 0.3412,
+      "in_queries": 3
+    },
+    {
+      "word": "고객",
+      "df": 921,
+      "ratio": 0.3361,
+      "in_queries": 1
+    },
+    {
+      "word": "계약",
+      "df": 919,
+      "ratio": 0.3354,
+      "in_queries": 3
+    },
+    {
+      "word": "2",
+      "df": 905,
+      "ratio": 0.3303,
+      "in_queries": 2
+    },
+    {
+      "word": "사항",
+      "df": 900,
+      "ratio": 0.3285,
+      "in_queries": 0
+    },
+    {
+      "word": "가능",
+      "df": 896,
+      "ratio": 0.327,
+      "in_queries": 6
+    },
+    {
+      "word": "금액",
+      "df": 895,
+      "ratio": 0.3266,
+      "in_queries": 2
+    },
+    {
+      "word": "기간",
+      "df": 839,
+      "ratio": 0.3062,
+      "in_queries": 2
+    },
+    {
+      "word": "적용",
+      "df": 808,
+      "ratio": 0.2949,
+      "in_queries": 2
+    },
+    {
+      "word": "이자",
+      "df": 793,
+      "ratio": 0.2894,
+      "in_queries": 9
+    },
+    {
+      "word": "내용",
+      "df": 774,
+      "ratio": 0.2825,
+      "in_queries": 1
+    },
+    {
+      "word": "투자",
+      "df": 768,
+      "ratio": 0.2803,
+      "in_queries": 7
+    },
+    {
+      "word": "기준",
+      "df": 759,
+      "ratio": 0.277,
+      "in_queries": 5
+    },
+    {
+      "word": "10",
+      "df": 739,
+      "ratio": 0.2697,
+      "in_queries": 3
+    },
+    {
+      "word": "금리",
+      "df": 730,
+      "ratio": 0.2664,
+      "in_queries": 3
+    },
+    {
+      "word": "위하다",
+      "df": 691,
+      "ratio": 0.2522,
+      "in_queries": 0
+    },
+    {
+      "word": "확인",
+      "df": 688,
+      "ratio": 0.2511,
+      "in_queries": 0
+    },
+    {
+      "word": "하나",
+      "df": 672,
+      "ratio": 0.2453,
+      "in_queries": 7
+    },
+    {
+      "word": "해지",
+      "df": 667,
+      "ratio": 0.2434,
+      "in_queries": 6
+    },
+    {
+      "word": "원금",
+      "df": 639,
+      "ratio": 0.2332,
+      "in_queries": 4
+    },
+    {
+      "word": "바라다",
+      "df": 635,
+      "ratio": 0.2318,
+      "in_queries": 0
+    },
+    {
+      "word": "관하다",
+      "df": 635,
+      "ratio": 0.2318,
+      "in_queries": 0
+    },
+    {
+      "word": "상환",
+      "df": 634,
+      "ratio": 0.2314,
+      "in_queries": 1
+    },
+    {
+      "word": "위험",
+      "df": 633,
+      "ratio": 0.231,
+      "in_queries": 7
+    },
+    {
+      "word": "방법",
+      "df": 629,
+      "ratio": 0.2296,
+      "in_queries": 3
+    },
+    {
+      "word": "5",
+      "df": 628,
+      "ratio": 0.2292,
+      "in_queries": 1
+    },
+    {
+      "word": "이익",
+      "df": 619,
+      "ratio": 0.2259,
+      "in_queries": 0
+    },
+    {
+      "word": "개정",
+      "df": 604,
+      "ratio": 0.2204,
+      "in_queries": 0
+    },
+    {
+      "word": "변경",
+      "df": 576,
+      "ratio": 0.2102,
+      "in_queries": 1
+    }
+  ]
+}

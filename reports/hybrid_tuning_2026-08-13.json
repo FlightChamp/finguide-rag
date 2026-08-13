@@ -6,6 +6,7 @@
     "dense 단독": {
       "method": "dense",
       "alpha": 1.0,
+      "normalize": "minmax",
       "overall": {
         "recall@1": 0.5521,
         "recall@3": 0.75,
@@ -16,7 +17,7 @@
         "full_recall@10": 0.7757,
         "precision@5": 0.2833,
         "n": 96,
-        "latency_ms": 117.1
+        "latency_ms": 110.0
       },
       "by_difficulty": {
         "easy": {
@@ -97,17 +98,18 @@
     "sparse 단독": {
       "method": "sparse",
       "alpha": 0.0,
+      "normalize": "minmax",
       "overall": {
         "recall@1": 0.4271,
         "recall@3": 0.6458,
         "recall@5": 0.6771,
         "recall@10": 0.7396,
-        "mrr": 0.5493,
-        "ndcg@10": 0.5659,
+        "mrr": 0.5494,
+        "ndcg@10": 0.566,
         "full_recall@10": 0.7028,
         "precision@5": 0.2083,
         "n": 96,
-        "latency_ms": 17.2
+        "latency_ms": 16.1
       },
       "by_difficulty": {
         "easy": {
@@ -126,7 +128,7 @@
           "recall@3": 0.2632,
           "recall@5": 0.3158,
           "recall@10": 0.4737,
-          "mrr": 0.2871,
+          "mrr": 0.2868,
           "ndcg@10": 0.2986,
           "full_recall@10": 0.4298,
           "precision@5": 0.1368,
@@ -137,8 +139,8 @@
           "recall@3": 0.6304,
           "recall@5": 0.6739,
           "recall@10": 0.7174,
-          "mrr": 0.4976,
-          "ndcg@10": 0.5269,
+          "mrr": 0.4978,
+          "ndcg@10": 0.5271,
           "full_recall@10": 0.6993,
           "precision@5": 0.1739,
           "n": 46
@@ -161,8 +163,8 @@
           "recall@3": 0.6471,
           "recall@5": 0.6667,
           "recall@10": 0.7451,
-          "mrr": 0.5294,
-          "ndcg@10": 0.5384,
+          "mrr": 0.5296,
+          "ndcg@10": 0.5386,
           "full_recall@10": 0.6954,
           "precision@5": 0.2118,
           "n": 51
@@ -185,111 +187,481 @@
         "beyond_20": 13
       }
     },
-    "weighted α=0.3": {
+    "weighted α=0.7": {
       "method": "weighted",
-      "alpha": 0.3,
+      "alpha": 0.7,
+      "normalize": "minmax",
       "overall": {
-        "recall@1": 0.4479,
-        "recall@3": 0.6667,
-        "recall@5": 0.7396,
-        "recall@10": 0.8229,
-        "mrr": 0.5786,
-        "ndcg@10": 0.6042,
-        "full_recall@10": 0.7694,
-        "precision@5": 0.2229,
+        "recall@1": 0.6042,
+        "recall@3": 0.8021,
+        "recall@5": 0.8125,
+        "recall@10": 0.8333,
+        "mrr": 0.6993,
+        "ndcg@10": 0.7109,
+        "full_recall@10": 0.8208,
+        "precision@5": 0.2875,
         "n": 96,
-        "latency_ms": 15.9
+        "latency_ms": 13.5
       },
       "by_difficulty": {
         "easy": {
-          "recall@1": 0.7097,
-          "recall@3": 0.9032,
-          "recall@5": 0.9032,
-          "recall@10": 0.9355,
-          "mrr": 0.7977,
-          "ndcg@10": 0.791,
-          "full_recall@10": 0.8753,
-          "precision@5": 0.3097,
+          "recall@1": 0.8387,
+          "recall@3": 0.9355,
+          "recall@5": 0.9355,
+          "recall@10": 0.9677,
+          "mrr": 0.8871,
+          "ndcg@10": 0.8917,
+          "full_recall@10": 0.9677,
+          "precision@5": 0.3548,
           "n": 31
         },
         "hard": {
-          "recall@1": 0.2105,
-          "recall@3": 0.2632,
-          "recall@5": 0.4737,
-          "recall@10": 0.6316,
-          "mrr": 0.3135,
-          "ndcg@10": 0.3648,
-          "full_recall@10": 0.5877,
-          "precision@5": 0.1684,
+          "recall@1": 0.3684,
+          "recall@3": 0.6842,
+          "recall@5": 0.6842,
+          "recall@10": 0.6842,
+          "mrr": 0.4953,
+          "ndcg@10": 0.5127,
+          "full_recall@10": 0.6316,
+          "precision@5": 0.2632,
           "n": 19
         },
         "medium": {
-          "recall@1": 0.3696,
-          "recall@3": 0.6739,
-          "recall@5": 0.7391,
-          "recall@10": 0.8261,
-          "mrr": 0.5405,
-          "ndcg@10": 0.5772,
-          "full_recall@10": 0.7732,
-          "precision@5": 0.187,
+          "recall@1": 0.5435,
+          "recall@3": 0.7609,
+          "recall@5": 0.7826,
+          "recall@10": 0.8043,
+          "mrr": 0.657,
+          "ndcg@10": 0.6709,
+          "full_recall@10": 0.8,
+          "precision@5": 0.2522,
           "n": 46
         }
       },
       "by_doc_type": {
         "FAQ": {
-          "recall@1": 0.7727,
+          "recall@1": 0.8636,
           "recall@3": 1.0,
           "recall@5": 1.0,
           "recall@10": 1.0,
-          "mrr": 0.8864,
-          "ndcg@10": 0.9125,
+          "mrr": 0.9167,
+          "ndcg@10": 0.9367,
+          "full_recall@10": 1.0,
+          "precision@5": 0.3,
+          "n": 22
+        },
+        "설명서": {
+          "recall@1": 0.5686,
+          "recall@3": 0.8039,
+          "recall@5": 0.8039,
+          "recall@10": 0.8431,
+          "mrr": 0.6831,
+          "ndcg@10": 0.7041,
+          "full_recall@10": 0.8392,
+          "precision@5": 0.3137,
+          "n": 51
+        },
+        "약관": {
+          "recall@1": 0.4348,
+          "recall@3": 0.6087,
+          "recall@5": 0.6522,
+          "recall@10": 0.6522,
+          "mrr": 0.5273,
+          "ndcg@10": 0.5101,
+          "full_recall@10": 0.6087,
+          "precision@5": 0.2174,
+          "n": 23
+        }
+      },
+      "failure_analysis": {
+        "top5": 78,
+        "rank_6_20": 9,
+        "beyond_20": 9
+      }
+    },
+    "weighted α=0.8": {
+      "method": "weighted",
+      "alpha": 0.8,
+      "normalize": "minmax",
+      "overall": {
+        "recall@1": 0.6354,
+        "recall@3": 0.7917,
+        "recall@5": 0.8021,
+        "recall@10": 0.8229,
+        "mrr": 0.7104,
+        "ndcg@10": 0.7168,
+        "full_recall@10": 0.8104,
+        "precision@5": 0.2958,
+        "n": 96,
+        "latency_ms": 14.1
+      },
+      "by_difficulty": {
+        "easy": {
+          "recall@1": 0.8065,
+          "recall@3": 0.9355,
+          "recall@5": 0.9355,
+          "recall@10": 0.9677,
+          "mrr": 0.8688,
+          "ndcg@10": 0.8786,
+          "full_recall@10": 0.9677,
+          "precision@5": 0.3613,
+          "n": 31
+        },
+        "hard": {
+          "recall@1": 0.4211,
+          "recall@3": 0.6842,
+          "recall@5": 0.6842,
+          "recall@10": 0.6842,
+          "mrr": 0.5296,
+          "ndcg@10": 0.5358,
+          "full_recall@10": 0.6316,
+          "precision@5": 0.2842,
+          "n": 19
+        },
+        "medium": {
+          "recall@1": 0.6087,
+          "recall@3": 0.7391,
+          "recall@5": 0.7609,
+          "recall@10": 0.7826,
+          "mrr": 0.6783,
+          "ndcg@10": 0.6825,
+          "full_recall@10": 0.7783,
+          "precision@5": 0.2565,
+          "n": 46
+        }
+      },
+      "by_doc_type": {
+        "FAQ": {
+          "recall@1": 0.8182,
+          "recall@3": 0.9545,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr": 0.8879,
+          "ndcg@10": 0.9111,
+          "full_recall@10": 1.0,
+          "precision@5": 0.3,
+          "n": 22
+        },
+        "설명서": {
+          "recall@1": 0.6275,
+          "recall@3": 0.8039,
+          "recall@5": 0.8039,
+          "recall@10": 0.8431,
+          "mrr": 0.7115,
+          "ndcg@10": 0.7258,
+          "full_recall@10": 0.8392,
+          "precision@5": 0.3255,
+          "n": 51
+        },
+        "약관": {
+          "recall@1": 0.4783,
+          "recall@3": 0.6087,
+          "recall@5": 0.6087,
+          "recall@10": 0.6087,
+          "mrr": 0.5381,
+          "ndcg@10": 0.5109,
+          "full_recall@10": 0.5652,
+          "precision@5": 0.2261,
+          "n": 23
+        }
+      },
+      "failure_analysis": {
+        "top5": 77,
+        "rank_6_20": 6,
+        "beyond_20": 13
+      }
+    },
+    "weighted α=0.9": {
+      "method": "weighted",
+      "alpha": 0.9,
+      "normalize": "minmax",
+      "overall": {
+        "recall@1": 0.5938,
+        "recall@3": 0.7604,
+        "recall@5": 0.7917,
+        "recall@10": 0.8021,
+        "mrr": 0.6767,
+        "ndcg@10": 0.6888,
+        "full_recall@10": 0.7896,
+        "precision@5": 0.2917,
+        "n": 96,
+        "latency_ms": 13.7
+      },
+      "by_difficulty": {
+        "easy": {
+          "recall@1": 0.7097,
+          "recall@3": 0.9032,
+          "recall@5": 0.9355,
+          "recall@10": 0.9355,
+          "mrr": 0.8062,
+          "ndcg@10": 0.836,
+          "full_recall@10": 0.9355,
+          "precision@5": 0.3806,
+          "n": 31
+        },
+        "hard": {
+          "recall@1": 0.3684,
+          "recall@3": 0.6842,
+          "recall@5": 0.6842,
+          "recall@10": 0.6842,
+          "mrr": 0.5026,
+          "ndcg@10": 0.5162,
+          "full_recall@10": 0.6316,
+          "precision@5": 0.2737,
+          "n": 19
+        },
+        "medium": {
+          "recall@1": 0.6087,
+          "recall@3": 0.6957,
+          "recall@5": 0.7391,
+          "recall@10": 0.7609,
+          "mrr": 0.6613,
+          "ndcg@10": 0.6608,
+          "full_recall@10": 0.7565,
+          "precision@5": 0.2391,
+          "n": 46
+        }
+      },
+      "by_doc_type": {
+        "FAQ": {
+          "recall@1": 0.8636,
+          "recall@3": 0.9545,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr": 0.903,
+          "ndcg@10": 0.9199,
           "full_recall@10": 1.0,
           "precision@5": 0.2909,
           "n": 22
         },
         "설명서": {
-          "recall@1": 0.4314,
-          "recall@3": 0.6471,
-          "recall@5": 0.7059,
-          "recall@10": 0.7647,
-          "mrr": 0.5567,
-          "ndcg@10": 0.5586,
-          "full_recall@10": 0.7052,
-          "precision@5": 0.2235,
+          "recall@1": 0.549,
+          "recall@3": 0.7647,
+          "recall@5": 0.7843,
+          "recall@10": 0.8039,
+          "mrr": 0.6592,
+          "ndcg@10": 0.6795,
+          "full_recall@10": 0.8,
+          "precision@5": 0.3216,
           "n": 51
         },
         "약관": {
-          "recall@1": 0.1739,
-          "recall@3": 0.3913,
-          "recall@5": 0.5652,
-          "recall@10": 0.7826,
-          "mrr": 0.3329,
-          "ndcg@10": 0.4106,
-          "full_recall@10": 0.6913,
-          "precision@5": 0.1565,
+          "recall@1": 0.4348,
+          "recall@3": 0.5652,
+          "recall@5": 0.6087,
+          "recall@10": 0.6087,
+          "mrr": 0.4991,
+          "ndcg@10": 0.4882,
+          "full_recall@10": 0.5652,
+          "precision@5": 0.2261,
           "n": 23
         }
       },
       "failure_analysis": {
-        "top5": 71,
-        "rank_6_20": 18,
-        "beyond_20": 7
+        "top5": 76,
+        "rank_6_20": 6,
+        "beyond_20": 14
       }
     },
-    "weighted α=0.5": {
-      "method": "weighted",
-      "alpha": 0.5,
+    "RRF α=0.7": {
+      "method": "rrf",
+      "alpha": 0.7,
+      "normalize": "minmax",
       "overall": {
-        "recall@1": 0.4583,
-        "recall@3": 0.6667,
-        "recall@5": 0.7292,
-        "recall@10": 0.8229,
-        "mrr": 0.5865,
-        "ndcg@10": 0.6105,
-        "full_recall@10": 0.7642,
-        "precision@5": 0.2208,
+        "recall@1": 0.6146,
+        "recall@3": 0.7917,
+        "recall@5": 0.8229,
+        "recall@10": 0.8542,
+        "mrr": 0.7073,
+        "ndcg@10": 0.7216,
+        "full_recall@10": 0.8382,
+        "precision@5": 0.2896,
         "n": 96,
-        "latency_ms": 16.6
+        "latency_ms": 13.5
+      },
+      "by_difficulty": {
+        "easy": {
+          "recall@1": 0.8065,
+          "recall@3": 0.9032,
+          "recall@5": 0.9355,
+          "recall@10": 0.9355,
+          "mrr": 0.86,
+          "ndcg@10": 0.8643,
+          "full_recall@10": 0.9355,
+          "precision@5": 0.3613,
+          "n": 31
+        },
+        "hard": {
+          "recall@1": 0.3684,
+          "recall@3": 0.6842,
+          "recall@5": 0.6842,
+          "recall@10": 0.7368,
+          "mrr": 0.5125,
+          "ndcg@10": 0.5256,
+          "full_recall@10": 0.6667,
+          "precision@5": 0.2526,
+          "n": 19
+        },
+        "medium": {
+          "recall@1": 0.587,
+          "recall@3": 0.7609,
+          "recall@5": 0.8043,
+          "recall@10": 0.8478,
+          "mrr": 0.6849,
+          "ndcg@10": 0.7064,
+          "full_recall@10": 0.8435,
+          "precision@5": 0.2565,
+          "n": 46
+        }
+      },
+      "by_doc_type": {
+        "FAQ": {
+          "recall@1": 0.8636,
+          "recall@3": 1.0,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr": 0.9242,
+          "ndcg@10": 0.9423,
+          "full_recall@10": 1.0,
+          "precision@5": 0.3,
+          "n": 22
+        },
+        "설명서": {
+          "recall@1": 0.6078,
+          "recall@3": 0.7843,
+          "recall@5": 0.8235,
+          "recall@10": 0.8431,
+          "mrr": 0.7011,
+          "ndcg@10": 0.7134,
+          "full_recall@10": 0.8327,
+          "precision@5": 0.3098,
+          "n": 51
+        },
+        "약관": {
+          "recall@1": 0.3913,
+          "recall@3": 0.6087,
+          "recall@5": 0.6522,
+          "recall@10": 0.7391,
+          "mrr": 0.5138,
+          "ndcg@10": 0.5288,
+          "full_recall@10": 0.6957,
+          "precision@5": 0.2348,
+          "n": 23
+        }
+      },
+      "failure_analysis": {
+        "top5": 79,
+        "rank_6_20": 8,
+        "beyond_20": 9
+      }
+    },
+    "RRF α=0.8": {
+      "method": "rrf",
+      "alpha": 0.8,
+      "normalize": "minmax",
+      "overall": {
+        "recall@1": 0.6458,
+        "recall@3": 0.7812,
+        "recall@5": 0.8125,
+        "recall@10": 0.8229,
+        "mrr": 0.7167,
+        "ndcg@10": 0.7178,
+        "full_recall@10": 0.8104,
+        "precision@5": 0.2958,
+        "n": 96,
+        "latency_ms": 13.8
+      },
+      "by_difficulty": {
+        "easy": {
+          "recall@1": 0.8065,
+          "recall@3": 0.9355,
+          "recall@5": 0.9355,
+          "recall@10": 0.9355,
+          "mrr": 0.8625,
+          "ndcg@10": 0.8665,
+          "full_recall@10": 0.9355,
+          "precision@5": 0.3613,
+          "n": 31
+        },
+        "hard": {
+          "recall@1": 0.5263,
+          "recall@3": 0.6842,
+          "recall@5": 0.6842,
+          "recall@10": 0.6842,
+          "mrr": 0.5925,
+          "ndcg@10": 0.5577,
+          "full_recall@10": 0.6316,
+          "precision@5": 0.2737,
+          "n": 19
+        },
+        "medium": {
+          "recall@1": 0.587,
+          "recall@3": 0.7174,
+          "recall@5": 0.7826,
+          "recall@10": 0.8043,
+          "mrr": 0.6697,
+          "ndcg@10": 0.6839,
+          "full_recall@10": 0.8,
+          "precision@5": 0.2609,
+          "n": 46
+        }
+      },
+      "by_doc_type": {
+        "FAQ": {
+          "recall@1": 0.8636,
+          "recall@3": 0.9545,
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "mrr": 0.9182,
+          "ndcg@10": 0.9335,
+          "full_recall@10": 1.0,
+          "precision@5": 0.3,
+          "n": 22
+        },
+        "설명서": {
+          "recall@1": 0.6275,
+          "recall@3": 0.7843,
+          "recall@5": 0.8039,
+          "recall@10": 0.8235,
+          "mrr": 0.7043,
+          "ndcg@10": 0.7083,
+          "full_recall@10": 0.8196,
+          "precision@5": 0.3176,
+          "n": 51
+        },
+        "약관": {
+          "recall@1": 0.4783,
+          "recall@3": 0.6087,
+          "recall@5": 0.6522,
+          "recall@10": 0.6522,
+          "mrr": 0.5513,
+          "ndcg@10": 0.5327,
+          "full_recall@10": 0.6087,
+          "precision@5": 0.2435,
+          "n": 23
+        }
+      },
+      "failure_analysis": {
+        "top5": 78,
+        "rank_6_20": 6,
+        "beyond_20": 12
+      }
+    },
+    "RRF α=0.9": {
+      "method": "rrf",
+      "alpha": 0.9,
+      "normalize": "minmax",
+      "overall": {
+        "recall@1": 0.6042,
+        "recall@3": 0.7604,
+        "recall@5": 0.7708,
+        "recall@10": 0.8125,
+        "mrr": 0.6866,
+        "ndcg@10": 0.6922,
+        "full_recall@10": 0.8,
+        "precision@5": 0.2854,
+        "n": 96,
+        "latency_ms": 13.7
       },
       "by_difficulty": {
         "easy": {
@@ -297,256 +669,74 @@
           "recall@3": 0.9032,
           "recall@5": 0.9032,
           "recall@10": 0.9355,
-          "mrr": 0.8191,
-          "ndcg@10": 0.8093,
-          "full_recall@10": 0.8753,
-          "precision@5": 0.3097,
+          "mrr": 0.8247,
+          "ndcg@10": 0.8337,
+          "full_recall@10": 0.9355,
+          "precision@5": 0.3677,
           "n": 31
         },
         "hard": {
-          "recall@1": 0.2105,
-          "recall@3": 0.2632,
-          "recall@5": 0.4737,
-          "recall@10": 0.6316,
-          "mrr": 0.3135,
-          "ndcg@10": 0.3587,
-          "full_recall@10": 0.5614,
-          "precision@5": 0.1684,
+          "recall@1": 0.4737,
+          "recall@3": 0.6316,
+          "recall@5": 0.6842,
+          "recall@10": 0.6842,
+          "mrr": 0.5599,
+          "ndcg@10": 0.5385,
+          "full_recall@10": 0.6316,
+          "precision@5": 0.2632,
           "n": 19
         },
         "medium": {
-          "recall@1": 0.3696,
-          "recall@3": 0.6739,
+          "recall@1": 0.5652,
+          "recall@3": 0.7174,
           "recall@5": 0.7174,
-          "recall@10": 0.8261,
-          "mrr": 0.5424,
-          "ndcg@10": 0.5805,
-          "full_recall@10": 0.7732,
-          "precision@5": 0.1826,
-          "n": 46
-        }
-      },
-      "by_doc_type": {
-        "FAQ": {
-          "recall@1": 0.7727,
-          "recall@3": 1.0,
-          "recall@5": 1.0,
-          "recall@10": 1.0,
-          "mrr": 0.8864,
-          "ndcg@10": 0.9137,
-          "full_recall@10": 1.0,
-          "precision@5": 0.2909,
-          "n": 22
-        },
-        "설명서": {
-          "recall@1": 0.451,
-          "recall@3": 0.6471,
-          "recall@5": 0.7059,
-          "recall@10": 0.7647,
-          "mrr": 0.5718,
-          "ndcg@10": 0.5723,
-          "full_recall@10": 0.7052,
-          "precision@5": 0.2235,
-          "n": 51
-        },
-        "약관": {
-          "recall@1": 0.1739,
-          "recall@3": 0.3913,
-          "recall@5": 0.5217,
           "recall@10": 0.7826,
-          "mrr": 0.3322,
-          "ndcg@10": 0.405,
-          "full_recall@10": 0.6696,
-          "precision@5": 0.1478,
-          "n": 23
-        }
-      },
-      "failure_analysis": {
-        "top5": 70,
-        "rank_6_20": 19,
-        "beyond_20": 7
-      }
-    },
-    "weighted α=0.7": {
-      "method": "weighted",
-      "alpha": 0.7,
-      "overall": {
-        "recall@1": 0.4688,
-        "recall@3": 0.6979,
-        "recall@5": 0.75,
-        "recall@10": 0.8646,
-        "mrr": 0.6016,
-        "ndcg@10": 0.6292,
-        "full_recall@10": 0.7898,
-        "precision@5": 0.2292,
-        "n": 96,
-        "latency_ms": 16.2
-      },
-      "by_difficulty": {
-        "easy": {
-          "recall@1": 0.7742,
-          "recall@3": 0.9032,
-          "recall@5": 0.9032,
-          "recall@10": 0.9355,
-          "mrr": 0.8403,
-          "ndcg@10": 0.8226,
-          "full_recall@10": 0.8753,
-          "precision@5": 0.3097,
-          "n": 31
-        },
-        "hard": {
-          "recall@1": 0.2105,
-          "recall@3": 0.3684,
-          "recall@5": 0.4737,
-          "recall@10": 0.7368,
-          "mrr": 0.3425,
-          "ndcg@10": 0.3861,
-          "full_recall@10": 0.6009,
-          "precision@5": 0.1684,
-          "n": 19
-        },
-        "medium": {
-          "recall@1": 0.3696,
-          "recall@3": 0.6957,
-          "recall@5": 0.7609,
-          "recall@10": 0.8696,
-          "mrr": 0.5477,
-          "ndcg@10": 0.5994,
-          "full_recall@10": 0.8101,
-          "precision@5": 0.2,
+          "mrr": 0.6459,
+          "ndcg@10": 0.6604,
+          "full_recall@10": 0.7783,
+          "precision@5": 0.2391,
           "n": 46
         }
       },
       "by_doc_type": {
         "FAQ": {
           "recall@1": 0.8182,
-          "recall@3": 1.0,
-          "recall@5": 1.0,
+          "recall@3": 0.9545,
+          "recall@5": 0.9545,
           "recall@10": 1.0,
-          "mrr": 0.9091,
-          "ndcg@10": 0.9239,
+          "mrr": 0.8939,
+          "ndcg@10": 0.9102,
           "full_recall@10": 1.0,
           "precision@5": 0.2909,
           "n": 22
         },
         "설명서": {
-          "recall@1": 0.451,
-          "recall@3": 0.6667,
-          "recall@5": 0.7255,
-          "recall@10": 0.8235,
-          "mrr": 0.5794,
-          "ndcg@10": 0.5923,
-          "full_recall@10": 0.7395,
-          "precision@5": 0.2353,
-          "n": 51
-        },
-        "약관": {
-          "recall@1": 0.1739,
-          "recall@3": 0.4783,
-          "recall@5": 0.5652,
-          "recall@10": 0.8261,
-          "mrr": 0.3567,
-          "ndcg@10": 0.4293,
-          "full_recall@10": 0.7,
-          "precision@5": 0.1565,
-          "n": 23
-        }
-      },
-      "failure_analysis": {
-        "top5": 72,
-        "rank_6_20": 16,
-        "beyond_20": 8
-      }
-    },
-    "RRF": {
-      "method": "rrf",
-      "alpha": 0.5,
-      "overall": {
-        "recall@1": 0.5729,
-        "recall@3": 0.7083,
-        "recall@5": 0.7812,
-        "recall@10": 0.875,
-        "mrr": 0.6707,
-        "ndcg@10": 0.6975,
-        "full_recall@10": 0.8403,
-        "precision@5": 0.2625,
-        "n": 96,
-        "latency_ms": 14.3
-      },
-      "by_difficulty": {
-        "easy": {
-          "recall@1": 0.8065,
-          "recall@3": 0.8387,
-          "recall@5": 0.9032,
-          "recall@10": 0.9677,
-          "mrr": 0.8477,
-          "ndcg@10": 0.8583,
-          "full_recall@10": 0.9462,
-          "precision@5": 0.3484,
-          "n": 31
-        },
-        "hard": {
-          "recall@1": 0.3158,
-          "recall@3": 0.4737,
-          "recall@5": 0.6316,
-          "recall@10": 0.7368,
-          "mrr": 0.4479,
-          "ndcg@10": 0.4968,
-          "full_recall@10": 0.6667,
-          "precision@5": 0.2421,
-          "n": 19
-        },
-        "medium": {
-          "recall@1": 0.5217,
-          "recall@3": 0.7174,
-          "recall@5": 0.7609,
-          "recall@10": 0.8696,
-          "mrr": 0.6435,
-          "ndcg@10": 0.672,
-          "full_recall@10": 0.8406,
-          "precision@5": 0.213,
-          "n": 46
-        }
-      },
-      "by_doc_type": {
-        "FAQ": {
-          "recall@1": 0.9091,
-          "recall@3": 1.0,
-          "recall@5": 1.0,
-          "recall@10": 1.0,
-          "mrr": 0.9545,
-          "ndcg@10": 0.955,
-          "full_recall@10": 1.0,
-          "precision@5": 0.3,
-          "n": 22
-        },
-        "설명서": {
-          "recall@1": 0.5098,
-          "recall@3": 0.6863,
+          "recall@1": 0.5882,
+          "recall@3": 0.7647,
           "recall@5": 0.7647,
-          "recall@10": 0.8824,
-          "mrr": 0.6318,
-          "ndcg@10": 0.668,
-          "full_recall@10": 0.8346,
-          "precision@5": 0.2824,
+          "recall@10": 0.8235,
+          "mrr": 0.6772,
+          "ndcg@10": 0.6859,
+          "full_recall@10": 0.8196,
+          "precision@5": 0.3098,
           "n": 51
         },
         "약관": {
-          "recall@1": 0.3913,
-          "recall@3": 0.4783,
+          "recall@1": 0.4348,
+          "recall@3": 0.5652,
           "recall@5": 0.6087,
-          "recall@10": 0.7391,
-          "mrr": 0.4855,
-          "ndcg@10": 0.5165,
-          "full_recall@10": 0.7,
-          "precision@5": 0.1826,
+          "recall@10": 0.6087,
+          "mrr": 0.5094,
+          "ndcg@10": 0.4977,
+          "full_recall@10": 0.5652,
+          "precision@5": 0.2261,
           "n": 23
         }
       },
       "failure_analysis": {
-        "top5": 75,
-        "rank_6_20": 14,
-        "beyond_20": 7
+        "top5": 74,
+        "rank_6_20": 8,
+        "beyond_20": 14
       }
     }
   }

@@ -3,7 +3,12 @@
 Dense(FAISS)와 Sparse(BM25)를 결합한 하이브리드 검색을 제공한다.
 """
 
-from .hybrid_retriever import FusionMethod, HybridHit, HybridRetriever
+from .hybrid_retriever import (
+    FusionMethod,
+    HybridHit,
+    HybridRetriever,
+    NormalizeMethod,
+)
 from .sparse_retriever import BM25Store, KiwiTokenizer, SparseHit, explain_tokens
 
 __all__ = [
@@ -14,4 +19,5 @@ __all__ = [
     "HybridRetriever",
     "HybridHit",
     "FusionMethod",
+    "NormalizeMethod",
 ]

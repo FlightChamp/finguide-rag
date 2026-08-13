@@ -76,21 +76,67 @@ class HybridHit:
         return "both"
 
 
-def minmax_normalize(scores: np.ndarray) -> np.ndarray:
-    """질의별 min-max 정규화.
+class NormalizeMethod(str, Enum):
+    MINMAX = "minmax"
+    ZSCORE = "zscore"
 
-    전역 정규화가 아니라 질의별로 하는 이유는, BM25 점수의 절대 크기가
-    질의의 어휘 구성에 따라 크게 달라지기 때문이다. 희귀어가 포함된
-    질의는 점수가 높게 나오고 흔한 어휘만 있으면 낮게 나온다. 질의 간
-    비교가 목적이 아니라 한 질의 안에서의 순위가 목적이므로 질의별
-    정규화가 맞다.
+
+def normalize_scores(
+    scores: np.ndarray,
+    present: np.ndarray,
+    method: NormalizeMethod = NormalizeMethod.MINMAX,
+) -> np.ndarray:
+    """질의별 점수 정규화.
+
+    present 는 각 문서가 해당 검색기의 후보에 있었는지를 나타내는 불리언
+    배열이다. 후보에 없는 문서를 0점으로 두고 정규화하면 분포가 크게
+    왜곡된다.
+
+    실제로 겪은 문제
+    ---------------
+    dense 점수는 코사인 유사도라 0.86~0.92의 좁은 구간에 몰려 있다.
+    여기에 후보 밖 문서의 0.0 이 섞이면 min 이 0 이 되어, 실질 차이
+    0.06 이 0.93~1.00 구간으로 압축된다. 미세한 순위 정보가 뭉개지면서
+    상대적으로 범위가 넓은 BM25(0~30)가 결합 결과를 지배한다.
+
+    이 때문에 가중합이 dense 단독보다 나쁘게 나왔다.
+
+    해결
+    ----
+    후보에 있는 문서만으로 정규화 기준(min/max 또는 평균/표준편차)을
+    계산하고, 후보 밖 문서에는 정규화 후 최솟값을 부여한다. 후보에
+    들지 못했다는 사실은 반영하되 분포는 훼손하지 않는다.
     """
-    if scores.size == 0:
-        return scores
-    lo, hi = float(scores.min()), float(scores.max())
+    out = np.zeros_like(scores, dtype=np.float64)
+
+    if not present.any():
+        return out
+
+    valid = scores[present]
+
+    if method == NormalizeMethod.ZSCORE:
+        mean = float(valid.mean())
+        std = float(valid.std())
+        if std < 1e-9:
+            out[present] = 0.5
+        else:
+            # z-score 를 시그모이드로 0~1 에 사상한다.
+            # 극단값의 영향이 min-max 보다 작다.
+            z = (scores - mean) / std
+            out = 1.0 / (1.0 + np.exp(-z))
+            out[~present] = float(out[present].min()) if present.any() else 0.0
+        return out
+
+    lo, hi = float(valid.min()), float(valid.max())
     if hi - lo < 1e-9:
-        return np.zeros_like(scores)
-    return (scores - lo) / (hi - lo)
+        out[present] = 1.0
+        return out
+
+    out = (scores - lo) / (hi - lo)
+    out = np.clip(out, 0.0, 1.0)
+    # 후보 밖 문서는 최하위로 둔다. 0 으로 두면 정규화 기준이 왜곡된다.
+    out[~present] = 0.0
+    return out
 
 
 class HybridRetriever:
@@ -105,6 +151,7 @@ class HybridRetriever:
         alpha: float = 0.5,
         rrf_k: int = 60,
         candidate_k: int = 100,
+        normalize: NormalizeMethod = NormalizeMethod.MINMAX,
     ):
         """
         alpha       : dense 가중치. 1.0이면 dense 단독, 0.0이면 sparse 단독.
@@ -112,6 +159,7 @@ class HybridRetriever:
                       원 논문(Cormack et al.)의 권장값 60을 기본으로 한다.
         candidate_k : 각 검색기에서 가져올 후보 수. 최종 top_k보다 넉넉해야
                       한쪽에서만 잡힌 문서가 결합 과정에서 살아남는다.
+        normalize   : 가중합에서 쓸 정규화 방식. RRF에는 영향이 없다.
         """
         self.embedder = embedder
         self.faiss = faiss_store
@@ -120,6 +168,7 @@ class HybridRetriever:
         self.alpha = alpha
         self.rrf_k = rrf_k
         self.candidate_k = candidate_k
+        self.normalize = normalize
 
         # 청크 ID -> 인덱스 매핑. 두 검색기의 결과를 대조할 때 쓴다.
         self._id_to_meta = {m["chunk_id"]: m for m in faiss_store.metas}
@@ -160,8 +209,9 @@ class HybridRetriever:
     def _fuse_weighted(self, dense: dict, sparse: dict, top_k: int) -> list[HybridHit]:
         """정규화 후 가중합.
 
-        한쪽에만 있는 문서는 없는 쪽 점수를 0으로 둔다. 후보에 들지
-        못했다는 것 자체가 낮은 관련도의 신호이므로 타당하다.
+        한쪽 후보에만 있는 문서는 없는 쪽에서 최하위 점수를 받는다.
+        후보에 들지 못했다는 사실은 반영하되, 0 으로 두어 정규화 기준을
+        왜곡하지는 않는다.
         """
         all_ids = set(dense) | set(sparse)
         if not all_ids:
@@ -170,9 +220,11 @@ class HybridRetriever:
         ids = sorted(all_ids)
         d_raw = np.array([dense.get(i, (0, 0.0))[1] for i in ids])
         s_raw = np.array([sparse.get(i, (0, 0.0))[1] for i in ids])
+        d_present = np.array([i in dense for i in ids])
+        s_present = np.array([i in sparse for i in ids])
 
-        d_norm = minmax_normalize(d_raw)
-        s_norm = minmax_normalize(s_raw)
+        d_norm = normalize_scores(d_raw, d_present, self.normalize)
+        s_norm = normalize_scores(s_raw, s_present, self.normalize)
         combined = self.alpha * d_norm + (1 - self.alpha) * s_norm
 
         order = np.argsort(-combined)[:top_k]
@@ -250,4 +302,4 @@ class HybridRetriever:
 
     def __repr__(self) -> str:
         return (f"HybridRetriever(method={self.method.value}, alpha={self.alpha}, "
-                f"candidate_k={self.candidate_k})")
+                f"norm={self.normalize.value}, candidate_k={self.candidate_k})")
