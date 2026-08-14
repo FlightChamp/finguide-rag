@@ -15,7 +15,10 @@ dense 인덱스와 동일하게 indexable_text(문서명 + 조항명 + 본문)�
 
 출력
 ----
-data/indexes/bm25/bm25.pkl
+data/indexes/bm25/{이름}/bm25.pkl
+
+Dense 인덱스와 마찬가지로 실험 이름 단위로 분리한다. 청킹을 바꿀 때마다
+덮어쓰면 비교 실험이 불가능해지기 때문이다.
 
 사용법
 -----
@@ -39,13 +42,25 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from finguide_rag.retrieval import BM25Store, KiwiTokenizer, explain_tokens  # noqa: E402
 
 CHUNKS_PATH = PROJECT_ROOT / "data" / "interim" / "chunks.jsonl"
-INDEX_DIR = PROJECT_ROOT / "data" / "indexes" / "bm25"
+INDEX_ROOT = PROJECT_ROOT / "data" / "indexes" / "bm25"
 
 
-def load_chunks() -> list[dict]:
-    if not CHUNKS_PATH.exists():
-        sys.exit(f"{CHUNKS_PATH} 없음. 먼저 09_build_chunks.py 를 실행하세요.")
-    return [json.loads(line) for line in CHUNKS_PATH.open(encoding="utf-8") if line.strip()]
+def load_chunks(path: Path) -> list[dict]:
+    if not path.exists():
+        sys.exit(f"{path} 없음. 먼저 09_build_chunks.py 를 실행하세요.")
+    return [json.loads(line) for line in path.open(encoding="utf-8") if line.strip()]
+
+
+def resolve_index_name(chunks_path: Path, explicit: str | None) -> str:
+    """인덱스 디렉토리 이름. Dense 쪽과 같은 규칙을 쓴다.
+
+        chunks.jsonl            -> default
+        chunks_structural.jsonl -> structural
+    """
+    if explicit:
+        return explicit
+    suffix = chunks_path.stem.removeprefix("chunks").lstrip("_")
+    return suffix or "default"
 
 
 def build_indexable_text(row: dict) -> str:
@@ -90,14 +105,28 @@ def main() -> None:
     ap.add_argument("--k1", type=float, default=1.2, help="용어 빈도 포화 계수")
     ap.add_argument("--b", type=float, default=0.75, help="문서 길이 정규화 강도")
     ap.add_argument("--inspect", action="store_true", help="토큰화 표본만 확인")
+    ap.add_argument("--chunks", default=None, help="청크 JSONL 경로")
+    ap.add_argument("--name", default=None, help="인덱스 이름 (생략 시 자동)")
+    ap.add_argument("--force", action="store_true", help="기존 인덱스 덮어쓰기")
     args = ap.parse_args()
 
     print("=" * 72)
     print("BM25 인덱스 구축")
     print("=" * 72)
 
-    rows = load_chunks()
-    print(f"  청크 {len(rows):,}개 로드")
+    chunks_path = Path(args.chunks) if args.chunks else CHUNKS_PATH
+    index_name = resolve_index_name(chunks_path, args.name)
+    index_dir = INDEX_ROOT / index_name
+
+    rows = load_chunks(chunks_path)
+    print(f"  청크 {len(rows):,}개 로드 ({chunks_path.name})")
+    print(f"  인덱스 이름: {index_name}")
+
+    if (index_dir / "bm25.pkl").exists() and not args.inspect and not args.force:
+        sys.exit(
+            f"\n{index_dir} 에 이미 인덱스가 있습니다.\n"
+            f"덮어쓰려면 --force, 다른 이름으로 만들려면 --name 을 쓰세요."
+        )
 
     if args.inspect:
         inspect(rows)
@@ -117,12 +146,12 @@ def main() -> None:
 
     print(f"  소요: {elapsed:.1f}초")
 
-    store.save(INDEX_DIR)
+    store.save(index_dir)
 
     # --- 자체 검증 ---
     # 저장한 인덱스를 다시 읽어 검색이 되는지 확인한다.
     print("\n  저장된 인덱스 검증 중...")
-    reloaded = BM25Store.load(INDEX_DIR)
+    reloaded = BM25Store.load(index_dir)
     print(f"    로드 성공: {reloaded}")
 
     # 첫 청크의 본문 일부로 검색하면 자기 자신이 상위에 나와야 한다
@@ -147,7 +176,7 @@ def main() -> None:
     for word, df in vocab.most_common(12):
         print(f"      {word:<12} {df:>3}개 문서 ({df / len(sample):.0%})")
 
-    print(f"\n저장 → {INDEX_DIR.relative_to(PROJECT_ROOT)}")
+    print(f"\n저장 → {index_dir.relative_to(PROJECT_ROOT)}")
     print("=" * 72)
     print("다음: python scripts/20_tune_hybrid.py")
     print("=" * 72)

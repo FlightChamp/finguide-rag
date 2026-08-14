@@ -5,11 +5,15 @@
 ----
 청크를 임베딩해 FAISS 인덱스를 구축한다.
 
-모델별로 디렉토리를 분리해 나란히 보관한다. 나중에 동일 평가셋으로
-두 모델의 검색 성능을 비교하기 위해서다.
+인덱스는 "실험 이름" 단위로 분리해 보관한다. 청킹 전략이나 임베딩
+모델을 바꿀 때 기존 인덱스를 덮어쓰면 비교 실험이 불가능해지기 때문이다.
+결과가 나쁠 때 되돌릴 수도 없다.
 
-    data/indexes/faiss/e5-small/
-    data/indexes/faiss/bge-m3/
+    data/indexes/faiss/e5-small/              기본 (길이 기반 청킹)
+    data/indexes/faiss/e5-small_structural/   구조별 청킹
+    data/indexes/faiss/bge-m3/                모델 비교용
+
+실험 이름은 --name 으로 지정하며, 생략하면 청크 파일명에서 자동 유추한다.
 
 무엇을 임베딩하는가
 ----------------
@@ -42,12 +46,29 @@ CHUNKS_PATH = PROJECT_ROOT / "data" / "interim" / "chunks.jsonl"
 INDEX_ROOT = PROJECT_ROOT / "data" / "indexes" / "faiss"
 
 
-def load_chunks(limit: int | None = None) -> list[dict]:
-    if not CHUNKS_PATH.exists():
-        sys.exit(f"{CHUNKS_PATH} 없음. 먼저 09_build_chunks.py 를 실행하세요.")
+def load_chunks(path: Path, limit: int | None = None) -> list[dict]:
+    if not path.exists():
+        sys.exit(f"{path} 없음. 먼저 09_build_chunks.py 를 실행하세요.")
 
-    rows = [json.loads(line) for line in CHUNKS_PATH.open(encoding="utf-8") if line.strip()]
+    rows = [json.loads(line) for line in path.open(encoding="utf-8") if line.strip()]
     return rows[:limit] if limit else rows
+
+
+def resolve_index_name(model_key: str, chunks_path: Path, explicit: str | None) -> str:
+    """인덱스 디렉토리 이름을 정한다.
+
+    명시하지 않으면 청크 파일명에서 유추한다.
+        chunks.jsonl            -> e5-small
+        chunks_structural.jsonl -> e5-small_structural
+
+    이렇게 하면 실험을 늘려도 인덱스가 서로 덮어쓰지 않는다.
+    """
+    if explicit:
+        return explicit
+
+    stem = chunks_path.stem            # chunks_structural
+    suffix = stem.removeprefix("chunks").lstrip("_")
+    return f"{model_key}_{suffix}" if suffix else model_key
 
 
 def build_indexable_text(row: dict) -> str:
@@ -67,6 +88,12 @@ def main() -> None:
     ap.add_argument("--model", default="e5-small", choices=list(MODELS), help="임베딩 모델")
     ap.add_argument("--batch", type=int, default=16, help="배치 크기")
     ap.add_argument("--limit", type=int, default=None, help="청크 수 제한(시험용)")
+    ap.add_argument("--chunks", default=None,
+                    help="청크 JSONL 경로 (기본: data/interim/chunks.jsonl)")
+    ap.add_argument("--name", default=None,
+                    help="인덱스 이름. 생략 시 모델명 + 청크 파일명으로 자동 결정")
+    ap.add_argument("--force", action="store_true",
+                    help="기존 인덱스가 있어도 덮어쓴다")
     args = ap.parse_args()
 
     spec = MODELS[args.model]
@@ -81,8 +108,23 @@ def main() -> None:
     else:
         print("  접두어 : 없음")
 
+    chunks_path = Path(args.chunks) if args.chunks else CHUNKS_PATH
+    index_name = resolve_index_name(args.model, chunks_path, args.name)
+    out_dir = INDEX_ROOT / index_name
+
+    print(f"  청크   : {chunks_path.name}")
+    print(f"  인덱스 : {index_name}")
+
+    # 기존 인덱스를 실수로 덮어쓰면 비교 실험이 불가능해진다.
+    # 베이스라인을 잃고 나면 청킹부터 다시 돌려야 한다.
+    if (out_dir / "config.json").exists() and not args.force:
+        sys.exit(
+            f"\n{out_dir} 에 이미 인덱스가 있습니다.\n"
+            f"덮어쓰려면 --force, 다른 이름으로 만들려면 --name 을 쓰세요."
+        )
+
     # --- 청크 로드 ---
-    rows = load_chunks(args.limit)
+    rows = load_chunks(chunks_path, args.limit)
     print(f"\n  청크 {len(rows):,}개 로드")
 
     texts = [build_indexable_text(r) for r in rows]
@@ -115,7 +157,6 @@ def main() -> None:
     store = FaissStore(dim=spec.dim, model_key=args.model)
     store.build(vectors, rows)
 
-    out_dir = INDEX_ROOT / args.model
     store.save(out_dir)
 
     # --- 자체 검증 ---

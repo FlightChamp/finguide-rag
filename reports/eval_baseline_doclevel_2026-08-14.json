@@ -1,0 +1,307 @@
+{
+  "date": "2026-08-14",
+  "tag": "baseline",
+  "model": "e5-small",
+  "index": "e5-small",
+  "eval_set": "retrieval_eval.csv",
+  "level": "doc",
+  "retrieval": "dense",
+  "n_queries": 96,
+  "overall": {
+    "recall@1": 0.6667,
+    "recall@3": 0.8646,
+    "recall@5": 0.9062,
+    "recall@10": 0.9479,
+    "mrr": 0.7676,
+    "ndcg@10": 0.8066,
+    "full_recall@10": 0.9479,
+    "precision@5": 0.225,
+    "n": 96
+  },
+  "by_difficulty": {
+    "easy": {
+      "recall@1": 0.8065,
+      "recall@3": 0.9355,
+      "recall@5": 0.9677,
+      "recall@10": 1.0,
+      "mrr": 0.8707,
+      "ndcg@10": 0.9012,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2516,
+      "n": 31
+    },
+    "hard": {
+      "recall@1": 0.3684,
+      "recall@3": 0.7895,
+      "recall@5": 0.8421,
+      "recall@10": 0.8947,
+      "mrr": 0.5707,
+      "ndcg@10": 0.6392,
+      "full_recall@10": 0.8947,
+      "precision@5": 0.2421,
+      "n": 19
+    },
+    "medium": {
+      "recall@1": 0.6957,
+      "recall@3": 0.8478,
+      "recall@5": 0.8913,
+      "recall@10": 0.9348,
+      "mrr": 0.7794,
+      "ndcg@10": 0.812,
+      "full_recall@10": 0.9348,
+      "precision@5": 0.2,
+      "n": 46
+    }
+  },
+  "by_doc_type": {
+    "FAQ": {
+      "recall@1": 0.7727,
+      "recall@3": 0.9545,
+      "recall@5": 0.9545,
+      "recall@10": 1.0,
+      "mrr": 0.8542,
+      "ndcg@10": 0.8891,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2364,
+      "n": 22
+    },
+    "설명서": {
+      "recall@1": 0.7255,
+      "recall@3": 0.8824,
+      "recall@5": 0.902,
+      "recall@10": 0.9412,
+      "mrr": 0.8092,
+      "ndcg@10": 0.8319,
+      "full_recall@10": 0.9412,
+      "precision@5": 0.2275,
+      "n": 51
+    },
+    "약관": {
+      "recall@1": 0.4348,
+      "recall@3": 0.7391,
+      "recall@5": 0.8696,
+      "recall@10": 0.913,
+      "mrr": 0.5924,
+      "ndcg@10": 0.6718,
+      "full_recall@10": 0.913,
+      "precision@5": 0.2087,
+      "n": 23
+    }
+  },
+  "by_category": {
+    "auth_otp_security_card": {
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 2
+    },
+    "bill_payment": {
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 1
+    },
+    "cd_atm": {
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.75,
+      "ndcg@10": 0.8467,
+      "full_recall@10": 1.0,
+      "precision@5": 0.3,
+      "n": 2
+    },
+    "certificate": {
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "full_recall@10": 1.0,
+      "precision@5": 0.5,
+      "n": 2
+    },
+    "deposit": {
+      "recall@1": 0.7692,
+      "recall@3": 0.8462,
+      "recall@5": 0.8462,
+      "recall@10": 0.9231,
+      "mrr": 0.8187,
+      "ndcg@10": 0.8482,
+      "full_recall@10": 0.9231,
+      "precision@5": 0.1846,
+      "n": 13
+    },
+    "deposit_trust": {
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 1
+    },
+    "derivatives": {
+      "recall@1": 0.6,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.8,
+      "ndcg@10": 0.8203,
+      "full_recall@10": 1.0,
+      "precision@5": 0.28,
+      "n": 5
+    },
+    "digital_banking": {
+      "recall@1": 0.6154,
+      "recall@3": 0.8462,
+      "recall@5": 0.9231,
+      "recall@10": 0.9231,
+      "mrr": 0.7462,
+      "ndcg@10": 0.7856,
+      "full_recall@10": 0.9231,
+      "precision@5": 0.2308,
+      "n": 13
+    },
+    "fund": {
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 2
+    },
+    "fx": {
+      "recall@1": 0.6667,
+      "recall@3": 0.8889,
+      "recall@5": 0.8889,
+      "recall@10": 1.0,
+      "mrr": 0.7917,
+      "ndcg@10": 0.7886,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2667,
+      "n": 9
+    },
+    "hana_oneq_mobile_banking": {
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.6667,
+      "ndcg@10": 0.75,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 2
+    },
+    "internet_banking": {
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.6667,
+      "ndcg@10": 0.75,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 2
+    },
+    "loan": {
+      "recall@1": 0.5238,
+      "recall@3": 0.7619,
+      "recall@5": 0.8571,
+      "recall@10": 0.8571,
+      "mrr": 0.6325,
+      "ndcg@10": 0.689,
+      "full_recall@10": 0.8571,
+      "precision@5": 0.2286,
+      "n": 21
+    },
+    "login_signup": {
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 1
+    },
+    "others": {
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 4
+    },
+    "overseas_branch_others": {
+      "recall@1": 0.5,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.75,
+      "ndcg@10": 0.8155,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 2
+    },
+    "phone_banking": {
+      "recall@1": 1.0,
+      "recall@3": 1.0,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 1.0,
+      "ndcg@10": 1.0,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 1
+    },
+    "retirement_pension": {
+      "recall@1": 0.7143,
+      "recall@3": 0.8571,
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "mrr": 0.8143,
+      "ndcg@10": 0.8597,
+      "full_recall@10": 1.0,
+      "precision@5": 0.2,
+      "n": 7
+    },
+    "trust": {
+      "recall@1": 0.5,
+      "recall@3": 0.6667,
+      "recall@5": 0.6667,
+      "recall@10": 1.0,
+      "mrr": 0.5949,
+      "ndcg@10": 0.6979,
+      "full_recall@10": 1.0,
+      "precision@5": 0.1667,
+      "n": 6
+    }
+  },
+  "failure_analysis": {
+    "top5": 87,
+    "rank_6_20": 4,
+    "beyond_20": 5
+  }
+}

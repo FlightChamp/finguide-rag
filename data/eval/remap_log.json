@@ -2,8 +2,10 @@
   "old_chunks": "C:\\Programming\\MyProject\\financial_rag_project\\data\\interim\\chunks.jsonl",
   "new_chunks": "data\\interim\\chunks_structural.jsonl",
   "min_similarity": 0.25,
+  "max_targets": 3,
   "stats": {
     "mapped": 93,
+    "expanded": 62,
     "failed": 0,
     "unchanged": 78
   },
@@ -27,10 +29,12 @@
         "hana_terms_deposit_002_c007"
       ],
       "new": [
-        "hana_terms_deposit_002_c009"
+        "hana_terms_deposit_002_c009",
+        "hana_terms_deposit_002_c010"
       ],
       "sims": [
-        0.8235294117647058
+        0.8235294117647058,
+        0.4539877300613497
       ]
     },
     {
@@ -96,10 +100,14 @@
         "hana_desc_retirement_pension_003_c039"
       ],
       "new": [
-        "hana_desc_retirement_pension_003_c021"
+        "hana_desc_retirement_pension_003_c044",
+        "hana_desc_retirement_pension_003_c021",
+        "hana_desc_retirement_pension_003_c043"
       ],
       "sims": [
-        0.6923076923076923
+        0.6923076923076923,
+        0.6923076923076923,
+        0.6280193236714976
       ]
     },
     {
@@ -125,14 +133,21 @@
       ],
       "new": [
         "hana_terms_loan_011_c056",
+        "hana_terms_loan_011_c055",
         "hana_terms_loan_011_c057",
         "hana_terms_loan_011_c058",
+        "hana_terms_loan_011_c047",
         "hana_terms_loan_011_c020"
       ],
       "sims": [
         0.9013605442176871,
+        0.5,
         0.7440273037542662,
+        0.40955631399317405,
         0.7607655502392344,
+        0.6014234875444839,
+        1.0,
+        1.0,
         1.0,
         1.0
       ]
@@ -147,16 +162,31 @@
         "hana_desc_loan_002_c004"
       ],
       "new": [
+        "hana_desc_loan_002_c017",
         "hana_desc_loan_002_c003",
+        "hana_desc_loan_002_c018",
+        "hana_desc_loan_002_c020",
         "hana_desc_loan_002_c006",
+        "hana_desc_loan_002_c019",
+        "hana_desc_loan_002_c005",
         "hana_desc_loan_002_c004"
       ],
       "sims": [
         1.0,
+        1.0,
+        0.6470588235294118,
         0.6992481203007519,
         0.6992481203007519,
+        0.6363636363636364,
+        0.6992481203007519,
+        0.6992481203007519,
+        0.6363636363636364,
         0.6226415094339622,
-        0.6226415094339622
+        0.6226415094339622,
+        0.6098484848484849,
+        0.6226415094339622,
+        0.6226415094339622,
+        0.6098484848484849
       ]
     },
     {
@@ -177,10 +207,14 @@
         "hana_desc_retirement_pension_007_c008"
       ],
       "new": [
-        "hana_desc_retirement_pension_007_c009"
+        "hana_desc_retirement_pension_007_c031",
+        "hana_desc_retirement_pension_007_c009",
+        "hana_desc_retirement_pension_007_c032"
       ],
       "sims": [
-        0.6642335766423357
+        0.6642335766423357,
+        0.6642335766423357,
+        0.6167883211678832
       ]
     },
     {
@@ -189,10 +223,14 @@
         "hana_desc_retirement_pension_008_c022"
       ],
       "new": [
-        "hana_desc_retirement_pension_008_c002"
+        "hana_desc_retirement_pension_008_c002",
+        "hana_desc_retirement_pension_008_c024",
+        "hana_desc_retirement_pension_008_c023"
       ],
       "sims": [
-        0.7416107382550335
+        0.7416107382550335,
+        0.7046979865771812,
+        0.5771812080536913
       ]
     },
     {
@@ -225,10 +263,12 @@
         "hana_terms_loan_024_c007"
       ],
       "new": [
-        "hana_terms_loan_024_c008"
+        "hana_terms_loan_024_c008",
+        "hana_terms_loan_024_c009"
       ],
       "sims": [
-        0.8680851063829788
+        0.8680851063829788,
+        0.5404255319148936
       ]
     },
     {
@@ -239,10 +279,12 @@
       ],
       "new": [
         "hana_desc_trust_013_c009",
+        "hana_desc_trust_013_c010",
         "hana_desc_trust_013_c012"
       ],
       "sims": [
         0.8773946360153256,
+        0.5333333333333333,
         1.0
       ]
     },
@@ -255,13 +297,17 @@
         "hana_desc_loan_007_c048"
       ],
       "new": [
+        "hana_desc_loan_007_c049",
         "hana_desc_loan_007_c003",
-        "hana_desc_loan_007_c002"
+        "hana_desc_loan_007_c002",
+        "hana_desc_loan_007_c048"
       ],
       "sims": [
         0.9704918032786886,
+        0.9704918032786886,
         1.0,
         1.0,
+        0.9860627177700348,
         0.9860627177700348
       ]
     },
@@ -343,7 +389,8 @@
       ],
       "sims": [
         0.9176470588235294,
-        0.754863813229572
+        0.754863813229572,
+        0.5562913907284768
       ]
     },
     {
@@ -355,11 +402,13 @@
       ],
       "new": [
         "hana_desc_trust_005_c015",
+        "hana_desc_trust_005_c014",
         "hana_desc_trust_005_c001",
         "hana_desc_trust_003_c001"
       ],
       "sims": [
         0.8254437869822485,
+        0.4230769230769231,
         0.8908554572271387,
         0.7861271676300579
       ]
@@ -370,10 +419,12 @@
         "hana_terms_digital_banking_001_c029"
       ],
       "new": [
-        "hana_terms_digital_banking_001_c035"
+        "hana_terms_digital_banking_001_c035",
+        "hana_terms_digital_banking_001_c034"
       ],
       "sims": [
-        0.6740088105726872
+        0.6740088105726872,
+        0.5072992700729927
       ]
     },
     {
@@ -395,10 +446,14 @@
         "hana_terms_deposit_002_c001"
       ],
       "new": [
+        "hana_terms_deposit_002_c004",
         "hana_terms_deposit_002_c003",
+        "hana_terms_deposit_002_c002",
         "hana_terms_deposit_002_c001"
       ],
       "sims": [
+        1.0,
+        1.0,
         1.0,
         1.0
       ]
@@ -425,14 +480,17 @@
       ],
       "new": [
         "hana_desc_loan_001_c013",
-        "hana_terms_loan_012_c002",
         "hana_desc_loan_001_c012",
+        "hana_terms_loan_012_c002",
+        "hana_desc_loan_001_c011",
         "hana_terms_loan_014_c001"
       ],
       "sims": [
         0.8609022556390977,
+        0.47368421052631576,
         0.8869257950530035,
         0.8793650793650793,
+        0.7746478873239436,
         1.0
       ]
     },
@@ -507,11 +565,14 @@
       ],
       "new": [
         "hana_desc_fx_006_c004",
+        "hana_desc_fx_006_c005",
         "hana_desc_fx_006_c003"
       ],
       "sims": [
         0.6470588235294118,
-        1.0
+        0.6147540983606558,
+        1.0,
+        0.623574144486692
       ]
     },
     {
@@ -520,10 +581,12 @@
         "hana_desc_trust_013_c022"
       ],
       "new": [
-        "hana_desc_trust_013_c025"
+        "hana_desc_trust_013_c025",
+        "hana_desc_trust_013_c024"
       ],
       "sims": [
-        1.0
+        1.0,
+        0.9245283018867925
       ]
     },
     {
@@ -532,10 +595,12 @@
         "hana_desc_trust_013_c027"
       ],
       "new": [
-        "hana_desc_trust_013_c030"
+        "hana_desc_trust_013_c030",
+        "hana_desc_trust_013_c031"
       ],
       "sims": [
-        1.0
+        1.0,
+        0.8925619834710744
       ]
     },
     {
@@ -586,6 +651,7 @@
       ],
       "sims": [
         0.7638376383763837,
+        0.5276752767527675,
         1.0
       ]
     },
@@ -601,7 +667,8 @@
       ],
       "sims": [
         0.8268398268398268,
-        1.0
+        1.0,
+        0.6618181818181819
       ]
     },
     {
@@ -614,16 +681,29 @@
         "hana_desc_loan_008_c041"
       ],
       "new": [
+        "hana_desc_loan_008_c067",
         "hana_desc_loan_008_c011",
+        "hana_desc_loan_008_c066",
+        "hana_desc_loan_008_c068",
         "hana_desc_loan_008_c012",
         "hana_desc_loan_008_c013",
+        "hana_desc_loan_008_c069",
+        "hana_desc_loan_008_c101",
         "hana_desc_loan_008_c044"
       ],
       "sims": [
         1.0,
+        1.0,
+        0.9171270718232044,
+        0.9014084507042254,
         0.9014084507042254,
         1.0,
+        1.0,
+        0.6161971830985915,
         0.6857142857142857,
+        0.6832740213523132,
+        0.6267605633802817,
+        0.8606271777003485,
         0.8606271777003485
       ]
     },
@@ -635,11 +715,15 @@
       ],
       "new": [
         "hana_terms_loan_018_c022",
-        "hana_terms_loan_018_c019"
+        "hana_terms_loan_018_c027",
+        "hana_terms_loan_018_c019",
+        "hana_terms_loan_018_c020"
       ],
       "sims": [
         0.8858024691358025,
-        0.9296482412060302
+        0.4639175257731959,
+        0.9296482412060302,
+        0.5092936802973977
       ]
     },
     {
@@ -708,10 +792,12 @@
         "hana_desc_trust_006_c004"
       ],
       "new": [
-        "hana_desc_trust_006_c003"
+        "hana_desc_trust_006_c003",
+        "hana_desc_trust_006_c004"
       ],
       "sims": [
-        1.0
+        1.0,
+        0.673469387755102
       ]
     },
     {
@@ -747,10 +833,14 @@
         "hana_desc_loan_008_c073"
       ],
       "new": [
-        "hana_desc_loan_008_c022"
+        "hana_desc_loan_008_c078",
+        "hana_desc_loan_008_c022",
+        "hana_desc_loan_008_c077"
       ],
       "sims": [
-        1.0
+        1.0,
+        1.0,
+        0.84
       ]
     },
     {
@@ -906,10 +996,12 @@
         "hana_terms_deposit_001_c004"
       ],
       "new": [
-        "hana_terms_deposit_001_c005"
+        "hana_terms_deposit_001_c005",
+        "hana_terms_deposit_001_c004"
       ],
       "sims": [
-        1.0
+        1.0,
+        0.5161290322580645
       ]
     },
     {
@@ -924,7 +1016,8 @@
       ],
       "sims": [
         0.8376288659793815,
-        0.6268221574344023
+        0.6268221574344023,
+        0.49854227405247814
       ]
     },
     {
@@ -933,10 +1026,14 @@
         "hana_desc_retirement_pension_005_c009"
       ],
       "new": [
-        "hana_desc_retirement_pension_005_c009"
+        "hana_desc_retirement_pension_005_c030",
+        "hana_desc_retirement_pension_005_c009",
+        "hana_desc_retirement_pension_005_c029"
       ],
       "sims": [
-        1.0
+        1.0,
+        1.0,
+        0.5309090909090909
       ]
     },
     {
@@ -959,11 +1056,15 @@
       ],
       "new": [
         "hana_terms_digital_banking_002_c013",
-        "hana_terms_digital_banking_002_c014"
+        "hana_terms_digital_banking_002_c014",
+        "hana_terms_digital_banking_002_c015"
       ],
       "sims": [
         0.665,
-        0.6557377049180327
+        0.6475409836065574,
+        0.6557377049180327,
+        0.5310344827586206,
+        0.42
       ]
     },
     {
@@ -1005,10 +1106,12 @@
         "hana_desc_loan_009_c053"
       ],
       "new": [
-        "hana_desc_loan_009_c056"
+        "hana_desc_loan_009_c056",
+        "hana_desc_loan_009_c055"
       ],
       "sims": [
-        0.7627737226277372
+        0.7627737226277372,
+        0.5296052631578947
       ]
     },
     {
@@ -1029,10 +1132,14 @@
         "hana_terms_loan_011_c028"
       ],
       "new": [
-        "hana_terms_loan_011_c011"
+        "hana_terms_loan_011_c038",
+        "hana_terms_loan_011_c011",
+        "hana_terms_loan_011_c039"
       ],
       "sims": [
-        0.7890295358649789
+        0.7890295358649789,
+        0.7890295358649789,
+        0.73125
       ]
     },
     {
@@ -1043,11 +1150,16 @@
       ],
       "new": [
         "hana_terms_loan_016_c028",
-        "hana_terms_loan_016_c027"
+        "hana_terms_loan_016_c029",
+        "hana_terms_loan_016_c027",
+        "hana_terms_loan_016_c026"
       ],
       "sims": [
         1.0,
-        0.7617021276595745
+        0.7845303867403315,
+        0.5842696629213483,
+        0.7617021276595745,
+        0.6468085106382979
       ]
     },
     {
@@ -1068,10 +1180,14 @@
         "hana_terms_loan_007_c041"
       ],
       "new": [
-        "hana_terms_loan_007_c061"
+        "hana_terms_loan_007_c062",
+        "hana_terms_loan_007_c061",
+        "hana_terms_loan_007_c064"
       ],
       "sims": [
-        1.0
+        1.0,
+        1.0,
+        0.9692307692307692
       ]
     },
     {
@@ -1107,10 +1223,14 @@
         "hana_terms_loan_014_c010"
       ],
       "new": [
-        "hana_terms_loan_014_c016"
+        "hana_terms_loan_014_c017",
+        "hana_terms_loan_014_c016",
+        "hana_terms_loan_014_c015"
       ],
       "sims": [
-        1.0
+        1.0,
+        1.0,
+        0.5686274509803921
       ]
     },
     {
@@ -1119,10 +1239,14 @@
         "hana_terms_loan_018_c004"
       ],
       "new": [
-        "hana_terms_loan_018_c006"
+        "hana_terms_loan_018_c006",
+        "hana_terms_loan_018_c007",
+        "hana_terms_loan_018_c027"
       ],
       "sims": [
-        0.9754601226993865
+        0.9754601226993865,
+        0.6221498371335505,
+        0.6185567010309279
       ]
     },
     {
@@ -1188,9 +1312,11 @@
         "hana_desc_retirement_pension_007_c028"
       ],
       "new": [
+        "hana_desc_retirement_pension_007_c031",
         "hana_desc_retirement_pension_007_c009"
       ],
       "sims": [
+        0.8532423208191127,
         0.8532423208191127
       ]
     },
@@ -1200,10 +1326,12 @@
         "hana_terms_digital_banking_002_c006"
       ],
       "new": [
-        "hana_terms_digital_banking_002_c008"
+        "hana_terms_digital_banking_002_c008",
+        "hana_terms_digital_banking_002_c007"
       ],
       "sims": [
-        0.579185520361991
+        0.579185520361991,
+        0.5512820512820513
       ]
     },
     {
@@ -1215,13 +1343,19 @@
       ],
       "new": [
         "hana_desc_retirement_pension_001_c027",
+        "hana_desc_retirement_pension_001_c026",
         "hana_desc_retirement_pension_001_c025",
-        "hana_desc_retirement_pension_001_c024"
+        "hana_desc_retirement_pension_001_c024",
+        "hana_desc_retirement_pension_001_c023"
       ],
       "sims": [
         0.7594501718213058,
+        0.5643939393939394,
         1.0,
-        1.0
+        0.8185483870967742,
+        0.782051282051282,
+        1.0,
+        0.9018867924528302
       ]
     },
     {
@@ -1246,12 +1380,14 @@
       ],
       "new": [
         "hana_terms_loan_007_c074",
+        "hana_terms_loan_007_c073",
         "hana_terms_loan_018_c041",
         "hana_terms_loan_011_c086",
         "hana_terms_loan_017_c034"
       ],
       "sims": [
         0.7448275862068966,
+        0.56,
         1.0,
         1.0,
         1.0
@@ -1305,10 +1441,12 @@
         "hana_terms_deposit_001_c007"
       ],
       "new": [
-        "hana_terms_deposit_001_c011"
+        "hana_terms_deposit_001_c011",
+        "hana_terms_deposit_001_c010"
       ],
       "sims": [
-        1.0
+        1.0,
+        0.8413461538461539
       ]
     },
     {
@@ -1334,11 +1472,14 @@
       ],
       "new": [
         "hana_terms_deposit_001_c002",
+        "hana_terms_deposit_001_c003",
         "hana_terms_deposit_001_c001"
       ],
       "sims": [
         0.6843853820598007,
-        1.0
+        0.6358381502890174,
+        1.0,
+        0.6204081632653061
       ]
     },
     {
@@ -1359,10 +1500,14 @@
         "hana_desc_retirement_pension_002_c021"
       ],
       "new": [
-        "hana_desc_retirement_pension_002_c003"
+        "hana_desc_retirement_pension_002_c024",
+        "hana_desc_retirement_pension_002_c003",
+        "hana_desc_retirement_pension_002_c002"
       ],
       "sims": [
-        1.0
+        1.0,
+        1.0,
+        0.9025157232704403
       ]
     },
     {

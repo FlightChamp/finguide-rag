@@ -67,15 +67,25 @@ KS = (1, 3, 5, 10)
 # ------------------------------------------------------------------
 
 
-def load_eval_set() -> list[dict]:
-    if not EVAL_CSV.exists():
-        sys.exit(f"{EVAL_CSV} 없음. 먼저 16_finalize_eval.py 를 실행하세요.")
-    with EVAL_CSV.open(encoding="utf-8-sig", newline="") as f:
+def load_eval_set(path: Path) -> list[dict]:
+    if not path.exists():
+        sys.exit(f"{path} 없음. 먼저 16_finalize_eval.py 를 실행하세요.")
+    with path.open(encoding="utf-8-sig", newline="") as f:
         return list(csv.DictReader(f))
 
 
-def run_search(rows: list[dict], model_key: str) -> list[QueryResult]:
-    index_dir = INDEX_ROOT / model_key
+def to_doc_id(chunk_id: str) -> str:
+    """청크 ID 에서 문서 ID 를 뽑는다.
+
+    청크 ID 규칙: {doc_id}_c{번호}
+        hana_terms_deposit_002_c007 -> hana_terms_deposit_002
+    """
+    return chunk_id.rsplit("_c", 1)[0] if "_c" in chunk_id else chunk_id
+
+
+def run_search(rows: list[dict], model_key: str, index_name: str,
+               level: str = "chunk") -> list[QueryResult]:
+    index_dir = INDEX_ROOT / index_name
     if not (index_dir / "config.json").exists():
         sys.exit(
             f"{index_dir} 에 인덱스가 없습니다.\n"
@@ -94,15 +104,42 @@ def run_search(rows: list[dict], model_key: str) -> list[QueryResult]:
     results: list[QueryResult] = []
     for row, vec in zip(rows, vectors):
         hits = store.search(vec, top_k=TOP_K)
+        relevant = {c.strip() for c in row["relevant_chunk_ids"].split("|") if c.strip()}
+        retrieved = [h.chunk_id for h in hits]
+        scores = [h.score for h in hits]
+
+        if level == "doc":
+            # 문서 단위 평가.
+            #
+            # 청크 ID 는 청킹 전략에 따라 바뀌지만 문서 ID 는 불변이다.
+            # 청킹을 바꾸면 평가셋 라벨을 재매핑해야 하는데, 그 과정에서
+            # 라벨 수가 달라지면 "정답이 많은 쪽이 유리한" 편향이 생긴다.
+            # 실제로 재매핑 후 라벨이 171개에서 225개로 늘어난 사례가 있었다.
+            #
+            # 문서 단위로 재면 이 편향이 사라져 전략 간 공정 비교가 가능하다.
+            relevant = {to_doc_id(c) for c in relevant}
+            # 중복 문서를 제거하되 순위는 유지한다
+            seen: set[str] = set()
+            deduped: list[str] = []
+            deduped_scores: list[float] = []
+            for cid, sc in zip(retrieved, scores):
+                did = to_doc_id(cid)
+                if did in seen:
+                    continue
+                seen.add(did)
+                deduped.append(did)
+                deduped_scores.append(sc)
+            retrieved, scores = deduped, deduped_scores
+
         results.append(QueryResult(
             query_id=row["query_id"],
             question=row["question"],
             difficulty=row["difficulty"],
             doc_type=row["doc_type"],
             category=row["category"],
-            relevant={c.strip() for c in row["relevant_chunk_ids"].split("|") if c.strip()},
-            retrieved=[h.chunk_id for h in hits],
-            scores=[h.score for h in hits],
+            relevant=relevant,
+            retrieved=retrieved,
+            scores=scores,
         ))
     return results
 
@@ -288,16 +325,29 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="e5-small", choices=list(MODELS))
     ap.add_argument("--tag", default="", help="리포트 제목에 붙일 이름표")
+    ap.add_argument("--index", default=None,
+                    help="인덱스 디렉토리 이름 (기본: 모델명)")
+    ap.add_argument("--eval", default=None,
+                    help="평가셋 CSV 경로 (청킹을 바꿨으면 재매핑본을 지정)")
+    ap.add_argument("--level", default="chunk", choices=["chunk", "doc"],
+                    help="평가 단위. doc 은 청킹 전략 간 공정 비교에 쓴다")
     args = ap.parse_args()
 
     print("=" * 68)
     print("검색 성능 평가")
     print("=" * 68)
 
-    rows = load_eval_set()
-    print(f"  평가셋 {len(rows)}건")
+    eval_path = Path(args.eval) if args.eval else EVAL_CSV
+    index_name = args.index or args.model
 
-    results = run_search(rows, args.model)
+    rows = load_eval_set(eval_path)
+    print(f"  평가셋 {len(rows)}건 ({eval_path.name})")
+    print(f"  인덱스 {index_name}")
+
+    if args.level == "doc":
+        print("  평가 단위: 문서 (청킹 전략 간 공정 비교용)")
+
+    results = run_search(rows, args.model, index_name, args.level)
 
     overall = aggregate(results, KS)
     by_diff = group_by(results, "difficulty", KS)
@@ -335,6 +385,8 @@ def main() -> None:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     stamp = date.today().isoformat()
     name = args.tag or args.model
+    if args.level == "doc":
+        name = f"{name}_doclevel"
 
     report_md = REPORT_DIR / f"eval_{name}_{stamp}.md"
     report_json = REPORT_DIR / f"eval_{name}_{stamp}.json"
@@ -346,6 +398,9 @@ def main() -> None:
         "date": stamp,
         "tag": args.tag or args.model,
         "model": args.model,
+        "index": index_name,
+        "eval_set": eval_path.name,
+        "level": args.level,
         "retrieval": "dense",
         "n_queries": len(results),
         "overall": overall,

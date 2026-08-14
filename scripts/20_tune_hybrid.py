@@ -64,7 +64,7 @@ from finguide_rag.retrieval import (  # noqa: E402
 
 EVAL_CSV = PROJECT_ROOT / "data" / "eval" / "retrieval_eval.csv"
 FAISS_ROOT = PROJECT_ROOT / "data" / "indexes" / "faiss"
-BM25_DIR = PROJECT_ROOT / "data" / "indexes" / "bm25"
+BM25_ROOT = PROJECT_ROOT / "data" / "indexes" / "bm25"
 REPORT_DIR = PROJECT_ROOT / "reports"
 
 TOP_K = 20
@@ -74,17 +74,23 @@ KS = (1, 3, 5, 10)
 # ------------------------------------------------------------------
 
 
-def load_eval_set() -> list[dict]:
-    if not EVAL_CSV.exists():
-        sys.exit(f"{EVAL_CSV} 없음. 먼저 16_finalize_eval.py 를 실행하세요.")
-    with EVAL_CSV.open(encoding="utf-8-sig", newline="") as f:
+def load_eval_set(path: Path) -> list[dict]:
+    if not path.exists():
+        sys.exit(f"{path} 없음. 먼저 16_finalize_eval.py 를 실행하세요.")
+    with path.open(encoding="utf-8-sig", newline="") as f:
         return list(csv.DictReader(f))
+
+
+def to_doc_id(chunk_id: str) -> str:
+    """청크 ID 에서 문서 ID 를 뽑는다. {doc_id}_c{번호} 규칙."""
+    return chunk_id.rsplit("_c", 1)[0] if "_c" in chunk_id else chunk_id
 
 
 def evaluate_config(
     rows: list[dict],
     retriever: HybridRetriever,
     label: str,
+    level: str = "chunk",
 ) -> tuple[dict, list[QueryResult]]:
     """설정 하나로 전체 평가셋을 검색하고 지표를 계산한다."""
     results: list[QueryResult] = []
@@ -92,15 +98,32 @@ def evaluate_config(
     t0 = time.perf_counter()
     for row in rows:
         hits = retriever.search(row["question"], top_k=TOP_K)
+        relevant = {c.strip() for c in row["relevant_chunk_ids"].split("|") if c.strip()}
+        retrieved = [h.chunk_id for h in hits]
+        scores = [h.score for h in hits]
+
+        if level == "doc":
+            # 청킹 전략이 달라도 문서 ID 는 불변이므로 공정 비교가 가능하다
+            relevant = {to_doc_id(c) for c in relevant}
+            seen: set[str] = set()
+            dd, ds = [], []
+            for cid, sc in zip(retrieved, scores):
+                did = to_doc_id(cid)
+                if did not in seen:
+                    seen.add(did)
+                    dd.append(did)
+                    ds.append(sc)
+            retrieved, scores = dd, ds
+
         results.append(QueryResult(
             query_id=row["query_id"],
             question=row["question"],
             difficulty=row["difficulty"],
             doc_type=row["doc_type"],
             category=row["category"],
-            relevant={c.strip() for c in row["relevant_chunk_ids"].split("|") if c.strip()},
-            retrieved=[h.chunk_id for h in hits],
-            scores=[h.score for h in hits],
+            relevant=relevant,
+            retrieved=retrieved,
+            scores=scores,
         ))
     elapsed = time.perf_counter() - t0
 
@@ -297,24 +320,32 @@ def main() -> None:
     ap.add_argument("--quick", action="store_true", help="설정을 최소로 줄여 빠르게 확인")
     ap.add_argument("--candidate-k", type=int, default=100,
                     help="각 검색기에서 가져올 후보 수")
+    ap.add_argument("--index", default=None, help="dense 인덱스 이름 (기본: 모델명)")
+    ap.add_argument("--bm25", default="default", help="BM25 인덱스 이름")
+    ap.add_argument("--eval", default=None, help="평가셋 CSV 경로")
+    ap.add_argument("--tag", default="", help="리포트 파일명에 붙일 이름표")
+    ap.add_argument("--level", default="chunk", choices=["chunk", "doc"],
+                    help="평가 단위. doc 은 청킹 전략 간 공정 비교에 쓴다")
     args = ap.parse_args()
 
     print("=" * 72)
     print("하이브리드 검색 파라미터 실험")
     print("=" * 72)
 
-    rows = load_eval_set()
-    print(f"  평가셋 {len(rows)}건")
+    eval_path = Path(args.eval) if args.eval else EVAL_CSV
+    rows = load_eval_set(eval_path)
+    print(f"  평가셋 {len(rows)}건 ({eval_path.name})")
 
     # --- 인덱스 로드 ---
-    faiss_dir = FAISS_ROOT / args.model
+    faiss_dir = FAISS_ROOT / (args.index or args.model)
     if not (faiss_dir / "config.json").exists():
         sys.exit(f"{faiss_dir} 에 인덱스가 없습니다. 11_build_index.py 를 먼저 실행하세요.")
-    if not (BM25_DIR / "bm25.pkl").exists():
-        sys.exit(f"{BM25_DIR} 에 BM25 인덱스가 없습니다. 19_build_bm25.py 를 먼저 실행하세요.")
+    bm25_dir = BM25_ROOT / args.bm25
+    if not (bm25_dir / "bm25.pkl").exists():
+        sys.exit(f"{bm25_dir} 에 BM25 인덱스가 없습니다. 19_build_bm25.py 를 먼저 실행하세요.")
 
     faiss_store = FaissStore.load(faiss_dir)
-    bm25_store = BM25Store.load(BM25_DIR)
+    bm25_store = BM25Store.load(bm25_dir)
     embedder = Embedder(args.model)
 
     print(f"  dense  인덱스 {faiss_store.size:,}개")
@@ -322,6 +353,9 @@ def main() -> None:
 
     if faiss_store.size != bm25_store.size:
         print("  !! 두 인덱스의 청크 수가 다릅니다. 한쪽이 오래된 것일 수 있습니다.")
+
+    if args.level == "doc":
+        print("  평가 단위: 문서 (청킹 전략 간 공정 비교용)")
 
     configs = build_configs(args)
     print(f"  설정 {len(configs)}가지 실험\n")
@@ -335,7 +369,7 @@ def main() -> None:
             normalize=norm,
         )
         print(f"  [{label}] 실행 중...", end=" ", flush=True)
-        metrics, results = evaluate_config(rows, retriever, label)
+        metrics, results = evaluate_config(rows, retriever, label, args.level)
         print(f"R@5={metrics['recall@5']:.3f}  MRR={metrics['mrr']:.3f}  "
               f"({metrics['latency_ms']:.0f}ms/건)")
 
@@ -386,14 +420,21 @@ def main() -> None:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     stamp = date.today().isoformat()
 
-    report_md = REPORT_DIR / f"hybrid_tuning_{stamp}.md"
-    report_json = REPORT_DIR / f"hybrid_tuning_{stamp}.json"
+    suffix = f"_{args.tag}" if args.tag else ""
+    if args.level == "doc":
+        suffix += "_doclevel"
+    report_md = REPORT_DIR / f"hybrid_tuning{suffix}_{stamp}.md"
+    report_json = REPORT_DIR / f"hybrid_tuning{suffix}_{stamp}.json"
 
     report_md.write_text(build_report(all_results, args.model), encoding="utf-8")
     report_json.write_text(
         json.dumps({
             "date": stamp,
             "model": args.model,
+            "index": args.index or args.model,
+            "bm25_index": args.bm25,
+            "eval_set": eval_path.name,
+            "level": args.level,
             "candidate_k": args.candidate_k,
             "results": all_results,
         }, ensure_ascii=False, indent=2),

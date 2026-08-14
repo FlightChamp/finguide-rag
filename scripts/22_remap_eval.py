@@ -17,9 +17,18 @@ Recall 이 0 에 가깝게 나오는데, 이것이 청킹 실패 때문인지 �
 
 매핑 방법
 --------
-기존 정답 청크의 본문을 새 청크들과 대조해, 텍스트가 가장 많이 겹치는
-청크를 새 정답으로 삼는다. 같은 문서 안에서만 후보를 찾으므로 오매핑
-위험이 낮다.
+기존 정답 청크의 본문을 새 청크들과 대조해, 텍스트가 겹치는 청크를 새
+정답으로 삼는다. 같은 문서 안에서만 후보를 찾으므로 오매핑 위험이 낮다.
+
+하나가 아니라 여럿을 인정하는 이유
+-------------------------------
+청킹 방식이 바뀌면 청크 크기가 달라진다. 기존 500자 청크가 새 청크
+두 개에 걸치는 일이 흔하다. 가장 겹치는 것 하나만 정답으로 두면
+검색이 나머지를 찾아왔을 때 오답으로 집계되어, 새 청킹 전략이
+부당하게 낮게 평가된다.
+
+따라서 임계값을 넘는 청크를 모두 인정하되, 최고 유사도의 절반에
+못 미치는 것은 부분 겹침으로 보고 제외한다.
 
 겹침 판정은 문자 3-gram 자카드 유사도를 쓴다. 형태소 분석보다 단순하지만
 "같은 원문을 다르게 자른 것"을 찾는 데는 충분하고, 경계가 조금 달라져도
@@ -94,6 +103,8 @@ def main() -> None:
     ap.add_argument("--eval", default=str(EVAL_CSV), help="평가셋 CSV 경로")
     ap.add_argument("--out", default=None, help="출력 경로 (기본: 평가셋 덮어쓰기)")
     ap.add_argument("--min-sim", type=float, default=MIN_SIMILARITY)
+    ap.add_argument("--max-targets", type=int, default=3,
+                    help="기존 청크 하나가 매핑될 수 있는 새 청크의 최대 개수")
     ap.add_argument("--dry-run", action="store_true", help="저장 없이 결과만 확인")
     args = ap.parse_args()
 
@@ -123,7 +134,7 @@ def main() -> None:
     print(f"  최소 유사도 {args.min_sim}")
     print()
 
-    stats = {"mapped": 0, "failed": 0, "unchanged": 0}
+    stats = {"mapped": 0, "expanded": 0, "failed": 0, "unchanged": 0}
     failures: list[tuple[str, str, float]] = []
     detail: list[dict] = []
 
@@ -150,21 +161,53 @@ def main() -> None:
                 stats["unchanged"] += 1
                 continue
 
-            # 같은 문서의 새 청크 중 가장 많이 겹치는 것을 찾는다
+            # 같은 문서의 새 청크 중 겹치는 것을 모두 찾는다.
+            #
+            # 하나만 고르면 안 되는 이유
+            # -------------------------
+            # 청킹 방식이 바뀌면 청크 크기가 달라진다. 기존 500자 청크가
+            # 새 청크 두 개에 걸치는 일이 흔하다.
+            #
+            #   기존 c007 (500자) = 제6조 후반 + 제7조 전반
+            #   신규 c009(제6조), c010(제7조)
+            #
+            # 가장 겹치는 것 하나만 정답으로 두면, 검색이 나머지를 찾아왔을 때
+            # 오답으로 집계된다. 새 청킹 전략이 부당하게 낮게 평가된다.
+            #
+            # 따라서 임계값을 넘는 모든 청크를 정답으로 인정하되,
+            # 최고 유사도 대비 지나치게 낮은 것은 제외해 오염을 막는다.
             old_g = ngrams(old["text"])
-            best_id, best_sim = "", 0.0
+            scored: list[tuple[float, str]] = []
             for cand in new_by_doc.get(old["doc_id"], []):
                 s = similarity(old_g, new_grams[cand["chunk_id"]])
-                if s > best_sim:
-                    best_id, best_sim = cand["chunk_id"], s
+                if s >= args.min_sim:
+                    scored.append((s, cand["chunk_id"]))
 
-            if best_sim >= args.min_sim:
-                new_ids.append(best_id)
-                sims.append(best_sim)
-                stats["mapped"] += 1
-            else:
-                failures.append((row["query_id"], old_id, best_sim))
+            if not scored:
+                # 최고 유사도를 실패 로그에 남긴다
+                best = max(
+                    (similarity(old_g, new_grams[c["chunk_id"]])
+                     for c in new_by_doc.get(old["doc_id"], [])),
+                    default=0.0,
+                )
+                failures.append((row["query_id"], old_id, best))
                 stats["failed"] += 1
+                continue
+
+            scored.sort(reverse=True)
+            top_sim = scored[0][0]
+
+            # 최고 유사도의 절반에 못 미치는 것은 부분 겹침으로 보고 제외한다.
+            # 이 조건이 없으면 스치듯 겹친 청크까지 정답이 되어 지표가 부풀려진다.
+            accepted = [(s, cid) for s, cid in scored[:args.max_targets]
+                        if s >= top_sim * 0.5]
+
+            for s, cid in accepted:
+                new_ids.append(cid)
+                sims.append(s)
+            stats["mapped"] += 1
+            if len(accepted) > 1:
+                stats["expanded"] += 1
 
         # 중복 제거하되 순서는 유지
         seen: set[str] = set()
@@ -192,11 +235,14 @@ def main() -> None:
 
     # --- 요약 ---
     total = stats["mapped"] + stats["failed"] + stats["unchanged"]
+    n_labels = sum(len(d["new"]) for d in detail)
     print("  [매핑 결과]")
-    print(f"    변경 없음 : {stats['unchanged']:>4}개")
-    print(f"    재매핑    : {stats['mapped']:>4}개")
-    print(f"    실패      : {stats['failed']:>4}개")
-    print(f"    합계      : {total:>4}개")
+    print(f"    변경 없음     : {stats['unchanged']:>4}개")
+    print(f"    재매핑        : {stats['mapped']:>4}개")
+    print(f"      복수로 확장 : {stats['expanded']:>4}개 (기존 청크가 새 청크 여럿에 걸침)")
+    print(f"    실패          : {stats['failed']:>4}개")
+    print(f"    원본 라벨 수  : {total:>4}개")
+    print(f"    최종 라벨 수  : {n_labels:>4}개  (질의당 평균 {n_labels / len(rows):.1f}개)")
 
     # 정답이 하나도 남지 않은 질의는 평가에서 무의미해진다
     empty = [d for d in detail if not d["new"]]
@@ -242,6 +288,7 @@ def main() -> None:
         "old_chunks": args.old,
         "new_chunks": args.new,
         "min_similarity": args.min_sim,
+        "max_targets": args.max_targets,
         "stats": stats,
         "empty_queries": [d["query_id"] for d in empty],
         "mappings": detail,

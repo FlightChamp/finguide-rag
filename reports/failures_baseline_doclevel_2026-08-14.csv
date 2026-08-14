@@ -1,0 +1,10 @@
+﻿query_id,question,difficulty,doc_type,category,hit_rank,failure_type,relevant_chunk_ids,top5_retrieved,top1_score,score_gap
+q002,하나은행 입출금 예금 이율은 바뀌면 언제부터 적용돼요?,medium,약관,deposit,미발견,20위 밖,hana_terms_deposit_002,hana_terms_loan_011|hana_desc_deposit_006|hana_terms_loan_017|hana_terms_loan_002|hana_desc_fx_005,0.8981,0.0069
+q013,하나은행 기업 인터넷뱅킹에서 급여 이체는 언제까지 할 수 있나요?,medium,설명서,digital_banking,미발견,20위 밖,hana_desc_digital_banking_001,hana_terms_loan_002|hana_terms_loan_001|hana_faq_159|hana_faq_104|hana_faq_083,0.8981,0.0016
+q034,하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,easy,설명서,trust,8,순위 낮음,hana_desc_trust_006,hana_desc_trust_011|hana_desc_trust_012|hana_desc_trust_008|hana_desc_trust_010|hana_desc_trust_009,0.9106,0.0011
+q037,해외에서 돈 받을 때 해외 사람이 우리 은행에 보내려면 뭘 알려줘야 해?,medium,FAQ,fx,8,순위 낮음,hana_faq_120,hana_faq_108|hana_faq_198|hana_faq_117|hana_faq_105|hana_terms_digital_banking_001,0.8887,0.0122
+q051,통장 없이 거래할 때 도장이나 서명은 꼭 제출해야 하나요?,hard,약관,deposit,7,순위 낮음,hana_terms_deposit_002,hana_terms_loan_018|hana_terms_loan_007|hana_terms_loan_017|hana_desc_loan_003|hana_terms_loan_011,0.8723,0.004
+q053,최고위험 밸런스 포트폴리오 어떤 사람한테 맞아요?,medium,설명서,trust,9,순위 낮음,hana_desc_trust_006,hana_desc_trust_001|hana_desc_trust_012|hana_desc_trust_005|hana_desc_trust_011|hana_desc_trust_010,0.8844,0.0005
+q075,대출받은 뒤에 원금은 안 내고 이자만 낼 수 있는 기간이 있나요?,hard,설명서,loan,미발견,20위 밖,hana_desc_loan_009,hana_desc_loan_008|hana_desc_loan_006|hana_terms_loan_011|hana_terms_loan_016|hana_desc_loan_007,0.9011,0.0018
+q085,기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,medium,약관,loan,미발견,20위 밖,hana_terms_loan_018,hana_desc_loan_003|hana_desc_loan_007|hana_terms_loan_024|hana_desc_loan_004,0.9011,0.0087
+q108,대출금을 제때 못 갚으면 집 팔고 남은 돈 더 내야 하나요?,hard,설명서,loan,미발견,20위 밖,hana_desc_loan_001,hana_terms_loan_016|hana_terms_loan_007|hana_terms_loan_019|hana_terms_loan_015|hana_terms_loan_014,0.878,0.0018
