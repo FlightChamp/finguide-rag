@@ -20,11 +20,22 @@ multilingual-e5-small의 최대 입력은 512토큰이다. 한국어는 대략 1
 data/interim/chunks.jsonl        전체 청크
 data/interim/chunk_stats.csv     문서별 청킹 통계
 
+청킹 전략
+--------
+기본은 구조별 청킹(조항/항/번호 단위)이다. 길이 기반과 비교 실험한 결과
+문서 단위 Recall@5 가 0.958 -> 0.979 로, 약관은 0.913 -> 0.957 로 개선됐다.
+
+흥미로운 점은 dense 단독 성능은 오히려 떨어졌다는 것이다(약관 0.870 ->
+0.739). 청크가 짧아져(455자 -> 387자) 문맥이 줄었기 때문이다. 대신 조항
+하나에 주제어가 집중되어 BM25 성능이 올랐고, 두 방식의 실패 지점이
+서로 달라져 결합 효율이 크게 높아졌다.
+
 사용법
 -----
-    python scripts/09_build_chunks.py
-    python scripts/09_build_chunks.py --no-tokens    # 토큰 측정 생략 (빠름)
-    python scripts/09_build_chunks.py --target 400   # 청크 크기 조정
+    python scripts/09_build_chunks.py               # 구조별 (기본)
+    python scripts/09_build_chunks.py --flat        # 길이 기반 (비교용)
+    python scripts/09_build_chunks.py --no-tokens   # 토큰 측정 생략
+    python scripts/09_build_chunks.py --target 400  # 청크 크기 조정
 """
 
 from __future__ import annotations
@@ -44,7 +55,7 @@ from finguide_rag.schema import Chunk, Document, DocType, Structure  # noqa: E40
 
 DOCS_PATH = PROJECT_ROOT / "data" / "interim" / "parsed" / "documents.jsonl"
 OUT_CHUNKS = PROJECT_ROOT / "data" / "interim" / "chunks.jsonl"
-OUT_CHUNKS_STRUCTURAL = PROJECT_ROOT / "data" / "interim" / "chunks_structural.jsonl"
+OUT_CHUNKS_FLAT = PROJECT_ROOT / "data" / "interim" / "chunks_flat.jsonl"
 OUT_STATS = PROJECT_ROOT / "data" / "interim" / "chunk_stats.csv"
 
 # 검증 대상 모델의 입력 한계
@@ -195,8 +206,9 @@ def main() -> None:
     ap.add_argument("--max", type=int, default=900, help="최대 청크 크기(자)")
     ap.add_argument("--overlap", type=int, default=80, help="겹침 크기(자)")
     ap.add_argument("--no-tokens", action="store_true", help="토큰 측정 생략")
-    ap.add_argument("--structural", action="store_true",
-                    help="구조별 청킹 사용 (조항/항/번호 단위)")
+    ap.add_argument("--flat", action="store_true",
+                    help="길이 기반 청킹 사용 (베이스라인 비교용). "
+                         "기본은 구조별 청킹이다")
     ap.add_argument("--out", default=None, help="출력 경로 (기본: chunks.jsonl)")
     args = ap.parse_args()
 
@@ -209,13 +221,18 @@ def main() -> None:
     parsable = [d for d in docs if d.is_parsable]
     print(f"  문서 {len(parsable)}건 (전체 {len(docs)}건 중)")
 
+    # 실험 결과 구조별 청킹을 기본으로 채택했다.
+    # 문서 단위 Recall@5 가 0.958 -> 0.979, 약관은 0.913 -> 0.957 로 개선됐다.
+    # 길이 기반은 --flat 으로 재현할 수 있다.
+    structural = not args.flat
+
     factory = ChunkerFactory(
-        structural=args.structural,
+        structural=structural,
         target_chars=args.target,
         max_chars=args.max,
         overlap_chars=args.overlap,
     )
-    mode = "구조별 (조항/항/번호)" if args.structural else "길이 기반 (flat)"
+    mode = "구조별 (조항/항/번호)" if structural else "길이 기반 (flat, 베이스라인)"
     print(f"  청킹 방식: {mode}")
 
     all_chunks: list[Chunk] = []
@@ -248,8 +265,8 @@ def main() -> None:
     global OUT_CHUNKS
     if args.out:
         OUT_CHUNKS = Path(args.out)
-    elif args.structural:
-        OUT_CHUNKS = OUT_CHUNKS_STRUCTURAL
+    elif args.flat:
+        OUT_CHUNKS = OUT_CHUNKS_FLAT
     save_chunks(all_chunks, token_counts)
     save_stats(parsable, by_doc)
 

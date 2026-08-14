@@ -153,7 +153,12 @@ class HybridRetriever:
         candidate_k: int = 100,
         normalize: NormalizeMethod = NormalizeMethod.MINMAX,
     ):
-        """
+        """기본값은 실험으로 정한 최적 설정이다.
+
+        구조별 청킹 + weighted(min-max) + alpha=0.5 조합에서 문서 단위
+        Recall@5 0.979 로 가장 높았다. 약관은 dense 단독 0.739 에서
+        0.957 까지 올랐다.
+
         alpha       : dense 가중치. 1.0이면 dense 단독, 0.0이면 sparse 단독.
         rrf_k       : RRF 상수. 클수록 상위 순위의 영향이 완만해진다.
                       원 논문(Cormack et al.)의 권장값 60을 기본으로 한다.

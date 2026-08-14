@@ -1,0 +1,61 @@
+﻿query_id,question,expected,refusal_type,why_unanswerable,source_chunk_id,doc_display_name,doc_type,category,verified,keep,review_note,reviewed
+r001,제 연체 기록이 대출 연체 이자에 어떻게 영향을 미치나요?,refuse,personalized,개인 연체 기록 필요,hana_desc_loan_006_c004,가계대출 상품설명서,설명서,loan,Y,Y,,Y
+r002,현재 기준금리는 얼마인가요?,refuse,time_variant,문서에 현재 기준금리 없음,hana_desc_retirement_pension_009_c031,『하나은행 디폴트옵션 중립투자형 포트폴리오 3』 상품설명서,설명서,retirement_pension,Y,Y,,Y
+r003,오늘 만기일 적용 결제환율은 얼마인가요?,refuse,time_variant,문서에 현재 환율 없음,hana_desc_derivatives_004_c010,장외파생상품설명서 - NDF(차액 결제 선물환) – 고객매도 / 고객매수,설명서,derivatives,Y,Y,,Y
+r004,제가 대출받은 후 직업이 바뀌면 대출금 지급이 조기만료되나요?,refuse,personalized,고객별 상황 미제공,hana_terms_loan_015_c016,대출거래약정서 (주택담보노후연금대출용) - (주택담보노후연금대출용),약관,loan,Y,N,"개인 정보가 부족한 질문이 아니라, 조기만료 사유 조항을 더 검색해야 하는 일반 문서 질의.",Y
+r005,인지세는 대출금액별로 얼마인가요?,refuse,blank_value,인지세 구체적 금액 미기재,hana_desc_loan_007_c008,기업대출 상품설명서,설명서,loan,Y,Y,,Y
+r006,이 상품은 우리 은행 내부 심사 기준에 어떻게 반영되나요?,refuse,out_of_scope,내부 심사 기준 미수록,hana_desc_derivatives_011_c001,장외파생상품설명서 - Range Forward – 고객이 조건부로 외화매도,설명서,derivatives,Y,Y,,Y
+r007,인지세는 대출금액별로 각각 몇 원인가요?,refuse,blank_value,인지세 값이 공란으로 남음,hana_desc_loan_008_c013,전세자금대출 상품설명서,설명서,loan,N,N,공란이 일부 있어도 대출금액별 인지세액 표가 명시되어 있어 답변 가능.,Y
+r008,하나은행과 타 은행의 해외송금 한도 차이는?,refuse,out_of_scope,타행 비교 정보 없음,hana_faq_117_c001,외국인도 인터넷뱅킹을 통해 해외송금 할 수 있나요?,FAQ,fx,Y,Y,,Y
+r009,특례금리 적용 기간 중 가산 금리는 몇 퍼센트인가요?,refuse,blank_value,가산 금리 값이 문서에 없음,hana_terms_loan_016_c002,대출거래약정서,약관,loan,Y,Y,,Y
+r010,이번 주 CD수익률은 어떻게 되나요?,refuse,time_variant,문서에 현재 수익률 없음,hana_desc_loan_002_c001,CD수익률 설명서 (여신거래용),설명서,loan,Y,Y,,Y
+r011,간편인증 등록 시 신분증 확인 절차가 있나요?,refuse,out_of_scope,문서에 절차 정보 없음,hana_faq_151_c001,[간편로그인] 간편인증이 무엇이고 어떻게 이용하나요?,FAQ,login_signup,Y,N,"현재 청크에는 없지만, 하나은행의 다른 간편인증·본인확인 FAQ/문서에서 확인 가능한 내부 범위 질문일 가능성이 높으므로 out_of_scope 거절 대상은 아님.",Y
+r012,기타비용 항목과 금액은 어떻게 되나요?,refuse,blank_value,문서에 값이 공란임,hana_desc_loan_004_c008,주택도시기금대출(가계용) 상품설명서,설명서,loan,Y,Y,,Y
+r013,제 거래 중도해지 시 손실 예상 금액은?,refuse,personalized,고객별 시장 상황 필요,hana_desc_derivatives_003_c003,장외파생상품설명서 - FX SWAP(외환스왑),설명서,derivatives,N,Y,역검증에서 답변 가능 판정,Y
+r014,원리금 납입일 변경 후 첫 납입기일은 언제인가요?,refuse,blank_value,첫 납입기일 값이 공란임,hana_terms_loan_014_c001,대출거래약정서,약관,loan,N,N,첫 납입기일 산정 규칙이 문서에 명시되어 있어 답변 가능.,Y
+r015,Enhanced Forward 계약 시 적용되는 금리 변동폭은 얼마인가요?,refuse,blank_value,문서에 구체적 값이 없음,hana_desc_derivatives_009_c018,장외파생상품설명서 - Enhanced Forward – 고객이 조건부로 외화 매도,설명서,derivatives,Y,Y,,Y
+r016,타 은행의 디폴트옵션 포트폴리오와 비교하면 이 상품의 장점은 무엇인가요?,refuse,out_of_scope,타행 정보가 문서에 없음,hana_desc_retirement_pension_008_c027,『하나은행 디폴트옵션 중립투자형 포트폴리오 2』 상품설명서,설명서,retirement_pension,Y,Y,,Y
+r017,현재 적용되는 대출 금리는 얼마인가요?,refuse,time_variant,문서에 현재 금리 없음,hana_desc_loan_010_c082,주택담보대출 상품설명서,설명서,loan,Y,Y,,Y
+r018,연체가산율은 몇 퍼센트로 정해지나요?,refuse,blank_value,연체가산율 값이 공란임,hana_terms_loan_024_c003,여신거래약정서(기업용),약관,loan,Y,Y,,Y
+r019,조기상환해약금율은 몇 퍼센트인가요?,refuse,blank_value,문서에 구체적 값 없음,hana_desc_loan_011_c005,내집마련 디딤돌 대출 상품설명서,설명서,loan,N,N,조기(중도)상환해약금율 0.6%가 문서에 명시되어 있으므로 답변 가능.,Y
+r020,제 개인 신용등급으로 이 상품을 이용해도 위험이 큰가요?,refuse,personalized,개인 신용등급 정보 필요,hana_desc_derivatives_002_c009,장외파생상품설명서 - 선물환(통화선도) – 고객매도 / 고객매수,설명서,derivatives,Y,Y,,Y
+r021,타 은행 전세자금대출과 비교해 금리 차이는?,refuse,out_of_scope,문서에 타 은행 내용 없음,hana_desc_loan_008_c112,전세자금대출 상품설명서,설명서,loan,Y,Y,,Y
+r022,이 상품은 다른 은행의 신용대출 상품과 비교해 어떤 점이 우수한가요?,refuse,out_of_scope,타행 비교 정보 없음,hana_desc_loan_006_c054,가계대출 상품설명서,설명서,loan,Y,Y,,Y
+r023,제 신용등급과 거래내역을 고려한 CD 수익률은 얼마인가요?,refuse,personalized,개인 신용정보 필요,hana_desc_loan_002_c004,CD수익률 설명서 (여신거래용),설명서,loan,Y,Y,,Y
+r024,다른 은행들의 CD수익률 산출 방식과 비교해 알려주세요.,refuse,out_of_scope,타행 정보가 문서에 없음,hana_desc_loan_002_c021,CD수익률 설명서 (여신거래용),설명서,loan,Y,Y,,Y
+r025,근저당권 설정 신규 등록세 금액은 얼마인가요?,refuse,blank_value,구체적 금액이 기재되어 있지 않음,hana_desc_loan_005_c040,가계대출 상품설명서,설명서,loan,N,N,"구체적 예시 금액이 문서에 명시되어 있어 답변 가능. 단, ‘2억 대출·채권최고액 2.2억 기준 등록세 44만 원’처럼 조건부로 답해야 함.",Y
+r026,하나은행의 디폴트옵션 상품 심사 기준은 무엇인가요?,refuse,out_of_scope,문서에 심사 기준 내용 없음,hana_desc_retirement_pension_005_c012,『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 상품설명서,설명서,retirement_pension,Y,Y,,Y
+r027,타 은행의 청년주택청약통장과 금리 차이는?,refuse,out_of_scope,타 은행 정보 없음,hana_desc_deposit_002_c010,『청년 주택드림 청약통장』 요약 상품설명서,설명서,deposit,Y,Y,,Y
+r028,담보권 실행 시 발생하는 비용은 얼마인가요?,refuse,blank_value,비용 구체적 금액 미기재,hana_desc_loan_006_c092,가계대출 상품설명서,설명서,loan,N,Y,역검증에서 답변 가능 판정,Y
+r029,미성년자 예금 해지 시 신용등급 영향은?,refuse,out_of_scope,문서에 신용등급 관련 내용 없음,hana_faq_008_c001,"미성년자 명의의 예금(요구불/예·적금, 청약) 해지 시 또는 제신고는 어떻게 해야 하나요?",FAQ,deposit_trust,Y,Y,,Y
+r030,이 상품의 신용 등급별 대출 심사 기준은 어떻게 되나요?,refuse,out_of_scope,심사 기준 내용이 문서에 없음,hana_desc_loan_010_c086,주택담보대출 상품설명서,설명서,loan,Y,Y,,Y
+r031,제가 고정금리 지급자로서 이 거래에서 받을 수 있는 최대 변동금리 수취액은 얼마인가요?,refuse,personalized,고객별 조건 미제공,hana_desc_derivatives_001_c014,장외파생상품설명서 - 이자율 스왑(고객고정금리 지급_대출 연계 이자율 스왑),설명서,derivatives,Y,Y,,Y
+r032,이 추가약정서에서 적용되는 금리 감면율은 몇 퍼센트인가요?,refuse,blank_value,금리 감면율 값이 공란임,hana_terms_loan_003_c002,추가약정서 - (행복연금대출및하나원큐 연금대출 금리감면용),약관,loan,Y,Y,,Y
+r033,대출거래 추가약정서에서 적용되는 고정금리 비율은 얼마인가요?,refuse,blank_value,고정금리 비율이 공란임,hana_terms_loan_007_c004,대출거래( )추가약정서,약관,loan,Y,Y,,Y
+r034,현재 대출금 이자율은 얼마인가요?,refuse,time_variant,문서에 현재 이자율 없음,hana_terms_loan_012_c001,대출거래약정서 담 당 책 임 자 관 리 자 부 점 장,약관,loan,Y,Y,,Y
+r035,이용계약 해지 시 신용등급에 미치는 영향은?,refuse,out_of_scope,문서에 신용등급 영향 없음,hana_terms_digital_banking_002_c014,마이데이터서비스 이용약관,약관,digital_banking,Y,Y,,Y
+r036,저는 사전지정운용방법 변경 통지를 받았나요?,refuse,personalized,개인별 통지 여부 불명,hana_desc_retirement_pension_004_c042,『하나은행 디폴트옵션 안정투자형 포트폴리오 2』 상품설명서,설명서,retirement_pension,Y,Y,,Y
+r037,연체기간 3개월 이하일 때 적용되는 연체이자율은 몇 퍼센트인가요?,refuse,blank_value,이자율 값이 공란으로 기재됨,hana_terms_loan_019_c005,주택도시기금 내집마련 디딤돌 대출거래약정서,약관,loan,N,N,"근거 청크 내에 ""연체기간이 3개월 이하인 경우 납입지연된 해당 원리금상환(예정)액에 대해 이자율 + 연 4%""라고 명확한 연체 가산이자율 기준 수치(연 4%)가 명시되어 있습니다. 문서 내용만으로 질문에 대해 충분히 답변이 가능하므로 blank_value 거절 대상에서 제외(n)합니다.",Y
+r038,여신금액은 얼마로 설정되었나요?,refuse,blank_value,금액 값이 공란임,hana_terms_loan_023_c002,여신거래약정서(단기금융용) - (단기금융용),약관,loan,Y,Y,,Y
+r039,제 개인 신용등급에 따른 대출 한도는?,refuse,personalized,개인 신용정보가 없어서,hana_desc_loan_005_c015,가계대출 상품설명서,설명서,loan,Y,Y,,Y
+r040,현재 대출 이자율은 얼마인가요?,refuse,time_variant,문서에 현재 이자율 없음,hana_terms_loan_011_c035,대출거래약정서(가계용) - 하나은행,약관,loan,Y,Y,,Y
+c001,기업전자금융 서비스에서 개인사업자가 ERP랑 연결하면 기본수수료가 얼마나 나와?,answer,answerable,,,,설명서,digital_banking,Y,Y,검색 평가셋에서 가져온 대조군,
+c002,일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?,answer,answerable,,,,설명서,trust,Y,Y,검색 평가셋에서 가져온 대조군,
+c003,폰뱅킹 신청 시 관공서 서류 제출 기준은?,answer,answerable,,,,FAQ,phone_banking,Y,Y,검색 평가셋에서 가져온 대조군,
+c004,마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?,answer,answerable,,,,약관,digital_banking,Y,Y,검색 평가셋에서 가져온 대조군,
+c005,일임형 개인종합자산관리계좌(ISA) 가입 시 투자 가능한 위험등급 모델포트폴리오 제시 기준은 무엇인가요?,answer,answerable,,,,설명서,trust,Y,Y,검색 평가셋에서 가져온 대조군,
+c006,기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,answer,answerable,,,,설명서,loan,Y,Y,검색 평가셋에서 가져온 대조군,
+c007,하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?,answer,answerable,,,,설명서,retirement_pension,Y,Y,검색 평가셋에서 가져온 대조군,
+c008,하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,answer,answerable,,,,약관,digital_banking,Y,Y,검색 평가셋에서 가져온 대조군,
+c009,하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,answer,answerable,,,,설명서,trust,Y,Y,검색 평가셋에서 가져온 대조군,
+c010,하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?,answer,answerable,,,,FAQ,loan,Y,Y,검색 평가셋에서 가져온 대조군,
+c011,은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?,answer,answerable,,,,약관,loan,Y,Y,검색 평가셋에서 가져온 대조군,
+c012,하나은행 환전지갑 선물하기 서비스에서 하나머니 환급 절차는 어떻게 이루어지나요?,answer,answerable,,,,설명서,fx,Y,Y,검색 평가셋에서 가져온 대조군,
+c013,기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,answer,answerable,,,,약관,loan,Y,Y,검색 평가셋에서 가져온 대조군,
+c014,Enhanced Forward라는 상품은 만기 환율이 예상과 다르게 떨어지면 어떤 위험이 있나요?,answer,answerable,,,,설명서,derivatives,Y,Y,검색 평가셋에서 가져온 대조군,
+c015,『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,answer,answerable,,,,설명서,retirement_pension,Y,Y,검색 평가셋에서 가져온 대조군,
+c016,OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?,answer,answerable,,,,FAQ,auth_otp_security_card,Y,Y,검색 평가셋에서 가져온 대조군,
+c017,자유저축예금 이자는 언제 받을 수 있나요?,answer,answerable,,,,약관,deposit,Y,Y,검색 평가셋에서 가져온 대조군,
+c018,종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,answer,answerable,,,,FAQ,bill_payment,Y,Y,검색 평가셋에서 가져온 대조군,
+c019,하나은행 예금 거래는 보통 어디에서 하나요?,answer,answerable,,,,약관,deposit,Y,Y,검색 평가셋에서 가져온 대조군,
+c020,ISA 계약을 중간에 해지할 때 어떤 특별한 사유가 있어야 해지할 수 있나요?,answer,answerable,,,,설명서,trust,Y,Y,검색 평가셋에서 가져온 대조군,
