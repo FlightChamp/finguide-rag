@@ -44,6 +44,7 @@ from finguide_rag.schema import Chunk, Document, DocType, Structure  # noqa: E40
 
 DOCS_PATH = PROJECT_ROOT / "data" / "interim" / "parsed" / "documents.jsonl"
 OUT_CHUNKS = PROJECT_ROOT / "data" / "interim" / "chunks.jsonl"
+OUT_CHUNKS_STRUCTURAL = PROJECT_ROOT / "data" / "interim" / "chunks_structural.jsonl"
 OUT_STATS = PROJECT_ROOT / "data" / "interim" / "chunk_stats.csv"
 
 # 검증 대상 모델의 입력 한계
@@ -194,6 +195,9 @@ def main() -> None:
     ap.add_argument("--max", type=int, default=900, help="최대 청크 크기(자)")
     ap.add_argument("--overlap", type=int, default=80, help="겹침 크기(자)")
     ap.add_argument("--no-tokens", action="store_true", help="토큰 측정 생략")
+    ap.add_argument("--structural", action="store_true",
+                    help="구조별 청킹 사용 (조항/항/번호 단위)")
+    ap.add_argument("--out", default=None, help="출력 경로 (기본: chunks.jsonl)")
     args = ap.parse_args()
 
     print("=" * 68)
@@ -206,10 +210,13 @@ def main() -> None:
     print(f"  문서 {len(parsable)}건 (전체 {len(docs)}건 중)")
 
     factory = ChunkerFactory(
+        structural=args.structural,
         target_chars=args.target,
         max_chars=args.max,
         overlap_chars=args.overlap,
     )
+    mode = "구조별 (조항/항/번호)" if args.structural else "길이 기반 (flat)"
+    print(f"  청킹 방식: {mode}")
 
     all_chunks: list[Chunk] = []
     by_doc: dict[str, list[Chunk]] = defaultdict(list)
@@ -238,6 +245,11 @@ def main() -> None:
         token_counts = measure_tokens(all_chunks)
 
     # --- 저장 ---
+    global OUT_CHUNKS
+    if args.out:
+        OUT_CHUNKS = Path(args.out)
+    elif args.structural:
+        OUT_CHUNKS = OUT_CHUNKS_STRUCTURAL
     save_chunks(all_chunks, token_counts)
     save_stats(parsable, by_doc)
 
@@ -261,6 +273,10 @@ def main() -> None:
         by_type[ch.doc_type] += 1
     for k, v in by_type.most_common():
         print(f"    {k:<10} : {v:>6,}개")
+
+    with_section = sum(1 for c in all_chunks if c.section and c.section != "FAQ")
+    print(f"\n  [구간명 부여] {with_section:,}개 / {len(all_chunks):,}개 "
+          f"({with_section / len(all_chunks):.0%})")
 
     print("\n  [구조별 청크 수]")
     by_struct: Counter = Counter()

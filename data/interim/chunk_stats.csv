@@ -1,17 +1,17 @@
 ﻿doc_id,doc_type,structure,title,doc_chars,n_chunks,avg_chunk_chars,max_chunk_chars
-hana_desc_deposit_002,설명서,article,『청년 주택드림 청약통장』 요약 상품설명서,14150,35,481,501
+hana_desc_deposit_002,설명서,article,『청년 주택드림 청약통장』 요약 상품설명서,14150,39,381,895
 hana_desc_deposit_004,설명서,flat,『골드·실버바(한국금거래소)』 상품설명서,2199,6,432,486
 hana_desc_deposit_005,설명서,flat,『골드바(한국조폐공사)』 상품설명서,2083,5,480,496
 hana_desc_deposit_006,설명서,flat,『하나 빌리언달러 통장』 요약 상품설명서,4988,13,457,499
 hana_desc_deposit_007,설명서,flat,『하나 보증서담보대출 입금전용계좌』상품설명서,3767,10,448,493
-hana_desc_deposit_008,설명서,article,『하나 부가가치세 매입자 납부전용계좌』 요약 상품설명서,7544,19,472,501
+hana_desc_deposit_008,설명서,article,『하나 부가가치세 매입자 납부전용계좌』 요약 상품설명서,7544,23,362,499
 hana_desc_deposit_009,설명서,flat,『하나더소호 가맹점 적금』 요약 상품설명서,5309,13,482,499
-hana_desc_deposit_010,설명서,clause,『주택청약예금』 요약 상품설명서,4631,12,459,501
-hana_desc_deposit_011,설명서,clause,『주택청약부금』 요약 상품설명서,4458,11,477,494
-hana_desc_deposit_012,설명서,clause,『주택청약저축』 요약 상품설명서,5488,14,466,497
-hana_desc_deposit_013,설명서,clause,『주택청약종합저축』 요약 상품설명서,6822,17,476,501
+hana_desc_deposit_010,설명서,clause,『주택청약예금』 요약 상품설명서,4631,13,398,500
+hana_desc_deposit_011,설명서,clause,『주택청약부금』 요약 상품설명서,4458,11,445,636
+hana_desc_deposit_012,설명서,clause,『주택청약저축』 요약 상품설명서,5488,14,419,497
+hana_desc_deposit_013,설명서,clause,『주택청약종합저축』 요약 상품설명서,6822,16,450,527
 hana_desc_deposit_015,설명서,flat,『나라사랑 하나통장』 요약 상품설명서,5348,14,456,499
-hana_desc_deposit_016,설명서,numbered,『사업자 주거래 우대통장』 상품설명서,3572,9,468,501
+hana_desc_deposit_016,설명서,numbered,『사업자 주거래 우대통장』 상품설명서,3572,10,412,500
 hana_desc_derivatives_001,설명서,flat,장외파생상품설명서,12698,32,473,500
 hana_desc_derivatives_002,설명서,flat,장외파생상품설명서,7720,19,481,500
 hana_desc_derivatives_003,설명서,flat,장외파생상품설명서,7659,20,458,500
@@ -26,7 +26,7 @@ hana_desc_derivatives_011,설명서,flat,장외파생상품설명서,10067,25,47
 hana_desc_derivatives_012,설명서,flat,장외파생상품설명서,10124,25,481,501
 hana_desc_derivatives_013,설명서,flat,장외파생상품설명서,12514,31,480,500
 hana_desc_derivatives_014,설명서,flat,장외파생상품설명서,12550,32,469,495
-hana_desc_digital_banking_001,설명서,numbered,『기업전자금융』 서비스 설명서,3233,8,474,496
+hana_desc_digital_banking_001,설명서,numbered,『기업전자금융』 서비스 설명서,3233,8,423,657
 hana_desc_digital_banking_002,설명서,flat,『기업 QR 결제 서비스』 설명서,2005,5,464,481
 hana_desc_digital_banking_003,설명서,flat,『해외 ATM 출금 서비스』 설명서,2482,6,480,499
 hana_desc_digital_banking_004,설명서,flat,『하나 합(마이데이터 서비스)』 설명서,1590,4,457,501
@@ -36,73 +36,73 @@ hana_desc_fx_002,설명서,flat,『개인뱅킹 환전지갑 서비스 설명서
 hana_desc_fx_003,설명서,flat,『고객센터 환전지갑 서비스 설명서』,2135,6,422,500
 hana_desc_fx_004,설명서,flat,『하나-웨스턴유니온 월렛송금』 서비스 설명서,1545,4,445,487
 hana_desc_fx_005,설명서,flat,『하나원큐기업 환전지갑 서비스 설명서』,1364,4,400,488
-hana_desc_fx_006,설명서,numbered,『환전지갑 목표환율 자동환전 서비스』 설명서,3590,9,469,482
-hana_desc_fx_007,설명서,numbered,『환전지갑 선물하기 서비스』 설명서,2259,6,443,491
-hana_desc_fx_008,설명서,clause,『제휴 환전지갑 서비스 설명서』,2351,6,458,501
-hana_desc_loan_001,설명서,article,보금자리론 설명서,21416,54,474,501
-hana_desc_loan_002,설명서,article,CD수익률 설명서 (여신거래용),10265,26,471,499
-hana_desc_loan_003,설명서,article,(은행보관용) 대출 상품설명서(권유용),21937,56,470,495
-hana_desc_loan_004,설명서,article,주택도시기금대출(가계용) 상품설명서,7986,21,456,501
-hana_desc_loan_005,설명서,article,가계대출 상품설명서,39292,99,475,501
-hana_desc_loan_006,설명서,article,가계대출 상품설명서,39960,101,474,501
-hana_desc_loan_007,설명서,article,기업대출 상품설명서,37020,93,476,500
-hana_desc_loan_008,설명서,article,전세자금대출 상품설명서,41874,106,474,501
-hana_desc_loan_009,설명서,article,주택연금 사전예약 보금자리론 설명서,22266,57,468,501
-hana_desc_loan_010,설명서,article,주택담보대출 상품설명서,41564,105,474,501
-hana_desc_loan_011,설명서,article,내집마련 디딤돌 대출 상품설명서,8398,21,476,501
-hana_desc_others_001,설명서,numbered,『하나 화상상담데스크』 서비스 설명서,1275,3,478,492
+hana_desc_fx_006,설명서,numbered,『환전지갑 목표환율 자동환전 서비스』 설명서,3590,9,416,592
+hana_desc_fx_007,설명서,numbered,『환전지갑 선물하기 서비스』 설명서,2259,6,375,621
+hana_desc_fx_008,설명서,clause,『제휴 환전지갑 서비스 설명서』,2351,6,431,501
+hana_desc_loan_001,설명서,article,보금자리론 설명서,21416,58,424,548
+hana_desc_loan_002,설명서,article,CD수익률 설명서 (여신거래용),10265,28,397,735
+hana_desc_loan_003,설명서,article,(은행보관용) 대출 상품설명서(권유용),21937,62,410,498
+hana_desc_loan_004,설명서,article,주택도시기금대출(가계용) 상품설명서,7986,22,406,860
+hana_desc_loan_005,설명서,article,가계대출 상품설명서,39292,101,440,785
+hana_desc_loan_006,설명서,article,가계대출 상품설명서,39960,104,436,744
+hana_desc_loan_007,설명서,article,기업대출 상품설명서,37020,92,453,812
+hana_desc_loan_008,설명서,article,전세자금대출 상품설명서,41874,113,423,806
+hana_desc_loan_009,설명서,article,주택연금 사전예약 보금자리론 설명서,22266,60,426,565
+hana_desc_loan_010,설명서,article,주택담보대출 상품설명서,41564,106,446,815
+hana_desc_loan_011,설명서,article,내집마련 디딤돌 대출 상품설명서,8398,21,445,858
+hana_desc_others_001,설명서,numbered,『하나 화상상담데스크』 서비스 설명서,1275,3,424,492
 hana_desc_others_002,설명서,flat,「예금 토큰」 설명서,2720,7,456,499
-hana_desc_retirement_pension_001,설명서,clause,개인형IRP 핵심설명서,9204,23,476,501
-hana_desc_retirement_pension_002,설명서,numbered,『하나은행 디폴트옵션 안정형 포트폴리오』 상품설명서,15119,38,475,501
-hana_desc_retirement_pension_003,설명서,numbered,『하나은행 디폴트옵션 안정투자형 포트폴리오 1』 상품설명서,16325,41,475,500
-hana_desc_retirement_pension_004,설명서,numbered,『하나은행 디폴트옵션 안정투자형 포트폴리오 2』 상품설명서,16217,41,473,501
-hana_desc_retirement_pension_005,설명서,numbered,『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 상품설명서,15667,40,469,501
-hana_desc_retirement_pension_006,설명서,numbered,『하나은행 디폴트옵션 적극투자형 포트폴리오 1』 상품설명서,15333,39,470,501
-hana_desc_retirement_pension_007,설명서,numbered,『하나은행 디폴트옵션 중립투자형 포트폴리오 1』 상품설명서,16215,41,473,499
-hana_desc_retirement_pension_008,설명서,numbered,『하나은행 디폴트옵션 중립투자형 포트폴리오 2』 상품설명서,16303,41,475,501
-hana_desc_retirement_pension_009,설명서,numbered,『하나은행 디폴트옵션 중립투자형 포트폴리오 3』 상품설명서,16185,41,472,501
-hana_desc_retirement_pension_010,설명서,article,퇴직연금 이율보증형보험 상품설명서(핵심/요약),4733,12,467,488
-hana_desc_trust_001,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (AI 최고위험),7695,19,480,501
-hana_desc_trust_002,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (AI 고위험),7703,20,461,501
-hana_desc_trust_003,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (AI 저위험),7729,19,482,501
-hana_desc_trust_004,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (AI 중위험),7700,19,481,501
-hana_desc_trust_005,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (저위험_포커스),7497,19,470,499
-hana_desc_trust_006,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (최고위험_밸런스),7430,19,466,501
-hana_desc_trust_007,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (최저위험),7407,19,465,500
-hana_desc_trust_008,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (고위험_밸런스),7458,19,468,500
-hana_desc_trust_009,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (고위험_포커스),7456,19,468,500
-hana_desc_trust_010,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (저위험_밸런스),7463,19,468,500
-hana_desc_trust_011,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (중위험_밸런스),7448,19,467,500
-hana_desc_trust_012,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (중위험_포커스),7447,19,467,500
-hana_desc_trust_013,설명서,article,일임형 개인종합자산관리계좌(ISA) 계약권유문서,16902,44,462,501
-hana_terms_deposit_001,약관,article,입출금이 자유로운 예금약관,4415,11,473,501
-hana_terms_deposit_002,약관,article,예금거래 기본약관,10402,26,476,501
-hana_terms_digital_banking_001,약관,article,전자금융거래 기본약관,15083,38,474,501
-hana_terms_digital_banking_002,약관,article,마이데이터서비스 이용약관,7692,19,480,501
-hana_terms_loan_001,약관,numbered,추가약정서,3135,8,461,501
-hana_terms_loan_002,약관,numbered,추가약정서(가계대출 금리감면용),4588,12,455,499
+hana_desc_retirement_pension_001,설명서,clause,개인형IRP 핵심설명서,9204,28,385,501
+hana_desc_retirement_pension_002,설명서,numbered,『하나은행 디폴트옵션 안정형 포트폴리오』 상품설명서,15119,43,403,495
+hana_desc_retirement_pension_003,설명서,numbered,『하나은행 디폴트옵션 안정투자형 포트폴리오 1』 상품설명서,16325,46,408,527
+hana_desc_retirement_pension_004,설명서,numbered,『하나은행 디폴트옵션 안정투자형 포트폴리오 2』 상품설명서,16217,44,420,539
+hana_desc_retirement_pension_005,설명서,numbered,『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 상품설명서,15667,41,432,856
+hana_desc_retirement_pension_006,설명서,numbered,『하나은행 디폴트옵션 적극투자형 포트폴리오 1』 상품설명서,15333,41,424,856
+hana_desc_retirement_pension_007,설명서,numbered,『하나은행 디폴트옵션 중립투자형 포트폴리오 1』 상품설명서,16215,44,420,527
+hana_desc_retirement_pension_008,설명서,numbered,『하나은행 디폴트옵션 중립투자형 포트폴리오 2』 상품설명서,16303,44,418,732
+hana_desc_retirement_pension_009,설명서,numbered,『하나은행 디폴트옵션 중립투자형 포트폴리오 3』 상품설명서,16185,44,419,538
+hana_desc_retirement_pension_010,설명서,article,퇴직연금 이율보증형보험 상품설명서(핵심/요약),4733,11,473,714
+hana_desc_trust_001,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (AI 최고위험),7695,20,412,776
+hana_desc_trust_002,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (AI 고위험),7703,20,412,785
+hana_desc_trust_003,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (AI 저위험),7729,20,413,795
+hana_desc_trust_004,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (AI 중위험),7700,20,412,788
+hana_desc_trust_005,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (저위험_포커스),7497,20,402,796
+hana_desc_trust_006,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (최고위험_밸런스),7430,20,398,777
+hana_desc_trust_007,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (최저위험),7407,19,414,896
+hana_desc_trust_008,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (고위험_밸런스),7458,20,400,786
+hana_desc_trust_009,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (고위험_포커스),7456,20,400,786
+hana_desc_trust_010,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (저위험_밸런스),7463,20,400,796
+hana_desc_trust_011,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (중위험_밸런스),7448,20,399,789
+hana_desc_trust_012,설명서,clause,하나은행 ISA 모델포트폴리오 설명서 (중위험_포커스),7447,20,399,789
+hana_desc_trust_013,설명서,article,일임형 개인종합자산관리계좌(ISA) 계약권유문서,16902,47,370,787
+hana_terms_deposit_001,약관,article,입출금이 자유로운 예금약관,4415,16,275,541
+hana_terms_deposit_002,약관,article,예금거래 기본약관,10402,33,321,831
+hana_terms_digital_banking_001,약관,article,전자금융거래 기본약관,15083,47,323,747
+hana_terms_digital_banking_002,약관,article,마이데이터서비스 이용약관,7692,22,348,755
+hana_terms_loan_001,약관,numbered,추가약정서,3135,9,383,501
+hana_terms_loan_002,약관,numbered,추가약정서(가계대출 금리감면용),4588,11,438,809
 hana_terms_loan_003,약관,flat,추가약정서,919,3,359,497
 hana_terms_loan_004,약관,flat,추가약정서,592,1,592,592
-hana_terms_loan_005,약관,article,추가약정서,1151,3,436,451
+hana_terms_loan_005,약관,article,추가약정서,1151,6,191,276
 hana_terms_loan_006,약관,flat,추가약정서,948,3,369,489
-hana_terms_loan_007,약관,article,대출거래( )추가약정서,21667,56,465,499
-hana_terms_loan_008,약관,article,대출거래추가약정서,1316,4,389,497
-hana_terms_loan_009,약관,article,대출거래추가약정서,1403,4,410,493
+hana_terms_loan_007,약관,article,대출거래( )추가약정서,21667,82,265,841
+hana_terms_loan_008,약관,article,대출거래추가약정서,1316,6,218,518
+hana_terms_loan_009,약관,article,대출거래추가약정서,1403,5,279,706
 hana_terms_loan_010,약관,flat,대출거래 추가약정서,121,1,121,121
-hana_terms_loan_011,약관,article,대출거래약정서(가계용),26131,67,468,501
-hana_terms_loan_012,약관,article,대출거래약정서 담 당 책 임 자 관 리 자 부 점 장,11144,28,474,500
-hana_terms_loan_013,약관,article,대출거래약정서,10240,26,470,500
-hana_terms_loan_014,약관,article,대출거래약정서,7395,19,464,501
-hana_terms_loan_015,약관,article,대출거래약정서 (주택담보노후연금대출용),8877,22,479,499
-hana_terms_loan_016,약관,article,대출거래약정서,12089,30,480,501
-hana_terms_loan_017,약관,article,은행여신거래 기본약관,12283,32,461,499
-hana_terms_loan_018,약관,article,은행여신거래 기본약관,15567,40,466,501
-hana_terms_loan_019,약관,article,주택도시기금 내집마련 디딤돌 대출거래약정서,10468,26,479,499
-hana_terms_loan_020,약관,article,여신거래추가약정서,4187,11,453,488
-hana_terms_loan_021,약관,numbered,여신거래추가약정서,710,1,710,710
-hana_terms_loan_022,약관,article,여신거래 추가약정서,1605,4,461,497
-hana_terms_loan_023,약관,article,여신거래약정서(단기금융용),8918,23,464,501
-hana_terms_loan_024,약관,article,여신거래약정서(기업용),11471,30,459,499
+hana_terms_loan_011,약관,article,대출거래약정서(가계용),26131,94,282,786
+hana_terms_loan_012,약관,article,대출거래약정서 담 당 책 임 자 관 리 자 부 점 장,11144,38,296,845
+hana_terms_loan_013,약관,article,대출거래약정서,10240,37,275,736
+hana_terms_loan_014,약관,article,대출거래약정서,7395,27,273,892
+hana_terms_loan_015,약관,article,대출거래약정서 (주택담보노후연금대출용),8877,32,276,832
+hana_terms_loan_016,약관,article,대출거래약정서,12089,43,297,847
+hana_terms_loan_017,약관,article,은행여신거래 기본약관,12283,44,278,865
+hana_terms_loan_018,약관,article,은행여신거래 기본약관,15567,50,310,892
+hana_terms_loan_019,약관,article,주택도시기금 내집마련 디딤돌 대출거래약정서,10468,33,318,844
+hana_terms_loan_020,약관,article,여신거래추가약정서,4187,14,309,745
+hana_terms_loan_021,약관,numbered,여신거래추가약정서,710,2,354,485
+hana_terms_loan_022,약관,article,여신거래 추가약정서,1605,5,320,663
+hana_terms_loan_023,약관,article,여신거래약정서(단기금융용),8918,25,361,827
+hana_terms_loan_024,약관,article,여신거래약정서(기업용),11471,39,303,721
 hana_faq_001,FAQ,qa_pair,주택청약종합저축으로의 전환 후 순위 기산일 및 납입인정금액 확인은 어디서,141,1,141,141
 hana_faq_002,FAQ,qa_pair,청약 예부금/청약저축의 주택청약종합저축으로의 전환 가입은 어떻게 해야 하,268,1,268,268
 hana_faq_003,FAQ,qa_pair,퇴직연금 가입확인서는 어디서 출력할 수 있나요?,136,1,136,136
