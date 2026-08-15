@@ -1,0 +1,945 @@
+{
+  "covered_products": [
+    {
+      "canonical_name": "청년 주택드림 청약통장",
+      "doc_id": "hana_desc_deposit_002",
+      "doc_title": "『청년 주택드림 청약통장』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2026-06-30"
+    },
+    {
+      "canonical_name": "골드·실버바(한국금거래소)",
+      "doc_id": "hana_desc_deposit_004",
+      "doc_title": "『골드·실버바(한국금거래소)』 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2026-02-06"
+    },
+    {
+      "canonical_name": "골드바(한국조폐공사)",
+      "doc_id": "hana_desc_deposit_005",
+      "doc_title": "『골드바(한국조폐공사)』 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2025-01-21"
+    },
+    {
+      "canonical_name": "하나 빌리언달러 통장",
+      "doc_id": "hana_desc_deposit_006",
+      "doc_title": "『하나 빌리언달러 통장』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2025-09-01"
+    },
+    {
+      "canonical_name": "하나 보증서담보대출 입금전용계좌",
+      "doc_id": "hana_desc_deposit_007",
+      "doc_title": "『하나 보증서담보대출 입금전용계좌』상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2025-09-01"
+    },
+    {
+      "canonical_name": "하나 부가가치세 매입자 납부전용계좌",
+      "doc_id": "hana_desc_deposit_008",
+      "doc_title": "『하나 부가가치세 매입자 납부전용계좌』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2025-09-01"
+    },
+    {
+      "canonical_name": "하나더소호 가맹점 적금",
+      "doc_id": "hana_desc_deposit_009",
+      "doc_title": "『하나더소호 가맹점 적금』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2025-12-17"
+    },
+    {
+      "canonical_name": "주택청약예금",
+      "doc_id": "hana_desc_deposit_010",
+      "doc_title": "『주택청약예금』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2026-03-10"
+    },
+    {
+      "canonical_name": "주택청약부금",
+      "doc_id": "hana_desc_deposit_011",
+      "doc_title": "『주택청약부금』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2026-03-10"
+    },
+    {
+      "canonical_name": "주택청약저축",
+      "doc_id": "hana_desc_deposit_012",
+      "doc_title": "『주택청약저축』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2025-01-01"
+    },
+    {
+      "canonical_name": "주택청약종합저축",
+      "doc_id": "hana_desc_deposit_013",
+      "doc_title": "『주택청약종합저축』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2026-06-30"
+    },
+    {
+      "canonical_name": "나라사랑 하나통장",
+      "doc_id": "hana_desc_deposit_015",
+      "doc_title": "『나라사랑 하나통장』 요약 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2026-07-01"
+    },
+    {
+      "canonical_name": "사업자 주거래 우대통장",
+      "doc_id": "hana_desc_deposit_016",
+      "doc_title": "『사업자 주거래 우대통장』 상품설명서",
+      "doc_type": "설명서",
+      "category": "deposit",
+      "granularity": "specific_product",
+      "effective_date": "2025-09-01"
+    },
+    {
+      "canonical_name": "기업전자금융",
+      "doc_id": "hana_desc_digital_banking_001",
+      "doc_title": "『기업전자금융』 서비스 설명서",
+      "doc_type": "설명서",
+      "category": "digital_banking",
+      "granularity": "specific_product",
+      "effective_date": "2026-02-19"
+    },
+    {
+      "canonical_name": "기업 QR 결제 서비스",
+      "doc_id": "hana_desc_digital_banking_002",
+      "doc_title": "『기업 QR 결제 서비스』 설명서",
+      "doc_type": "설명서",
+      "category": "digital_banking",
+      "granularity": "specific_product",
+      "effective_date": "2026-06-18"
+    },
+    {
+      "canonical_name": "해외 ATM 출금 서비스",
+      "doc_id": "hana_desc_digital_banking_003",
+      "doc_title": "『해외 ATM 출금 서비스』 설명서",
+      "doc_type": "설명서",
+      "category": "digital_banking",
+      "granularity": "specific_product",
+      "effective_date": "2026-04-27"
+    },
+    {
+      "canonical_name": "하나 합(마이데이터 서비스)",
+      "doc_id": "hana_desc_digital_banking_004",
+      "doc_title": "『하나 합(마이데이터 서비스)』 설명서",
+      "doc_type": "설명서",
+      "category": "digital_banking",
+      "granularity": "specific_product",
+      "effective_date": "2026-06-25"
+    },
+    {
+      "canonical_name": "제휴사 해외 ATM 출금 서비스",
+      "doc_id": "hana_desc_digital_banking_005",
+      "doc_title": "『제휴사 해외 ATM 출금 서비스』 설명서",
+      "doc_type": "설명서",
+      "category": "digital_banking",
+      "granularity": "specific_product",
+      "effective_date": "2026-04-27"
+    },
+    {
+      "canonical_name": "easy-one 외화송금서비스",
+      "doc_id": "hana_desc_fx_001",
+      "doc_title": "『easy-one 외화송금서비스』 상품설명서",
+      "doc_type": "설명서",
+      "category": "fx",
+      "granularity": "specific_product",
+      "effective_date": "2026-01-19"
+    },
+    {
+      "canonical_name": "개인뱅킹 환전지갑 서비스 설명서",
+      "doc_id": "hana_desc_fx_002",
+      "doc_title": "『개인뱅킹 환전지갑 서비스 설명서』",
+      "doc_type": "설명서",
+      "category": "fx",
+      "granularity": "specific_product",
+      "effective_date": "2026-03-13"
+    },
+    {
+      "canonical_name": "고객센터 환전지갑 서비스 설명서",
+      "doc_id": "hana_desc_fx_003",
+      "doc_title": "『고객센터 환전지갑 서비스 설명서』",
+      "doc_type": "설명서",
+      "category": "fx",
+      "granularity": "specific_product",
+      "effective_date": "2026-03-30"
+    },
+    {
+      "canonical_name": "하나-웨스턴유니온 월렛송금",
+      "doc_id": "hana_desc_fx_004",
+      "doc_title": "『하나-웨스턴유니온 월렛송금』 서비스 설명서",
+      "doc_type": "설명서",
+      "category": "fx",
+      "granularity": "specific_product",
+      "effective_date": "2025-07-18"
+    },
+    {
+      "canonical_name": "하나원큐기업 환전지갑 서비스 설명서",
+      "doc_id": "hana_desc_fx_005",
+      "doc_title": "『하나원큐기업 환전지갑 서비스 설명서』",
+      "doc_type": "설명서",
+      "category": "fx",
+      "granularity": "specific_product",
+      "effective_date": "2026-02-27"
+    },
+    {
+      "canonical_name": "환전지갑 목표환율 자동환전 서비스",
+      "doc_id": "hana_desc_fx_006",
+      "doc_title": "『환전지갑 목표환율 자동환전 서비스』 설명서",
+      "doc_type": "설명서",
+      "category": "fx",
+      "granularity": "specific_product",
+      "effective_date": "2026-05-11"
+    },
+    {
+      "canonical_name": "환전지갑 선물하기 서비스",
+      "doc_id": "hana_desc_fx_007",
+      "doc_title": "『환전지갑 선물하기 서비스』 설명서",
+      "doc_type": "설명서",
+      "category": "fx",
+      "granularity": "specific_product",
+      "effective_date": "2026-05-11"
+    },
+    {
+      "canonical_name": "제휴 환전지갑 서비스 설명서",
+      "doc_id": "hana_desc_fx_008",
+      "doc_title": "『제휴 환전지갑 서비스 설명서』",
+      "doc_type": "설명서",
+      "category": "fx",
+      "granularity": "specific_product",
+      "effective_date": "2026-04-02"
+    },
+    {
+      "canonical_name": "하나 화상상담데스크",
+      "doc_id": "hana_desc_others_001",
+      "doc_title": "『하나 화상상담데스크』 서비스 설명서",
+      "doc_type": "설명서",
+      "category": "others",
+      "granularity": "specific_product",
+      "effective_date": "2026-02-23"
+    },
+    {
+      "canonical_name": "예금 토큰",
+      "doc_id": "hana_desc_others_002",
+      "doc_title": "「예금 토큰」 설명서",
+      "doc_type": "설명서",
+      "category": "others",
+      "granularity": "specific_product",
+      "effective_date": "2025-04-01"
+    },
+    {
+      "canonical_name": "하나은행 디폴트옵션 안정형 포트폴리오",
+      "doc_id": "hana_desc_retirement_pension_002",
+      "doc_title": "『하나은행 디폴트옵션 안정형 포트폴리오』 상품설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "specific_product",
+      "effective_date": "2025-09-01"
+    },
+    {
+      "canonical_name": "하나은행 디폴트옵션 안정투자형 포트폴리오 1",
+      "doc_id": "hana_desc_retirement_pension_003",
+      "doc_title": "『하나은행 디폴트옵션 안정투자형 포트폴리오 1』 상품설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "specific_product",
+      "effective_date": "2026-04-01"
+    },
+    {
+      "canonical_name": "하나은행 디폴트옵션 안정투자형 포트폴리오 2",
+      "doc_id": "hana_desc_retirement_pension_004",
+      "doc_title": "『하나은행 디폴트옵션 안정투자형 포트폴리오 2』 상품설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "specific_product",
+      "effective_date": "2025-09-01"
+    },
+    {
+      "canonical_name": "하나은행 디폴트옵션 안정투자형 포트폴리오 3",
+      "doc_id": "hana_desc_retirement_pension_005",
+      "doc_title": "『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 상품설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "specific_product",
+      "effective_date": "2026-06-23"
+    },
+    {
+      "canonical_name": "하나은행 디폴트옵션 적극투자형 포트폴리오 1",
+      "doc_id": "hana_desc_retirement_pension_006",
+      "doc_title": "『하나은행 디폴트옵션 적극투자형 포트폴리오 1』 상품설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "specific_product",
+      "effective_date": "2026-05-27"
+    },
+    {
+      "canonical_name": "하나은행 디폴트옵션 중립투자형 포트폴리오 1",
+      "doc_id": "hana_desc_retirement_pension_007",
+      "doc_title": "『하나은행 디폴트옵션 중립투자형 포트폴리오 1』 상품설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "specific_product",
+      "effective_date": "2026-04-01"
+    },
+    {
+      "canonical_name": "하나은행 디폴트옵션 중립투자형 포트폴리오 2",
+      "doc_id": "hana_desc_retirement_pension_008",
+      "doc_title": "『하나은행 디폴트옵션 중립투자형 포트폴리오 2』 상품설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "specific_product",
+      "effective_date": "2025-09-01"
+    },
+    {
+      "canonical_name": "하나은행 디폴트옵션 중립투자형 포트폴리오 3",
+      "doc_id": "hana_desc_retirement_pension_009",
+      "doc_title": "『하나은행 디폴트옵션 중립투자형 포트폴리오 3』 상품설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "specific_product",
+      "effective_date": "2025-09-01"
+    }
+  ],
+  "covered_families": [
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_001",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_002",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_003",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_004",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_005",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_006",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_007",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_008",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_009",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_010",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_011",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_012",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_013",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "장외파생",
+      "doc_id": "hana_desc_derivatives_014",
+      "doc_title": "장외파생상품설명서",
+      "doc_type": "설명서",
+      "category": "derivatives",
+      "granularity": "product_family",
+      "effective_date": "2025-12-08"
+    },
+    {
+      "canonical_name": "보금자리론",
+      "doc_id": "hana_desc_loan_001",
+      "doc_title": "보금자리론 설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-05-14"
+    },
+    {
+      "canonical_name": "CD수익률",
+      "doc_id": "hana_desc_loan_002",
+      "doc_title": "CD수익률 설명서 (여신거래용)",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2025-03-21"
+    },
+    {
+      "canonical_name": "(은행보관용) 대출",
+      "doc_id": "hana_desc_loan_003",
+      "doc_title": "(은행보관용) 대출 상품설명서(권유용)",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2025-01-13"
+    },
+    {
+      "canonical_name": "주택도시기금대출",
+      "doc_id": "hana_desc_loan_004",
+      "doc_title": "주택도시기금대출(가계용) 상품설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-01-01"
+    },
+    {
+      "canonical_name": "가계대출",
+      "doc_id": "hana_desc_loan_005",
+      "doc_title": "가계대출 상품설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2025-01-13"
+    },
+    {
+      "canonical_name": "가계대출",
+      "doc_id": "hana_desc_loan_006",
+      "doc_title": "가계대출 상품설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2025-01-13"
+    },
+    {
+      "canonical_name": "기업대출",
+      "doc_id": "hana_desc_loan_007",
+      "doc_title": "기업대출 상품설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2025-01-13"
+    },
+    {
+      "canonical_name": "전세자금대출",
+      "doc_id": "hana_desc_loan_008",
+      "doc_title": "전세자금대출 상품설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2025-01-13"
+    },
+    {
+      "canonical_name": "주택연금 사전예약 보금자리론",
+      "doc_id": "hana_desc_loan_009",
+      "doc_title": "주택연금 사전예약 보금자리론 설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-05-14"
+    },
+    {
+      "canonical_name": "주택담보대출",
+      "doc_id": "hana_desc_loan_010",
+      "doc_title": "주택담보대출 상품설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2025-01-13"
+    },
+    {
+      "canonical_name": "내집마련 디딤돌 대출",
+      "doc_id": "hana_desc_loan_011",
+      "doc_title": "내집마련 디딤돌 대출 상품설명서",
+      "doc_type": "설명서",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-01-01"
+    },
+    {
+      "canonical_name": "개인형IRP",
+      "doc_id": "hana_desc_retirement_pension_001",
+      "doc_title": "개인형IRP 핵심설명서",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "product_family",
+      "effective_date": "2026-02-13"
+    },
+    {
+      "canonical_name": "퇴직연금 이율보증형보험",
+      "doc_id": "hana_desc_retirement_pension_010",
+      "doc_title": "퇴직연금 이율보증형보험 상품설명서(핵심/요약)",
+      "doc_type": "설명서",
+      "category": "retirement_pension",
+      "granularity": "product_family",
+      "effective_date": "2025-09-01"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_001",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (AI 최고위험)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-05-21"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_002",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (AI 고위험)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-05-21"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_003",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (AI 저위험)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-06-15"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_004",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (AI 중위험)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-05-21"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_005",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (저위험_포커스)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-06-15"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_006",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (최고위험_밸런스)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-06-15"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_007",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (최저위험)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-04-13"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_008",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (고위험_밸런스)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-06-15"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_009",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (고위험_포커스)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-06-15"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_010",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (저위험_밸런스)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-06-15"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_011",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (중위험_밸런스)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-06-15"
+    },
+    {
+      "canonical_name": "하나은행 ISA 모델포트폴리오",
+      "doc_id": "hana_desc_trust_012",
+      "doc_title": "하나은행 ISA 모델포트폴리오 설명서 (중위험_포커스)",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-06-15"
+    },
+    {
+      "canonical_name": "일임형 개인종합자산관리계좌",
+      "doc_id": "hana_desc_trust_013",
+      "doc_title": "일임형 개인종합자산관리계좌(ISA) 계약권유문서",
+      "doc_type": "설명서",
+      "category": "trust",
+      "granularity": "product_family",
+      "effective_date": "2026-05-29"
+    },
+    {
+      "canonical_name": "추가약정서",
+      "doc_id": "hana_terms_loan_001",
+      "doc_title": "추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-05-29"
+    },
+    {
+      "canonical_name": "추가약정서",
+      "doc_id": "hana_terms_loan_002",
+      "doc_title": "추가약정서(가계대출 금리감면용)",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-06-30"
+    },
+    {
+      "canonical_name": "추가약정서",
+      "doc_id": "hana_terms_loan_003",
+      "doc_title": "추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2021-03-25"
+    },
+    {
+      "canonical_name": "추가약정서",
+      "doc_id": "hana_terms_loan_004",
+      "doc_title": "추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2021-03-25"
+    },
+    {
+      "canonical_name": "추가약정서",
+      "doc_id": "hana_terms_loan_005",
+      "doc_title": "추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2021-09-17"
+    },
+    {
+      "canonical_name": "추가약정서",
+      "doc_id": "hana_terms_loan_006",
+      "doc_title": "추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2021-03-25"
+    },
+    {
+      "canonical_name": "대출거래( )추가약정서",
+      "doc_id": "hana_terms_loan_007",
+      "doc_title": "대출거래( )추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2023-02-28"
+    },
+    {
+      "canonical_name": "대출거래추가약정서",
+      "doc_id": "hana_terms_loan_008",
+      "doc_title": "대출거래추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-04-17"
+    },
+    {
+      "canonical_name": "대출거래추가약정서",
+      "doc_id": "hana_terms_loan_009",
+      "doc_title": "대출거래추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-04-17"
+    },
+    {
+      "canonical_name": "대출거래 추가약정서",
+      "doc_id": "hana_terms_loan_010",
+      "doc_title": "대출거래 추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2021-06-17"
+    },
+    {
+      "canonical_name": "대출거래약정서",
+      "doc_id": "hana_terms_loan_011",
+      "doc_title": "대출거래약정서(가계용)",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2021-03-25"
+    },
+    {
+      "canonical_name": "대출거래약정서 담 당 책 임 자 관 리 자 부 점 장",
+      "doc_id": "hana_terms_loan_012",
+      "doc_title": "대출거래약정서 담 당 책 임 자 관 리 자 부 점 장",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-05-11"
+    },
+    {
+      "canonical_name": "대출거래약정서",
+      "doc_id": "hana_terms_loan_013",
+      "doc_title": "대출거래약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2023-06-02"
+    },
+    {
+      "canonical_name": "대출거래약정서",
+      "doc_id": "hana_terms_loan_014",
+      "doc_title": "대출거래약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2018-05-31"
+    },
+    {
+      "canonical_name": "대출거래약정서",
+      "doc_id": "hana_terms_loan_015",
+      "doc_title": "대출거래약정서 (주택담보노후연금대출용)",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2024-12-30"
+    },
+    {
+      "canonical_name": "대출거래약정서",
+      "doc_id": "hana_terms_loan_016",
+      "doc_title": "대출거래약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-06-22"
+    },
+    {
+      "canonical_name": "주택도시기금 내집마련 디딤돌 대출거래약정서",
+      "doc_id": "hana_terms_loan_019",
+      "doc_title": "주택도시기금 내집마련 디딤돌 대출거래약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-06-22"
+    },
+    {
+      "canonical_name": "여신거래추가약정서",
+      "doc_id": "hana_terms_loan_020",
+      "doc_title": "여신거래추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2023-02-28"
+    },
+    {
+      "canonical_name": "여신거래추가약정서",
+      "doc_id": "hana_terms_loan_021",
+      "doc_title": "여신거래추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2021-03-25"
+    },
+    {
+      "canonical_name": "여신거래 추가약정서",
+      "doc_id": "hana_terms_loan_022",
+      "doc_title": "여신거래 추가약정서",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2024-03-18"
+    },
+    {
+      "canonical_name": "여신거래약정서",
+      "doc_id": "hana_terms_loan_023",
+      "doc_title": "여신거래약정서(단기금융용)",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2021-03-25"
+    },
+    {
+      "canonical_name": "여신거래약정서",
+      "doc_id": "hana_terms_loan_024",
+      "doc_title": "여신거래약정서(기업용)",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2026-06-30"
+    }
+  ],
+  "general_policy_docs": [
+    {
+      "canonical_name": "예금",
+      "doc_id": "hana_terms_deposit_001",
+      "doc_title": "입출금이 자유로운 예금약관",
+      "doc_type": "약관",
+      "category": "deposit",
+      "granularity": "product_family",
+      "effective_date": "2024-03-29"
+    },
+    {
+      "canonical_name": "예금",
+      "doc_id": "hana_terms_deposit_002",
+      "doc_title": "예금거래 기본약관",
+      "doc_type": "약관",
+      "category": "deposit",
+      "granularity": "product_family",
+      "effective_date": "2025-02-26"
+    },
+    {
+      "canonical_name": "전자금융",
+      "doc_id": "hana_terms_digital_banking_001",
+      "doc_title": "전자금융거래 기본약관",
+      "doc_type": "약관",
+      "category": "digital_banking",
+      "granularity": "product_family",
+      "effective_date": "2020-12-10"
+    },
+    {
+      "canonical_name": "전자금융",
+      "doc_id": "hana_terms_digital_banking_002",
+      "doc_title": "마이데이터서비스 이용약관",
+      "doc_type": "약관",
+      "category": "digital_banking",
+      "granularity": "product_family",
+      "effective_date": "2026-06-25"
+    },
+    {
+      "canonical_name": "대출",
+      "doc_id": "hana_terms_loan_017",
+      "doc_title": "은행여신거래 기본약관",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2024-10-17"
+    },
+    {
+      "canonical_name": "대출",
+      "doc_id": "hana_terms_loan_018",
+      "doc_title": "은행여신거래 기본약관",
+      "doc_type": "약관",
+      "category": "loan",
+      "granularity": "product_family",
+      "effective_date": "2024-10-17"
+    }
+  ],
+  "skipped_count": 4
+}

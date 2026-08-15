@@ -1,0 +1,320 @@
+﻿question,extracted_product,granularity,intent,needs_specific,general_ok,confidence,match_status,matched_product,candidates,gate_refuse,gate_reason,error,source,expected,refusal_type
+제 연체 기록이 대출 연체 이자에 어떻게 영향을 미치나요?,,none,general_policy,False,True,0.9,none,,,False,,,refusal_eval.csv,refuse,personalized
+현재 기준금리는 얼마인가요?,,none,rate_current,False,True,0.9,none,,,False,,,refusal_eval.csv,refuse,time_variant
+오늘 만기일 적용 결제환율은 얼마인가요?,,none,rate_current,False,True,0.9,none,,,False,,,refusal_eval.csv,refuse,time_variant
+인지세는 대출금액별로 얼마인가요?,,none,fee,False,True,0.9,none,,,False,,,refusal_eval.csv,refuse,blank_value
+이 상품은 우리 은행 내부 심사 기준에 어떻게 반영되나요?,,none,general_policy,False,True,0.8,none,,,False,,,refusal_eval.csv,refuse,out_of_scope
+하나은행과 타 은행의 해외송금 한도 차이는?,해외송금,product_family,limit,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval.csv,refuse,out_of_scope
+특례금리 적용 기간 중 가산 금리는 몇 퍼센트인가요?,,none,rate_current,True,False,0.7,none,,,False,,,refusal_eval.csv,refuse,blank_value
+이번 주 CD수익률은 어떻게 되나요?,CD,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval.csv,refuse,time_variant
+기타비용 항목과 금액은 어떻게 되나요?,,none,fee,False,True,0.8,none,,,False,,,refusal_eval.csv,refuse,blank_value
+제 거래 중도해지 시 손실 예상 금액은?,,none,early_termination,False,True,0.8,none,,,False,,,refusal_eval.csv,refuse,personalized
+Enhanced Forward 계약 시 적용되는 금리 변동폭은 얼마인가요?,Enhanced Forward 계약,specific_product,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval.csv,refuse,blank_value
+타 은행의 디폴트옵션 포트폴리오와 비교하면 이 상품의 장점은 무엇인가요?,이 상품,none,general_policy,True,False,0.8,unmatched,,,False,,,refusal_eval.csv,refuse,out_of_scope
+현재 적용되는 대출 금리는 얼마인가요?,,none,rate_current,False,True,0.8,none,,,False,,,refusal_eval.csv,refuse,time_variant
+연체가산율은 몇 퍼센트로 정해지나요?,,none,rate_current,False,True,0.9,none,,,False,,,refusal_eval.csv,refuse,blank_value
+제 개인 신용등급으로 이 상품을 이용해도 위험이 큰가요?,이 상품,none,eligibility,False,False,0.6,unmatched,,,False,,,refusal_eval.csv,refuse,personalized
+타 은행 전세자금대출과 비교해 금리 차이는?,전세자금대출,product_family,rate_current,True,False,0.9,covered,전세자금대출,,False,,,refusal_eval.csv,refuse,out_of_scope
+이 상품은 다른 은행의 신용대출 상품과 비교해 어떤 점이 우수한가요?,신용대출,product_family,general_policy,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval.csv,refuse,out_of_scope
+제 신용등급과 거래내역을 고려한 CD 수익률은 얼마인가요?,CD,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval.csv,refuse,personalized
+다른 은행들의 CD수익률 산출 방식과 비교해 알려주세요.,CD수익률,product_family,rate_current,True,False,0.9,covered,CD수익률,,False,,,refusal_eval.csv,refuse,out_of_scope
+하나은행의 디폴트옵션 상품 심사 기준은 무엇인가요?,디폴트옵션,specific_product,eligibility,True,False,0.9,ambiguous,하나은행 디폴트옵션 안정형 포트폴리오,하나은행 디폴트옵션 안정형 포트폴리오|하나은행 디폴트옵션 안정투자형 포트폴리오 1|하나은행 디폴트옵션 안정투자형 포트폴리오 2|하나은행 디폴트옵션 안정투자형 포트폴리오 3|하나은행 디폴트옵션 적극투자형 포트폴리오 1,True,ambiguous_product,,refusal_eval.csv,refuse,out_of_scope
+타 은행의 청년주택청약통장과 금리 차이는?,청년주택청약통장,specific_product,rate_current,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval.csv,refuse,out_of_scope
+담보권 실행 시 발생하는 비용은 얼마인가요?,,none,fee,False,True,0.9,none,,,False,,,refusal_eval.csv,refuse,blank_value
+미성년자 예금 해지 시 신용등급 영향은?,예금,product_family,general_policy,False,True,0.9,unmatched,,,False,,,refusal_eval.csv,refuse,out_of_scope
+이 상품의 신용 등급별 대출 심사 기준은 어떻게 되나요?,이 상품,none,eligibility,True,False,0.8,unmatched,,,False,,,refusal_eval.csv,refuse,out_of_scope
+제가 고정금리 지급자로서 이 거래에서 받을 수 있는 최대 변동금리 수취액은 얼마인가요?,,none,limit,False,True,0.8,none,,,False,,,refusal_eval.csv,refuse,personalized
+이 추가약정서에서 적용되는 금리 감면율은 몇 퍼센트인가요?,,none,rate_current,True,False,0.9,none,,,False,,,refusal_eval.csv,refuse,blank_value
+대출거래 추가약정서에서 적용되는 고정금리 비율은 얼마인가요?,대출거래 추가약정서,specific_product,rate_current,True,False,0.9,covered,대출거래( )추가약정서,,False,,,refusal_eval.csv,refuse,blank_value
+현재 대출금 이자율은 얼마인가요?,,none,rate_current,True,False,0.9,none,,,False,,,refusal_eval.csv,refuse,time_variant
+이용계약 해지 시 신용등급에 미치는 영향은?,,none,general_policy,False,True,0.9,none,,,False,,,refusal_eval.csv,refuse,out_of_scope
+저는 사전지정운용방법 변경 통지를 받았나요?,,none,procedure,False,True,0.8,none,,,False,,,refusal_eval.csv,refuse,personalized
+여신금액은 얼마로 설정되었나요?,,none,limit,True,False,0.8,none,,,False,,,refusal_eval.csv,refuse,blank_value
+제 개인 신용등급에 따른 대출 한도는?,,none,limit,False,True,0.9,none,,,False,,,refusal_eval.csv,refuse,personalized
+현재 대출 이자율은 얼마인가요?,,none,rate_current,False,False,0.8,none,,,False,,,refusal_eval.csv,refuse,time_variant
+기업전자금융 서비스에서 개인사업자가 ERP랑 연결하면 기본수수료가 얼마나 나와?,기업전자금융 서비스,product_family,fee,True,False,0.9,ambiguous,기업전자금융,기업전자금융,True,ambiguous_product,,refusal_eval.csv,answer,answerable
+일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?,일임형 개인종합자산관리계좌(ISA),specific_product,fee,True,False,0.95,ambiguous,일임형 개인종합자산관리계좌,일임형 개인종합자산관리계좌,True,ambiguous_product,,refusal_eval.csv,answer,answerable
+폰뱅킹 신청 시 관공서 서류 제출 기준은?,,none,required_docs,False,True,0.9,none,,,False,,,refusal_eval.csv,answer,answerable
+마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?,마이데이터서비스,product_family,general_policy,False,True,0.9,ambiguous,하나 합(마이데이터 서비스),하나 합(마이데이터 서비스),False,,,refusal_eval.csv,answer,answerable
+일임형 개인종합자산관리계좌(ISA) 가입 시 투자 가능한 위험등급 모델포트폴리오 제시 기준은 무엇인가요?,일임형 개인종합자산관리계좌(ISA),specific_product,eligibility,True,False,0.9,ambiguous,일임형 개인종합자산관리계좌,일임형 개인종합자산관리계좌,True,ambiguous_product,,refusal_eval.csv,answer,answerable
+기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,기업대출,product_family,definition,True,False,0.9,covered,기업대출,,False,,,refusal_eval.csv,answer,answerable
+하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?,하나은행 디폴트옵션 안정투자형 포트폴리오 1,specific_product,general_policy,True,False,0.9,covered,하나은행 디폴트옵션 안정투자형 포트폴리오 1,,False,,,refusal_eval.csv,answer,answerable
+하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,,none,procedure,False,True,0.9,none,,,False,,,refusal_eval.csv,answer,answerable
+하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,ISA 모델포트폴리오(최고위험_밸런스),specific_product,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval.csv,answer,answerable
+하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?,하나은행 대출,product_family,definition,False,True,0.9,unmatched,,,False,,,refusal_eval.csv,answer,answerable
+은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,refusal_eval.csv,answer,answerable
+하나은행 환전지갑 선물하기 서비스에서 하나머니 환급 절차는 어떻게 이루어지나요?,하나은행 환전지갑 선물하기 서비스,specific_product,procedure,True,False,0.9,ambiguous,환전지갑 선물하기 서비스,환전지갑 선물하기 서비스,True,ambiguous_product,,refusal_eval.csv,answer,answerable
+기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,기업용 대출,product_family,general_policy,False,True,0.9,unmatched,,,False,,,refusal_eval.csv,answer,answerable
+Enhanced Forward라는 상품은 만기 환율이 예상과 다르게 떨어지면 어떤 위험이 있나요?,Enhanced Forward,specific_product,definition,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval.csv,answer,answerable
+『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,하나은행 디폴트옵션 안정투자형 포트폴리오 3,specific_product,procedure,True,False,0.95,covered,하나은행 디폴트옵션 안정투자형 포트폴리오 3,,False,,,refusal_eval.csv,answer,answerable
+OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?,OTP,product_family,procedure,False,True,0.9,unmatched,,,False,,,refusal_eval.csv,answer,answerable
+자유저축예금 이자는 언제 받을 수 있나요?,자유저축예금,specific_product,rate_current,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval.csv,answer,answerable
+종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,,none,definition,False,True,0.9,none,,,False,,,refusal_eval.csv,answer,answerable
+하나은행 예금 거래는 보통 어디에서 하나요?,,none,procedure,False,True,0.9,none,,,False,,,refusal_eval.csv,answer,answerable
+ISA 계약을 중간에 해지할 때 어떤 특별한 사유가 있어야 해지할 수 있나요?,ISA,product_family,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval.csv,answer,answerable
+제 연체 기록이 대출 연체 이자에 어떻게 영향을 미치나요?,,none,general_policy,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,personalized
+현재 기준금리는 얼마인가요?,,none,rate_current,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,time_variant
+오늘 만기일 적용 결제환율은 얼마인가요?,,none,rate_current,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,time_variant
+제가 대출받은 후 직업이 바뀌면 대출금 지급이 조기만료되나요?,,none,early_termination,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,personalized
+인지세는 대출금액별로 얼마인가요?,,none,fee,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+이 상품은 우리 은행 내부 심사 기준에 어떻게 반영되나요?,,none,general_policy,False,True,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,out_of_scope
+인지세는 대출금액별로 각각 몇 원인가요?,,none,fee,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+하나은행과 타 은행의 해외송금 한도 차이는?,해외송금,product_family,limit,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,refuse,out_of_scope
+특례금리 적용 기간 중 가산 금리는 몇 퍼센트인가요?,,none,rate_current,True,False,0.7,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+이번 주 CD수익률은 어떻게 되나요?,CD,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,refuse,time_variant
+간편인증 등록 시 신분증 확인 절차가 있나요?,,none,procedure,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,out_of_scope
+기타비용 항목과 금액은 어떻게 되나요?,,none,fee,False,True,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+제 거래 중도해지 시 손실 예상 금액은?,,none,early_termination,False,True,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,personalized
+원리금 납입일 변경 후 첫 납입기일은 언제인가요?,,none,procedure,False,True,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+Enhanced Forward 계약 시 적용되는 금리 변동폭은 얼마인가요?,Enhanced Forward 계약,specific_product,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,refuse,blank_value
+타 은행의 디폴트옵션 포트폴리오와 비교하면 이 상품의 장점은 무엇인가요?,이 상품,none,general_policy,True,False,0.8,unmatched,,,False,,,refusal_eval_draft.csv,refuse,out_of_scope
+현재 적용되는 대출 금리는 얼마인가요?,,none,rate_current,False,True,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,time_variant
+연체가산율은 몇 퍼센트로 정해지나요?,,none,rate_current,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+조기상환해약금율은 몇 퍼센트인가요?,,none,early_termination,True,False,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+제 개인 신용등급으로 이 상품을 이용해도 위험이 큰가요?,이 상품,none,eligibility,False,False,0.6,unmatched,,,False,,,refusal_eval_draft.csv,refuse,personalized
+타 은행 전세자금대출과 비교해 금리 차이는?,전세자금대출,product_family,rate_current,True,False,0.9,covered,전세자금대출,,False,,,refusal_eval_draft.csv,refuse,out_of_scope
+이 상품은 다른 은행의 신용대출 상품과 비교해 어떤 점이 우수한가요?,신용대출,product_family,general_policy,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,refuse,out_of_scope
+제 신용등급과 거래내역을 고려한 CD 수익률은 얼마인가요?,CD,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,refuse,personalized
+다른 은행들의 CD수익률 산출 방식과 비교해 알려주세요.,CD수익률,product_family,rate_current,True,False,0.9,covered,CD수익률,,False,,,refusal_eval_draft.csv,refuse,out_of_scope
+근저당권 설정 신규 등록세 금액은 얼마인가요?,,none,fee,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+하나은행의 디폴트옵션 상품 심사 기준은 무엇인가요?,디폴트옵션,specific_product,eligibility,True,False,0.9,ambiguous,하나은행 디폴트옵션 안정형 포트폴리오,하나은행 디폴트옵션 안정형 포트폴리오|하나은행 디폴트옵션 안정투자형 포트폴리오 1|하나은행 디폴트옵션 안정투자형 포트폴리오 2|하나은행 디폴트옵션 안정투자형 포트폴리오 3|하나은행 디폴트옵션 적극투자형 포트폴리오 1,True,ambiguous_product,,refusal_eval_draft.csv,refuse,out_of_scope
+타 은행의 청년주택청약통장과 금리 차이는?,청년주택청약통장,specific_product,rate_current,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,refuse,out_of_scope
+담보권 실행 시 발생하는 비용은 얼마인가요?,,none,fee,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+미성년자 예금 해지 시 신용등급 영향은?,예금,product_family,general_policy,False,True,0.9,unmatched,,,False,,,refusal_eval_draft.csv,refuse,out_of_scope
+이 상품의 신용 등급별 대출 심사 기준은 어떻게 되나요?,이 상품,none,eligibility,True,False,0.8,unmatched,,,False,,,refusal_eval_draft.csv,refuse,out_of_scope
+제가 고정금리 지급자로서 이 거래에서 받을 수 있는 최대 변동금리 수취액은 얼마인가요?,,none,limit,False,True,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,personalized
+이 추가약정서에서 적용되는 금리 감면율은 몇 퍼센트인가요?,,none,rate_current,True,False,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+대출거래 추가약정서에서 적용되는 고정금리 비율은 얼마인가요?,대출거래 추가약정서,specific_product,rate_current,True,False,0.9,covered,대출거래( )추가약정서,,False,,,refusal_eval_draft.csv,refuse,blank_value
+현재 대출금 이자율은 얼마인가요?,,none,rate_current,True,False,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,time_variant
+이용계약 해지 시 신용등급에 미치는 영향은?,,none,general_policy,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,out_of_scope
+저는 사전지정운용방법 변경 통지를 받았나요?,,none,procedure,False,True,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,personalized
+연체기간 3개월 이하일 때 적용되는 연체이자율은 몇 퍼센트인가요?,,none,rate_current,True,False,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+여신금액은 얼마로 설정되었나요?,,none,limit,True,False,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,blank_value
+제 개인 신용등급에 따른 대출 한도는?,,none,limit,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,refuse,personalized
+현재 대출 이자율은 얼마인가요?,,none,rate_current,False,False,0.8,none,,,False,,,refusal_eval_draft.csv,refuse,time_variant
+기업전자금융 서비스에서 개인사업자가 ERP랑 연결하면 기본수수료가 얼마나 나와?,기업전자금융 서비스,product_family,fee,True,False,0.9,ambiguous,기업전자금융,기업전자금융,True,ambiguous_product,,refusal_eval_draft.csv,answer,answerable
+일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?,일임형 개인종합자산관리계좌(ISA),specific_product,fee,True,False,0.95,ambiguous,일임형 개인종합자산관리계좌,일임형 개인종합자산관리계좌,True,ambiguous_product,,refusal_eval_draft.csv,answer,answerable
+폰뱅킹 신청 시 관공서 서류 제출 기준은?,,none,required_docs,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,answer,answerable
+마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?,마이데이터서비스,product_family,general_policy,False,True,0.9,ambiguous,하나 합(마이데이터 서비스),하나 합(마이데이터 서비스),False,,,refusal_eval_draft.csv,answer,answerable
+일임형 개인종합자산관리계좌(ISA) 가입 시 투자 가능한 위험등급 모델포트폴리오 제시 기준은 무엇인가요?,일임형 개인종합자산관리계좌(ISA),specific_product,eligibility,True,False,0.9,ambiguous,일임형 개인종합자산관리계좌,일임형 개인종합자산관리계좌,True,ambiguous_product,,refusal_eval_draft.csv,answer,answerable
+기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,기업대출,product_family,definition,True,False,0.9,covered,기업대출,,False,,,refusal_eval_draft.csv,answer,answerable
+하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?,하나은행 디폴트옵션 안정투자형 포트폴리오 1,specific_product,general_policy,True,False,0.9,covered,하나은행 디폴트옵션 안정투자형 포트폴리오 1,,False,,,refusal_eval_draft.csv,answer,answerable
+하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,,none,procedure,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,answer,answerable
+하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,ISA 모델포트폴리오(최고위험_밸런스),specific_product,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,answer,answerable
+하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?,하나은행 대출,product_family,definition,False,True,0.9,unmatched,,,False,,,refusal_eval_draft.csv,answer,answerable
+은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,answer,answerable
+하나은행 환전지갑 선물하기 서비스에서 하나머니 환급 절차는 어떻게 이루어지나요?,하나은행 환전지갑 선물하기 서비스,specific_product,procedure,True,False,0.9,ambiguous,환전지갑 선물하기 서비스,환전지갑 선물하기 서비스,True,ambiguous_product,,refusal_eval_draft.csv,answer,answerable
+기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,기업용 대출,product_family,general_policy,False,True,0.9,unmatched,,,False,,,refusal_eval_draft.csv,answer,answerable
+Enhanced Forward라는 상품은 만기 환율이 예상과 다르게 떨어지면 어떤 위험이 있나요?,Enhanced Forward,specific_product,definition,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,answer,answerable
+『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,하나은행 디폴트옵션 안정투자형 포트폴리오 3,specific_product,procedure,True,False,0.95,covered,하나은행 디폴트옵션 안정투자형 포트폴리오 3,,False,,,refusal_eval_draft.csv,answer,answerable
+OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?,OTP,product_family,procedure,False,True,0.9,unmatched,,,False,,,refusal_eval_draft.csv,answer,answerable
+자유저축예금 이자는 언제 받을 수 있나요?,자유저축예금,specific_product,rate_current,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,answer,answerable
+종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,,none,definition,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,answer,answerable
+하나은행 예금 거래는 보통 어디에서 하나요?,,none,procedure,False,True,0.9,none,,,False,,,refusal_eval_draft.csv,answer,answerable
+ISA 계약을 중간에 해지할 때 어떤 특별한 사유가 있어야 해지할 수 있나요?,ISA,product_family,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,refusal_eval_draft.csv,answer,answerable
+14살 미만 애들 현금IC카드 본인이 직접 받을 수 있어?,현금IC카드,product_family,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 입출금 예금 이율은 바뀌면 언제부터 적용돼요?,입출금 예금,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 환전지갑에서 외화 찾을 때 신분증 꼭 가져가야 해요? 대리인은 어떻게 되나요?,하나은행 환전지갑,specific_product,required_docs,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+주택청약종합저축 가입하고 청약 1순위 되려면 어느 정도 기간과 납입횟수가 필요한가요?,주택청약종합저축,specific_product,eligibility,True,False,0.95,covered,주택청약종합저축,,False,,,retrieval_eval.csv,,
+Range Forward 상품은 만기 환율이 정해진 범위 밖으로 나가면 어떻게 처리되나요?,Range Forward,specific_product,general_policy,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+소득공제 장기펀드를 5년 안에 중간에 해지하면 세금이 얼마나 나와요?,소득공제 장기펀드,specific_product,early_termination,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?,하나은행 디폴트옵션 안정투자형 포트폴리오 1,specific_product,general_policy,True,False,0.9,covered,하나은행 디폴트옵션 안정투자형 포트폴리오 1,,False,,,retrieval_eval.csv,,
+휴대폰 번호는 안 바꾸고 기기만 바꿨는데 금융인증서 클라우드 계속 쓸 수 있나요?,금융인증서 클라우드,specific_product,procedure,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 가계 대출받을 때 이자율은 중간에 바꿀 수 있어?,가계 대출,product_family,rate_current,True,False,0.9,covered,가계대출,,False,,,retrieval_eval.csv,,
+하나은행 CD 수익률은 누가 어떻게 정하는 거예요?,하나은행 CD,specific_product,definition,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 기업 인터넷뱅킹에서 급여 이체는 언제까지 할 수 있나요?,기업 인터넷뱅킹,product_family,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품 가입 후 따로 운용 방법 지시 안 하면 어떻게 돼요?,하나은행 디폴트옵션 중립투자형 포트폴리오 1,specific_product,general_policy,True,False,0.9,covered,하나은행 디폴트옵션 중립투자형 포트폴리오 1,,False,,,retrieval_eval.csv,,
+하나은행 디폴트옵션 중립투자형 포트폴리오 2는 중간에 해지하면 원금 손실 가능성이 있나요?,하나은행 디폴트옵션 중립투자형 포트폴리오 2,specific_product,early_termination,True,False,0.95,covered,하나은행 디폴트옵션 중립투자형 포트폴리오 2,,False,,,retrieval_eval.csv,,
+하나원큐에서 특정 계좌 조회 못하게 하려면 어떻게 해?,하나원큐,product_family,procedure,False,True,0.9,ambiguous,하나원큐기업 환전지갑 서비스 설명서,하나원큐기업 환전지갑 서비스 설명서,False,,,retrieval_eval.csv,,
+하나원큐 로그인할 때 기본 로그인 방법을 바꾸려면 어떻게 해야 해요?,하나원큐,product_family,procedure,False,True,0.9,ambiguous,하나원큐기업 환전지갑 서비스 설명서,하나원큐기업 환전지갑 서비스 설명서,False,,,retrieval_eval.csv,,
+기업 대출할 때 원화 금리는 어떤 기준으로 정해지나요?,기업 대출,product_family,rate_current,True,False,0.9,covered,기업대출,,False,,,retrieval_eval.csv,,
+일임형 개인종합자산관리계좌(ISA) 가입 시 투자 가능한 위험등급 모델포트폴리오 제시 기준은 무엇인가요?,일임형 개인종합자산관리계좌(ISA),specific_product,eligibility,True,False,0.9,ambiguous,일임형 개인종합자산관리계좌,일임형 개인종합자산관리계좌,True,ambiguous_product,,retrieval_eval.csv,,
+기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,기업대출,product_family,definition,True,False,0.9,covered,기업대출,,False,,,retrieval_eval.csv,,
+Enhanced Forward라는 상품은 만기 환율이 예상과 다르게 떨어지면 어떤 위험이 있나요?,Enhanced Forward,specific_product,definition,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+이자율 스왑(고객 고정금리 지급) 중도해지는 어떻게 가능한가요?,이자율 스왑(고객 고정금리 지급),specific_product,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+구 외환은행 프라임등급 계속 유지하려면 어떻게 해야 해요?,구 외환은행 프라임등급,specific_product,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 이자율 스왑 상품의 위험등급과 손실범위는 어떻게 되나요?,이자율 스왑 상품,product_family,general_policy,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+청년 주택드림 청약통장 가입할 때 소득 증명서류로는 어떤 게 필요한가요?,청년 주택드림 청약통장,specific_product,required_docs,True,False,0.95,covered,청년 주택드림 청약통장,,False,,,retrieval_eval.csv,,
+하나일임형ISA 저위험포커스 모델포트폴리오가 포함한 금융상품은 원금보장이 되나요?,하나일임형ISA 저위험포커스 모델포트폴리오,specific_product,general_policy,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행에서 전자금융 거래 내역을 못 받을 때 은행이 어떻게 알려줘야 해?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+해외 출국 전 하나은행 전자금융사기예방서비스 설정은 어떻게 해야 하나요?,하나은행 전자금융사기예방서비스,specific_product,procedure,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 예금 거래는 보통 어디에서 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,,none,definition,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+대출일과 월 납입일이 다르면 첫 이자는 언제 내야 하나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나 합 서비스는 몇 살 이상부터 창구에서 바로 신청할 수 있어?,하나 합 서비스,specific_product,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,ISA 모델포트폴리오(최고위험_밸런스),specific_product,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+골드바 살 때는 가격 계산할 때 수수료랑 세금 어떻게 붙어요?,골드바,product_family,fee,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?,하나은행 대출,product_family,definition,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+해외에서 돈 받을 때 해외 사람이 우리 은행에 보내려면 뭘 알려줘야 해?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+환전 신청을 했는데 아직 처리 안 됐어요. 이럴 때 더 신청할 수 있나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?,일임형 개인종합자산관리계좌(ISA),specific_product,fee,True,False,0.95,ambiguous,일임형 개인종합자산관리계좌,일임형 개인종합자산관리계좌,True,ambiguous_product,,retrieval_eval.csv,,
+ISA 계약을 중간에 해지할 때 어떤 특별한 사유가 있어야 해지할 수 있나요?,ISA,product_family,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 브라우저인증서 서비스는 2020년 12월 10일 이후 신규 발급이 가능한가요?,하나은행 브라우저인증서 서비스,specific_product,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 카드로 해외에서 현지 돈을 찾으려면 어떤 서비스가 있나요?,하나은행 카드,product_family,general_policy,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?,마이데이터서비스,product_family,general_policy,False,True,0.9,ambiguous,하나 합(마이데이터 서비스),하나 합(마이데이터 서비스),False,,,retrieval_eval.csv,,
+전세자금대출에서 중도상환해약금 산정 기준은 무엇인가요?,전세자금대출,product_family,early_termination,True,False,0.95,covered,전세자금대출,,False,,,retrieval_eval.csv,,
+은행에서 빌린 돈을 10일 넘게 못 갚으면 어떻게 되나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+사업자 주거래 우대통장 가입 후 최초 다음달까지 제공되는 수수료 우대서비스는 무엇인가요?,사업자 주거래 우대통장,specific_product,fee,True,False,0.95,covered,사업자 주거래 우대통장,,False,,,retrieval_eval.csv,,
+Enhanced Forward 상품에서 환율 변동이 평가손익에 어떤 영향을 주나요?,Enhanced Forward,specific_product,definition,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+통장 없이 거래할 때 도장이나 서명은 꼭 제출해야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+예금 토큰 전환이 제한되는 경우는 어떤 상황인가요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+최고위험 밸런스 포트폴리오 어떤 사람한테 맞아요?,최고위험 밸런스 포트폴리오,product_family,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 마이너스통장 대출 이자는 어떤 기준으로 출금되나요?,마이너스통장 대출,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+외화 송금한 후에 돈 보내는 걸 취소하거나 바꿀 수 있나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+전세자금대출 갚을 때 빚이 여러 개면 어떤 순서로 갚아요?,전세자금대출,product_family,general_policy,False,True,0.9,covered,전세자금대출,,False,,,retrieval_eval.csv,,
+"상속으로 집을 받았는데 그 집이 수도권 밖 85㎡ 이하 단독주택일 때, 다른 지역으로 이사 가면 어떤 상황이 되나요?",,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?,OTP,product_family,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+하나은행 대출 중간에 갚으면 수수료 어떻게 계산돼요?,하나은행 대출,product_family,fee,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+제가 13살인데 해외에서 계좌를 이용하려면 ATM에서 돈을 뺄 수 있나요?,,none,eligibility,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나 화상상담데스크 이용 가능시간은 어떻게 되나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나은행 예금 토큰은 모바일 앱에서 어떻게 가입해요?,하나은행 예금 토큰,specific_product,procedure,True,False,0.9,ambiguous,예금 토큰,예금 토큰,True,ambiguous_product,,retrieval_eval.csv,,
+해외에서 현지 돈을 뽑을 때 수수료가 어떻게 되나요?,,none,fee,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+해외 ATM 출금 서비스의 1회 출금 표준한도는 얼마인가요?,해외 ATM 출금 서비스,product_family,limit,True,False,0.9,covered,해외 ATM 출금 서비스,,False,,,retrieval_eval.csv,,
+하나은행 글로벌ATM에서 해외카드로 잔액 조회할 수 있나요?,글로벌ATM,product_family,general_policy,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+폰뱅킹 신청 시 관공서 서류 제출 기준은?,,none,required_docs,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+저축예금 통장에 사기 의심이 생기면 거래가 어떻게 제한돼요?,저축예금 통장,product_family,general_policy,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+"월급이 7000만 원 이하이고 집이 없는데, 다음 해 2월 말까지 어떤 서류를 은행에 내야 소득공제를 받을 수 있나요?",,none,required_docs,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,하나은행 디폴트옵션 안정투자형 포트폴리오 3,specific_product,procedure,True,False,0.95,covered,하나은행 디폴트옵션 안정투자형 포트폴리오 3,,False,,,retrieval_eval.csv,,
+기업전자금융 서비스에서 개인사업자가 ERP랑 연결하면 기본수수료가 얼마나 나와?,기업전자금융 서비스,product_family,fee,True,False,0.9,ambiguous,기업전자금융,기업전자금융,True,ambiguous_product,,retrieval_eval.csv,,
+내가 가입할 때 다른 사람 정보를 써서 신청하면 계약을 바로 끊나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+주택청약저축에서 선납한 금액은 언제 인정회차로 산정되나요?,주택청약저축,specific_product,general_policy,True,False,0.95,covered,주택청약저축,,False,,,retrieval_eval.csv,,
+하나은행 인터넷뱅킹에서 1천만원 넘게 이체하려면 어떻게 해야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+대출받은 뒤에 원금은 안 내고 이자만 낼 수 있는 기간이 있나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나은행 심플이체에서 이체 내역을 수정할 수 있나요?,하나은행 심플이체,specific_product,procedure,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+하나은행 가계 대출할 때 인지세는 누가 부담해요?,가계 대출,product_family,fee,False,True,0.9,covered,가계대출,,False,,,retrieval_eval.csv,,
+전세자금 대출할 때 배우자랑 합친 자산이 너무 많으면 우대금리 받을 수 없나요?,전세자금 대출,product_family,eligibility,True,False,0.9,covered,전세자금대출,,False,,,retrieval_eval.csv,,
+하나 합(마이데이터 서비스) 이용 시 만 14세 미만 손님의 거래 제한 내용은 무엇인가요?,하나 합(마이데이터 서비스),specific_product,general_policy,True,False,0.9,covered,하나 합(마이데이터 서비스),,False,,,retrieval_eval.csv,,
+"돈 빌린 사람이 약속을 안 지켜서 은행이 보증인에게 알릴 때, 은행은 얼마나 빨리 알려야 하나요?",,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나은행 환전지갑 선물하기 서비스에서 하나머니 환급 절차는 어떻게 이루어지나요?,하나은행 환전지갑 선물하기 서비스,specific_product,procedure,True,False,0.9,ambiguous,환전지갑 선물하기 서비스,환전지갑 선물하기 서비스,True,ambiguous_product,,retrieval_eval.csv,,
+내가 자급제폰에 안드로이드 10 쓰는데 스마트 간편인증이 안 돼요. 어떻게 해야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+제가 대출받을 때 알려준 집 보유 수가 사실과 다르면 대출에 문제가 생기나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,기업용 대출,product_family,general_policy,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+부부 합산 소득이 7천만원 넘으면 어떤 대출을 못 받나요?,,none,eligibility,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나은행 내 계좌이체 시 보안매체나 공동인증서 사용 여부는?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+제휴사 해외 ATM 출금 서비스에서 특정 제휴사 환율 적용 방식은 무엇인가요?,제휴사 해외 ATM 출금 서비스,product_family,definition,True,False,0.9,covered,제휴사 해외 ATM 출금 서비스,,False,,,retrieval_eval.csv,,
+외화를 은행 외화통장에 넣으면 수수료가 어떻게 되나요?,외화통장,product_family,fee,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+"하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품, 만기 전에 돈 찾으면 이자가 어떻게 돼요?",하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품,specific_product,early_termination,True,False,0.95,ambiguous,하나은행 디폴트옵션 중립투자형 포트폴리오 1,하나은행 디폴트옵션 중립투자형 포트폴리오 1,True,ambiguous_product,,retrieval_eval.csv,,
+하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+개인형IRP에서 만기 자금 운용 지시가 없을 때 어떻게 운용되나요?,개인형IRP,product_family,general_policy,True,False,0.9,covered,개인형IRP,,False,,,retrieval_eval.csv,,
+소득공제 장기펀드 소득공제 대상자 요건은 무엇인가요?,소득공제 장기펀드,specific_product,eligibility,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+은행이 서류를 잃어버리거나 다치게 하면 제가 가진 다른 증서로 빚을 갚아야 하나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나원큐기업 환전지갑 서비스에서 재환전 시 건당 금액이 1백만원 초과하면 어떻게 처리해야 하나요?,하나원큐기업 환전지갑 서비스,specific_product,procedure,True,False,0.9,ambiguous,하나원큐기업 환전지갑 서비스 설명서,하나원큐기업 환전지갑 서비스 설명서,True,ambiguous_product,,retrieval_eval.csv,,
+하나은행 제휴 환전지갑으로 외화 받을 때 직접 가서 신분증 보여줘야 하나요?,하나은행 제휴 환전지갑,specific_product,procedure,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+내 계좌에 돈이 부족하면 인터넷으로 돈 보내기가 안 되나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나은행 저축예금에서 날짜 없는 수표가 들어오면 어떻게 처리해줘?,하나은행 저축예금,product_family,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+하나은행 예금 토큰 해지 시 수수료나 위약금이 발생합니까?,예금 토큰,specific_product,fee,True,False,0.9,covered,예금 토큰,,False,,,retrieval_eval.csv,,
+자유저축예금 이자는 언제 받을 수 있나요?,자유저축예금,specific_product,rate_current,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval.csv,,
+대출금을 제때 못 갚으면 집 팔고 남은 돈 더 내야 하나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval.csv,,
+하나은행 디폴트옵션 안정형 포트폴리오의 투자원금 손실 가능성은 어떻게 설명되어 있나요?,디폴트옵션 안정형 포트폴리오,specific_product,definition,True,False,0.9,ambiguous,하나은행 디폴트옵션 안정형 포트폴리오,하나은행 디폴트옵션 안정형 포트폴리오,True,ambiguous_product,,retrieval_eval.csv,,
+외국인도 하나은행 인터넷뱅킹으로 해외송금하려면 어떻게 해야 해?,하나은행 인터넷뱅킹,none,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval.csv,,
+14살 미만 애들 현금IC카드 본인이 직접 받을 수 있어?,현금IC카드,product_family,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 입출금 예금 이율은 바뀌면 언제부터 적용돼요?,입출금 예금,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 환전지갑에서 외화 찾을 때 신분증 꼭 가져가야 해요? 대리인은 어떻게 되나요?,하나은행 환전지갑,specific_product,required_docs,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행에서 복리 적용하는 대출 중간에 금리 계산은 어떻게 해줘요?,복리 적용하는 대출,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+주택청약종합저축 가입하고 청약 1순위 되려면 어느 정도 기간과 납입횟수가 필요한가요?,주택청약종합저축,specific_product,eligibility,True,False,0.95,covered,주택청약종합저축,,False,,,retrieval_eval_draft.csv,,
+Range Forward 상품은 만기 환율이 정해진 범위 밖으로 나가면 어떻게 처리되나요?,Range Forward,specific_product,general_policy,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+소득공제 장기펀드를 5년 안에 중간에 해지하면 세금이 얼마나 나와요?,소득공제 장기펀드,specific_product,early_termination,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+타겟 리뎀션 포워드 상품은 만기 전에 환율이 일정 수준 내려가면 계약이 자동으로 끝날 수도 있나요?,타겟 리뎀션 포워드 상품,specific_product,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?,하나은행 디폴트옵션 안정투자형 포트폴리오 1,specific_product,general_policy,True,False,0.9,covered,하나은행 디폴트옵션 안정투자형 포트폴리오 1,,False,,,retrieval_eval_draft.csv,,
+휴대폰 번호는 안 바꾸고 기기만 바꿨는데 금융인증서 클라우드 계속 쓸 수 있나요?,금융인증서 클라우드,specific_product,procedure,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 가계 대출받을 때 이자율은 중간에 바꿀 수 있어?,가계 대출,product_family,rate_current,True,False,0.9,covered,가계대출,,False,,,retrieval_eval_draft.csv,,
+하나은행 CD 수익률은 누가 어떻게 정하는 거예요?,하나은행 CD,specific_product,definition,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 기업 인터넷뱅킹에서 급여 이체는 언제까지 할 수 있나요?,기업 인터넷뱅킹,product_family,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품 가입 후 따로 운용 방법 지시 안 하면 어떻게 돼요?,하나은행 디폴트옵션 중립투자형 포트폴리오 1,specific_product,general_policy,True,False,0.9,covered,하나은행 디폴트옵션 중립투자형 포트폴리오 1,,False,,,retrieval_eval_draft.csv,,
+하나은행 디폴트옵션 중립투자형 포트폴리오 2는 중간에 해지하면 원금 손실 가능성이 있나요?,하나은행 디폴트옵션 중립투자형 포트폴리오 2,specific_product,early_termination,True,False,0.95,covered,하나은행 디폴트옵션 중립투자형 포트폴리오 2,,False,,,retrieval_eval_draft.csv,,
+하나원큐에서 특정 계좌 조회 못하게 하려면 어떻게 해?,하나원큐,product_family,procedure,False,True,0.9,ambiguous,하나원큐기업 환전지갑 서비스 설명서,하나원큐기업 환전지갑 서비스 설명서,False,,,retrieval_eval_draft.csv,,
+하나원큐 로그인할 때 기본 로그인 방법을 바꾸려면 어떻게 해야 해요?,하나원큐,product_family,procedure,False,True,0.9,ambiguous,하나원큐기업 환전지갑 서비스 설명서,하나원큐기업 환전지갑 서비스 설명서,False,,,retrieval_eval_draft.csv,,
+기업 대출할 때 원화 금리는 어떤 기준으로 정해지나요?,기업 대출,product_family,rate_current,True,False,0.9,covered,기업대출,,False,,,retrieval_eval_draft.csv,,
+일임형 개인종합자산관리계좌(ISA) 가입 시 투자 가능한 위험등급 모델포트폴리오 제시 기준은 무엇인가요?,일임형 개인종합자산관리계좌(ISA),specific_product,eligibility,True,False,0.9,ambiguous,일임형 개인종합자산관리계좌,일임형 개인종합자산관리계좌,True,ambiguous_product,,retrieval_eval_draft.csv,,
+기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,기업대출,product_family,definition,True,False,0.9,covered,기업대출,,False,,,retrieval_eval_draft.csv,,
+Enhanced Forward라는 상품은 만기 환율이 예상과 다르게 떨어지면 어떤 위험이 있나요?,Enhanced Forward,specific_product,definition,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+이자율 스왑(고객 고정금리 지급) 중도해지는 어떻게 가능한가요?,이자율 스왑(고객 고정금리 지급),specific_product,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+구 외환은행 프라임등급 계속 유지하려면 어떻게 해야 해요?,구 외환은행 프라임등급,specific_product,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 이자율 스왑 상품의 위험등급과 손실범위는 어떻게 되나요?,이자율 스왑 상품,product_family,general_policy,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+청년 주택드림 청약통장 가입할 때 소득 증명서류로는 어떤 게 필요한가요?,청년 주택드림 청약통장,specific_product,required_docs,True,False,0.95,covered,청년 주택드림 청약통장,,False,,,retrieval_eval_draft.csv,,
+하나일임형ISA 저위험포커스 모델포트폴리오가 포함한 금융상품은 원금보장이 되나요?,하나일임형ISA 저위험포커스 모델포트폴리오,specific_product,general_policy,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행에서 전자금융 거래 내역을 못 받을 때 은행이 어떻게 알려줘야 해?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+해외 출국 전 하나은행 전자금융사기예방서비스 설정은 어떻게 해야 하나요?,하나은행 전자금융사기예방서비스,specific_product,procedure,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 예금 거래는 보통 어디에서 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,,none,definition,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+대출일과 월 납입일이 다르면 첫 이자는 언제 내야 하나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나 합 서비스는 몇 살 이상부터 창구에서 바로 신청할 수 있어?,하나 합 서비스,specific_product,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+처음 돈 넣고 두 번째 돈 넣을 때 은행에서 따로 알려주나요?,,none,procedure,False,True,0.8,none,,,False,,,retrieval_eval_draft.csv,,
+하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,ISA 모델포트폴리오(최고위험_밸런스),specific_product,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+골드바 살 때는 가격 계산할 때 수수료랑 세금 어떻게 붙어요?,골드바,product_family,fee,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?,하나은행 대출,product_family,definition,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+해외에서 돈 받을 때 해외 사람이 우리 은행에 보내려면 뭘 알려줘야 해?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+대출 이자는 언제까지 내야 하나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+환전 신청을 했는데 아직 처리 안 됐어요. 이럴 때 더 신청할 수 있나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?,일임형 개인종합자산관리계좌(ISA),specific_product,fee,True,False,0.95,ambiguous,일임형 개인종합자산관리계좌,일임형 개인종합자산관리계좌,True,ambiguous_product,,retrieval_eval_draft.csv,,
+ISA 계약을 중간에 해지할 때 어떤 특별한 사유가 있어야 해지할 수 있나요?,ISA,product_family,early_termination,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 브라우저인증서 서비스는 2020년 12월 10일 이후 신규 발급이 가능한가요?,하나은행 브라우저인증서 서비스,specific_product,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 카드로 해외에서 현지 돈을 찾으려면 어떤 서비스가 있나요?,하나은행 카드,product_family,general_policy,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+만기 전에 돈을 찾고 싶은데 은행에서 꼭 허락해야 하나요?,,none,early_termination,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?,마이데이터서비스,product_family,general_policy,False,True,0.9,ambiguous,하나 합(마이데이터 서비스),하나 합(마이데이터 서비스),False,,,retrieval_eval_draft.csv,,
+전세자금대출에서 중도상환해약금 산정 기준은 무엇인가요?,전세자금대출,product_family,early_termination,True,False,0.95,covered,전세자금대출,,False,,,retrieval_eval_draft.csv,,
+은행에서 빌린 돈을 10일 넘게 못 갚으면 어떻게 되나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+사업자 주거래 우대통장 가입 후 최초 다음달까지 제공되는 수수료 우대서비스는 무엇인가요?,사업자 주거래 우대통장,specific_product,fee,True,False,0.95,covered,사업자 주거래 우대통장,,False,,,retrieval_eval_draft.csv,,
+Enhanced Forward 상품에서 환율 변동이 평가손익에 어떤 영향을 주나요?,Enhanced Forward,specific_product,definition,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+통장 없이 거래할 때 도장이나 서명은 꼭 제출해야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+예금 토큰 전환이 제한되는 경우는 어떤 상황인가요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+최고위험 밸런스 포트폴리오 어떤 사람한테 맞아요?,최고위험 밸런스 포트폴리오,product_family,eligibility,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 마이너스통장 대출 이자는 어떤 기준으로 출금되나요?,마이너스통장 대출,product_family,rate_current,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+외화 송금한 후에 돈 보내는 걸 취소하거나 바꿀 수 있나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+전세자금대출 갚을 때 빚이 여러 개면 어떤 순서로 갚아요?,전세자금대출,product_family,general_policy,False,True,0.9,covered,전세자금대출,,False,,,retrieval_eval_draft.csv,,
+"상속으로 집을 받았는데 그 집이 수도권 밖 85㎡ 이하 단독주택일 때, 다른 지역으로 이사 가면 어떤 상황이 되나요?",,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?,OTP,product_family,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+하나은행 대출 중간에 갚으면 수수료 어떻게 계산돼요?,하나은행 대출,product_family,fee,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+제가 13살인데 해외에서 계좌를 이용하려면 ATM에서 돈을 뺄 수 있나요?,,none,eligibility,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나 화상상담데스크 이용 가능시간은 어떻게 되나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나은행 예금 토큰은 모바일 앱에서 어떻게 가입해요?,하나은행 예금 토큰,specific_product,procedure,True,False,0.9,ambiguous,예금 토큰,예금 토큰,True,ambiguous_product,,retrieval_eval_draft.csv,,
+해외에서 현지 돈을 뽑을 때 수수료가 어떻게 되나요?,,none,fee,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+해외 ATM 출금 서비스의 1회 출금 표준한도는 얼마인가요?,해외 ATM 출금 서비스,product_family,limit,True,False,0.9,covered,해외 ATM 출금 서비스,,False,,,retrieval_eval_draft.csv,,
+하나은행 글로벌ATM에서 해외카드로 잔액 조회할 수 있나요?,글로벌ATM,product_family,general_policy,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+외화로 바꾸는 신청을 여러 번 동시에 할 수 있나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+폰뱅킹 신청 시 관공서 서류 제출 기준은?,,none,required_docs,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+저축예금 통장에 사기 의심이 생기면 거래가 어떻게 제한돼요?,저축예금 통장,product_family,general_policy,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+"월급이 7000만 원 이하이고 집이 없는데, 다음 해 2월 말까지 어떤 서류를 은행에 내야 소득공제를 받을 수 있나요?",,none,required_docs,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,하나은행 디폴트옵션 안정투자형 포트폴리오 3,specific_product,procedure,True,False,0.95,covered,하나은행 디폴트옵션 안정투자형 포트폴리오 3,,False,,,retrieval_eval_draft.csv,,
+기업전자금융 서비스에서 개인사업자가 ERP랑 연결하면 기본수수료가 얼마나 나와?,기업전자금융 서비스,product_family,fee,True,False,0.9,ambiguous,기업전자금융,기업전자금융,True,ambiguous_product,,retrieval_eval_draft.csv,,
+내가 가입할 때 다른 사람 정보를 써서 신청하면 계약을 바로 끊나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+주택청약저축에서 선납한 금액은 언제 인정회차로 산정되나요?,주택청약저축,specific_product,general_policy,True,False,0.95,covered,주택청약저축,,False,,,retrieval_eval_draft.csv,,
+하나은행 인터넷뱅킹에서 1천만원 넘게 이체하려면 어떻게 해야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+대출받은 뒤에 원금은 안 내고 이자만 낼 수 있는 기간이 있나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나은행 심플이체에서 이체 내역을 수정할 수 있나요?,하나은행 심플이체,specific_product,procedure,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+하나은행 가계 대출할 때 인지세는 누가 부담해요?,가계 대출,product_family,fee,False,True,0.9,covered,가계대출,,False,,,retrieval_eval_draft.csv,,
+이 상품에 투자하면 원금이 안전하게 보장되나요?,이 상품,none,general_policy,False,True,0.7,unmatched,,,False,,,retrieval_eval_draft.csv,,
+전세자금 대출할 때 배우자랑 합친 자산이 너무 많으면 우대금리 받을 수 없나요?,전세자금 대출,product_family,eligibility,True,False,0.9,covered,전세자금대출,,False,,,retrieval_eval_draft.csv,,
+하나 합(마이데이터 서비스) 이용 시 만 14세 미만 손님의 거래 제한 내용은 무엇인가요?,하나 합(마이데이터 서비스),specific_product,general_policy,True,False,0.9,covered,하나 합(마이데이터 서비스),,False,,,retrieval_eval_draft.csv,,
+"돈 빌린 사람이 약속을 안 지켜서 은행이 보증인에게 알릴 때, 은행은 얼마나 빨리 알려야 하나요?",,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나은행 환전지갑 선물하기 서비스에서 하나머니 환급 절차는 어떻게 이루어지나요?,하나은행 환전지갑 선물하기 서비스,specific_product,procedure,True,False,0.9,ambiguous,환전지갑 선물하기 서비스,환전지갑 선물하기 서비스,True,ambiguous_product,,retrieval_eval_draft.csv,,
+내가 자급제폰에 안드로이드 10 쓰는데 스마트 간편인증이 안 돼요. 어떻게 해야 하나요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+제가 대출받을 때 알려준 집 보유 수가 사실과 다르면 대출에 문제가 생기나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,기업용 대출,product_family,general_policy,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+부부 합산 소득이 7천만원 넘으면 어떤 대출을 못 받나요?,,none,eligibility,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나은행 내 계좌이체 시 보안매체나 공동인증서 사용 여부는?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+제휴사 해외 ATM 출금 서비스에서 특정 제휴사 환율 적용 방식은 무엇인가요?,제휴사 해외 ATM 출금 서비스,product_family,definition,True,False,0.9,covered,제휴사 해외 ATM 출금 서비스,,False,,,retrieval_eval_draft.csv,,
+하나은행 앱 비밀번호 5번 넘게 틀리면 어떻게 해요?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+통장인감 분실 시 하나은행 입출금통장 재발급 절차와 수수료는 무엇인가요?,입출금통장,product_family,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+외화를 은행 외화통장에 넣으면 수수료가 어떻게 되나요?,외화통장,product_family,fee,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+"하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품, 만기 전에 돈 찾으면 이자가 어떻게 돼요?",하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품,specific_product,early_termination,True,False,0.95,ambiguous,하나은행 디폴트옵션 중립투자형 포트폴리오 1,하나은행 디폴트옵션 중립투자형 포트폴리오 1,True,ambiguous_product,,retrieval_eval_draft.csv,,
+외화 팔 때 환율이 조금만 올라도 얼마나 손해 보는 건가요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,,none,procedure,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+개인형IRP에서 만기 자금 운용 지시가 없을 때 어떻게 운용되나요?,개인형IRP,product_family,general_policy,True,False,0.9,covered,개인형IRP,,False,,,retrieval_eval_draft.csv,,
+소득공제 장기펀드 소득공제 대상자 요건은 무엇인가요?,소득공제 장기펀드,specific_product,eligibility,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+은행에서 거래한 내용에 오류가 있을 때는 어떻게 처리하나요?,,none,general_policy,False,True,0.95,none,,,False,,,retrieval_eval_draft.csv,,
+"하나은행 전자금융 거래할 때, 내 컴퓨터나 휴대폰 정보를 등록해야 하나요?",전자금융,product_family,procedure,False,True,0.9,ambiguous,기업전자금융,기업전자금융,False,,,retrieval_eval_draft.csv,,
+은행이 서류를 잃어버리거나 다치게 하면 제가 가진 다른 증서로 빚을 갚아야 하나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나원큐기업 환전지갑 서비스에서 재환전 시 건당 금액이 1백만원 초과하면 어떻게 처리해야 하나요?,하나원큐기업 환전지갑 서비스,specific_product,procedure,True,False,0.9,ambiguous,하나원큐기업 환전지갑 서비스 설명서,하나원큐기업 환전지갑 서비스 설명서,True,ambiguous_product,,retrieval_eval_draft.csv,,
+하나은행 제휴 환전지갑으로 외화 받을 때 직접 가서 신분증 보여줘야 하나요?,하나은행 제휴 환전지갑,specific_product,procedure,True,False,0.9,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+내 계좌에 돈이 부족하면 인터넷으로 돈 보내기가 안 되나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나은행 저축예금에서 날짜 없는 수표가 들어오면 어떻게 처리해줘?,하나은행 저축예금,product_family,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
+하나은행 예금 토큰 해지 시 수수료나 위약금이 발생합니까?,예금 토큰,specific_product,fee,True,False,0.9,covered,예금 토큰,,False,,,retrieval_eval_draft.csv,,
+만약 제가 돈을 중간에 찾으면 어떤 불이익이 있나요?,,none,early_termination,False,True,0.8,none,,,False,,,retrieval_eval_draft.csv,,
+골드·실버바 매매 시 적용되는 은행 판매가격 산정 방법은 무엇인가요?,골드·실버바,product_family,general_policy,True,False,0.9,ambiguous,골드·실버바(한국금거래소),골드·실버바(한국금거래소),True,ambiguous_product,,retrieval_eval_draft.csv,,
+자유저축예금 이자는 언제 받을 수 있나요?,자유저축예금,specific_product,rate_current,True,False,0.95,unmatched,,,True,product_mismatch,,retrieval_eval_draft.csv,,
+대출금을 제때 못 갚으면 집 팔고 남은 돈 더 내야 하나요?,,none,general_policy,False,True,0.9,none,,,False,,,retrieval_eval_draft.csv,,
+하나은행 디폴트옵션 안정형 포트폴리오의 투자원금 손실 가능성은 어떻게 설명되어 있나요?,디폴트옵션 안정형 포트폴리오,specific_product,definition,True,False,0.9,ambiguous,하나은행 디폴트옵션 안정형 포트폴리오,하나은행 디폴트옵션 안정형 포트폴리오,True,ambiguous_product,,retrieval_eval_draft.csv,,
+외국인도 하나은행 인터넷뱅킹으로 해외송금하려면 어떻게 해야 해?,하나은행 인터넷뱅킹,none,procedure,False,True,0.9,unmatched,,,False,,,retrieval_eval_draft.csv,,
