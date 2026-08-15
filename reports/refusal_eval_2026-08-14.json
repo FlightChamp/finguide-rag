@@ -1,0 +1,87 @@
+{
+  "date": "2026-08-14",
+  "eval_set": {
+    "total": 53,
+    "refuse": 33,
+    "answer": 20
+  },
+  "retrieval": {
+    "model": "e5-small",
+    "alpha": 0.5
+  },
+  "thresholds": {
+    "refuse": {
+      "score_top1": 0.72,
+      "gap_1_5": 0.1
+    },
+    "answer": {
+      "score_top1": 0.92,
+      "gap_1_5": 0.38
+    }
+  },
+  "stages": {
+    "0단계만 (질문 패턴)": {
+      "tp": 22,
+      "fn": 11,
+      "fp": 1,
+      "tn": 19,
+      "refusal_accuracy": 0.6667,
+      "false_answer_rate": 0.3333,
+      "over_refusal_rate": 0.05,
+      "answer_accuracy": 0.95,
+      "precision": 0.9565,
+      "f1": 0.7857,
+      "balanced_accuracy": 0.8083,
+      "n": 53,
+      "llm_calls": 0
+    },
+    "0+1단계 (패턴+검색)": {
+      "tp": 22,
+      "fn": 11,
+      "fp": 2,
+      "tn": 18,
+      "refusal_accuracy": 0.6667,
+      "false_answer_rate": 0.3333,
+      "over_refusal_rate": 0.1,
+      "answer_accuracy": 0.9,
+      "precision": 0.9167,
+      "f1": 0.7719,
+      "balanced_accuracy": 0.7833,
+      "n": 53,
+      "llm_calls": 0
+    },
+    "0+1+2단계 (LLM 포함)": {
+      "tp": 29,
+      "fn": 4,
+      "fp": 5,
+      "tn": 15,
+      "refusal_accuracy": 0.8788,
+      "false_answer_rate": 0.1212,
+      "over_refusal_rate": 0.25,
+      "answer_accuracy": 0.75,
+      "precision": 0.8529,
+      "f1": 0.8657,
+      "balanced_accuracy": 0.8144,
+      "n": 53,
+      "llm_calls": 21
+    }
+  },
+  "by_type": {
+    "personalized": {
+      "n": 7,
+      "hit": 7
+    },
+    "time_variant": {
+      "n": 6,
+      "hit": 6
+    },
+    "blank_value": {
+      "n": 9,
+      "hit": 7
+    },
+    "out_of_scope": {
+      "n": 11,
+      "hit": 9
+    }
+  }
+}

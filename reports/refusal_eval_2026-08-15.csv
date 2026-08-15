@@ -1,0 +1,54 @@
+﻿query_id,question,expected,refusal_type,predicted,stage,reason,score_top1,gap_1_5,blank_ratio,correct
+r001,제 연체 기록이 대출 연체 이자에 어떻게 영향을 미치나요?,refuse,personalized,refuse,pattern,personalized,0.6025,0.0399,0.0,True
+r002,현재 기준금리는 얼마인가요?,refuse,time_variant,refuse,pattern,time_variant,0.6144,0.122,0.0,True
+r003,오늘 만기일 적용 결제환율은 얼마인가요?,refuse,time_variant,refuse,pattern,time_variant,1.0,0.364,0.0,True
+r005,인지세는 대출금액별로 얼마인가요?,refuse,blank_value,refuse,llm,no_evidence,0.8205,0.1541,0.0,True
+r006,이 상품은 우리 은행 내부 심사 기준에 어떻게 반영되나요?,refuse,out_of_scope,refuse,pattern,out_of_scope,0.821,0.321,0.0,True
+r008,하나은행과 타 은행의 해외송금 한도 차이는?,refuse,out_of_scope,refuse,pattern,out_of_scope,0.824,0.1727,0.0,True
+r009,특례금리 적용 기간 중 가산 금리는 몇 퍼센트인가요?,refuse,blank_value,refuse,retrieval,blank_value,0.9712,0.3543,0.8,True
+r010,이번 주 CD수익률은 어떻게 되나요?,refuse,time_variant,refuse,pattern,time_variant,0.9862,0.1248,0.0,True
+r012,기타비용 항목과 금액은 어떻게 되나요?,refuse,blank_value,refuse,retrieval,low_confidence,0.5,0.0018,0.6,True
+r013,제 거래 중도해지 시 손실 예상 금액은?,refuse,personalized,refuse,pattern,personalized,0.9472,0.1251,0.0,True
+r015,Enhanced Forward 계약 시 적용되는 금리 변동폭은 얼마인가요?,refuse,blank_value,refuse,retrieval,blank_value,0.8958,0.2678,0.2,True
+r016,타 은행의 디폴트옵션 포트폴리오와 비교하면 이 상품의 장점은 무엇인가요?,refuse,out_of_scope,refuse,pattern,out_of_scope,0.8341,0.0374,0.0,True
+r017,현재 적용되는 대출 금리는 얼마인가요?,refuse,time_variant,refuse,pattern,time_variant,0.5268,0.0641,0.0,True
+r018,연체가산율은 몇 퍼센트로 정해지나요?,refuse,blank_value,answer,llm,,0.9752,0.1985,0.0,False
+r020,제 개인 신용등급으로 이 상품을 이용해도 위험이 큰가요?,refuse,personalized,refuse,pattern,personalized,0.5,0.0055,0.0,True
+r021,타 은행 전세자금대출과 비교해 금리 차이는?,refuse,out_of_scope,refuse,pattern,out_of_scope,0.8513,0.1693,0.2,True
+r022,이 상품은 다른 은행의 신용대출 상품과 비교해 어떤 점이 우수한가요?,refuse,out_of_scope,refuse,pattern,out_of_scope,0.747,0.152,0.0,True
+r023,제 신용등급과 거래내역을 고려한 CD 수익률은 얼마인가요?,refuse,personalized,refuse,pattern,personalized,1.0,0.1515,0.0,True
+r024,다른 은행들의 CD수익률 산출 방식과 비교해 알려주세요.,refuse,out_of_scope,refuse,pattern,out_of_scope,0.9967,0.0941,0.0,True
+r026,하나은행의 디폴트옵션 상품 심사 기준은 무엇인가요?,refuse,out_of_scope,refuse,pattern,out_of_scope,0.7544,0.306,0.0,True
+r027,타 은행의 청년주택청약통장과 금리 차이는?,refuse,out_of_scope,refuse,pattern,out_of_scope,0.8965,0.0895,0.0,True
+r028,담보권 실행 시 발생하는 비용은 얼마인가요?,refuse,blank_value,refuse,retrieval,blank_value,0.5564,0.0807,0.8,True
+r029,미성년자 예금 해지 시 신용등급 영향은?,refuse,out_of_scope,refuse,llm,no_evidence,1.0,0.7572,0.0,True
+r030,이 상품의 신용 등급별 대출 심사 기준은 어떻게 되나요?,refuse,out_of_scope,refuse,pattern,out_of_scope,0.7699,0.1822,0.0,True
+r031,제가 고정금리 지급자로서 이 거래에서 받을 수 있는 최대 변동금리 수취액은 얼마인가요?,refuse,personalized,refuse,pattern,personalized,1.0,0.2998,0.0,True
+r032,이 추가약정서에서 적용되는 금리 감면율은 몇 퍼센트인가요?,refuse,blank_value,refuse,retrieval,blank_value,0.9565,0.0941,0.4,True
+r033,대출거래 추가약정서에서 적용되는 고정금리 비율은 얼마인가요?,refuse,blank_value,refuse,retrieval,blank_value,0.7183,0.1096,0.2,True
+r034,현재 대출금 이자율은 얼마인가요?,refuse,time_variant,refuse,pattern,time_variant,0.5,0.1595,0.0,True
+r035,이용계약 해지 시 신용등급에 미치는 영향은?,refuse,out_of_scope,refuse,retrieval,low_confidence,0.74,0.0653,0.0,True
+r036,저는 사전지정운용방법 변경 통지를 받았나요?,refuse,personalized,refuse,pattern,personalized,1.0,0.1588,0.0,True
+r038,여신금액은 얼마로 설정되었나요?,refuse,blank_value,refuse,retrieval,low_confidence,0.5511,0.0582,0.6,True
+r039,제 개인 신용등급에 따른 대출 한도는?,refuse,personalized,refuse,pattern,personalized,0.8762,0.0918,0.0,True
+r040,현재 대출 이자율은 얼마인가요?,refuse,time_variant,refuse,pattern,time_variant,0.5,0.1437,0.0,True
+c001,기업전자금융 서비스에서 개인사업자가 ERP랑 연결하면 기본수수료가 얼마나 나와?,answer,answerable,answer,llm,,1.0,0.7088,0.0,True
+c002,일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?,answer,answerable,answer,llm,,1.0,0.3402,0.0,True
+c003,폰뱅킹 신청 시 관공서 서류 제출 기준은?,answer,answerable,answer,llm,,1.0,0.8051,0.0,True
+c004,마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?,answer,answerable,answer,llm,,0.8119,0.1718,0.0,True
+c005,일임형 개인종합자산관리계좌(ISA) 가입 시 투자 가능한 위험등급 모델포트폴리오 제시 기준은 무엇인가요?,answer,answerable,answer,llm,,0.9864,0.6386,0.0,True
+c006,기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,answer,answerable,answer,llm,,0.9983,0.5301,0.0,True
+c007,하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?,answer,answerable,refuse,retrieval,low_confidence,0.5917,0.033,0.0,False
+c008,하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,answer,answerable,refuse,llm,no_evidence,0.8119,0.1965,0.0,False
+c009,하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,answer,answerable,answer,llm,,1.0,0.1519,0.0,True
+c010,하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?,answer,answerable,answer,llm,,1.0,0.8509,0.2,True
+c011,은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?,answer,answerable,answer,llm,,0.6738,0.104,0.0,True
+c012,하나은행 환전지갑 선물하기 서비스에서 하나머니 환급 절차는 어떻게 이루어지나요?,answer,answerable,answer,llm,,1.0,0.3313,0.0,True
+c013,기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,answer,answerable,answer,llm,,0.9862,0.1549,0.0,True
+c014,Enhanced Forward라는 상품은 만기 환율이 예상과 다르게 떨어지면 어떤 위험이 있나요?,answer,answerable,answer,llm,,0.9591,0.1382,0.0,True
+c015,『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,answer,answerable,answer,llm,,1.0,0.2081,0.0,True
+c016,OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?,answer,answerable,answer,llm,,1.0,0.6592,0.0,True
+c017,자유저축예금 이자는 언제 받을 수 있나요?,answer,answerable,answer,llm,,1.0,0.3307,0.0,True
+c018,종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,answer,answerable,answer,llm,,1.0,0.8865,0.0,True
+c019,하나은행 예금 거래는 보통 어디에서 하나요?,answer,answerable,answer,llm,,0.693,0.2895,0.0,True
+c020,ISA 계약을 중간에 해지할 때 어떤 특별한 사유가 있어야 해지할 수 있나요?,answer,answerable,answer,llm,,0.7559,0.2919,0.0,True
