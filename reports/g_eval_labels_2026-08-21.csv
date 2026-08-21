@@ -1,0 +1,26 @@
+﻿id,group,question,decision,stage,blind,memo,human_환각,draft_환각,human_상품일치,draft_상품일치,human_수치정확,draft_수치정확,human_미확인신고,draft_미확인신고,human_실무활용,draft_실무활용
+01,정상 답변,하나은행 내 계좌이체 시 보안매체나 공동인증서 사용 여부는?,refuse,pattern,False,일반 계좌이체 보안수단 질문을 개인화 문의로 오거절. 개인정보 조회 필요 판단은 부적절.,na,pass,na,na,na,na,fail,fail,fail,fail
+02,정상 답변,제휴사 해외 ATM 출금 서비스에서 특정 제휴사 환율 적용 방식은 무엇인가요?,answer,llm,False,제휴사 해외 ATM 환율 적용 방식이 근거와 일치.,pass,pass,pass,pass,na,na,pass,pass,pass,pass
+03,정상 답변,"상속으로 집을 받았는데 그 집이 수도권 밖 85㎡ 이하 단독주택일 때, 다른 지역으로 이사 가면 어떤 상황이 되나요?",answer,llm,False,청년 주택드림 청약통장 주택 보유 예외에 보금자리론 추가주택 처분 의무를 섞음. 상품/문서 불일치 및 cross-document hallucination.,fail,pass,fail,pass,fail,pass,fail,pass,fail,pass
+04,정상 답변,통장 없이 거래할 때 도장이나 서명은 꼭 제출해야 하나요?,refuse,llm,True,정상 답변 문항인데 no_evidence로 오거절. 검색된 상계 조항은 질문과 직접 대응하지 않아 retrieval/evidence selection 실패.,na,,na,,na,,fail,,fail,
+05,정상 답변,하나은행 인터넷뱅킹에서 1천만원 넘게 이체하려면 어떻게 해야 하나요?,answer,llm,False,"OTP 등록, 자물쇠카드 한도, 영업점 증액 필요 내용이 근거와 일치.",pass,pass,pass,pass,pass,pass,pass,pass,pass,pass
+06,정상 답변,전세자금대출 갚을 때 빚이 여러 개면 어떤 순서로 갚아요?,refuse,llm,True,정상 답변 문항인데 no_evidence로 오거절. 현재 top evidence는 상환방식 설명일 뿐 여러 채무의 변제/충당 순서를 직접 답하지 못함.,na,,na,,na,,fail,,fail,
+07,정상 답변,기업 대출할 때 원화 금리는 어떤 기준으로 정해지나요?,answer,llm,False,원화대출 고정금리 산정 기준과 기준상품이 근거와 일치. 미확인 항목 신고도 적절.,pass,pass,pass,pass,pass,pass,pass,pass,pass,pass
+08,정상 답변,폰뱅킹 신청 시 관공서 서류 제출 기준은?,answer,llm,False,"관공서 서류 3개월, 관련인 주민번호 표시, 1년 내 제출 생략 가능 등이 근거와 일치.",pass,pass,pass,pass,pass,pass,pass,pass,pass,pass
+09,정상 답변,『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,answer,llm,False,디폴트옵션 포트폴리오 3 변경 통지 7일 및 다른 운용방법 선택 가능 내용이 근거와 일치.,pass,pass,pass,pass,pass,pass,pass,pass,pass,pass
+10,정상 답변,대출받은 뒤에 원금은 안 내고 이자만 낼 수 있는 기간이 있나요?,answer,llm,False,"기업대출 기준으로 이자만 납부 가능한 만기일시상환을 설명하고, 보금자리론 관련 미확인 항목을 분리 신고함. 단, 향후에는 “기업대출 기준”을 첫 문장에 더 강하게 표시 권장.",pass,pass,pass,pass,na,na,pass,pass,pass,pass
+11,정상 답변,내가 가입할 때 다른 사람 정보를 써서 신청하면 계약을 바로 끊나요?,answer,llm,False,"타인정보 가입 시 해지 가능 및 사전통지는 근거와 맞지만, “계약이 바로 체결되지 않고”는 근거 부족. 즉시성 여부를 단정하지 않아야 함.",fail,pass,pass,pass,na,na,fail,pass,fail,pass
+12,정상 답변,내가 자급제폰에 안드로이드 10 쓰는데 스마트 간편인증이 안 돼요. 어떻게 해야 하나요?,answer,llm,False,"자급제폰+Android 10, KT/SKT/LGU+ 조치가 근거와 일치.",pass,pass,pass,pass,pass,pass,pass,pass,pass,pass
+13,정상 답변,주택청약종합저축 가입하고 청약 1순위 되려면 어느 정도 기간과 납입횟수가 필요한가요?,answer,llm,False,지역별 1순위 기간·납입회차 수치가 근거와 일치.,pass,pass,pass,pass,pass,pass,pass,pass,pass,pass
+14,정상 답변,하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,refuse,llm,False,정상 답변 문항인데 no_evidence로 오거절. 현재 검색 근거는 마이데이터 개요/전송요구권 일부만 보여 직접 답변이 부족하므로 retrieval/evidence selection 재점검 필요.,na,pass,na,pass,na,na,fail,pass,fail,pass
+15,정상 답변,종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,answer,llm,False,종합부동산세가 국세라는 답변이 FAQ 근거와 일치.,pass,pass,pass,pass,na,na,pass,pass,pass,pass
+16,정상 답변,기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,answer,llm,False,기업대출 자금용도별 구분과 예시가 근거와 일치.,pass,pass,pass,pass,na,na,pass,pass,pass,pass
+17,정상 답변,제가 13살인데 해외에서 계좌를 이용하려면 ATM에서 돈을 뺄 수 있나요?,refuse,llm,True,근거에 만 14세 이상 본인 계좌 보유 고객만 가능하다고 명시되어 있어 13세 이용 불가로 답해야 했으나 no_evidence로 오거절.,na,,pass,,na,,fail,,fail,
+18,거절 대상,담보권 실행 시 발생하는 비용은 얼마인가요?,refuse,retrieval,False,구체 값이 기재되지 않은 항목에 대해 담당 부서 확인을 안내한 것은 적절.,na,pass,na,pass,na,pass,pass,pass,pass,pass
+19,거절 대상,타 은행 전세자금대출과 비교해 금리 차이는?,refuse,pattern,False,타행 비교는 공개 하나은행 문서 범위 밖이므로 거절 적절.,na,pass,na,na,na,na,pass,pass,pass,pass
+20,거절 대상,제 개인 신용등급으로 이 상품을 이용해도 위험이 큰가요?,refuse,pattern,False,개인 신용등급 기반 위험 판단은 고객정보 조회가 필요하므로 거절 적절.,na,pass,na,na,na,na,pass,fail,pass,fail
+21,거절 대상,현재 대출금 이자율은 얼마인가요?,refuse,pattern,True,현재 대출금 이자율은 실시간 변동값이므로 거절 적절.,na,,na,,na,,pass,,pass,
+22,거절 대상,이번 주 CD수익률은 어떻게 되나요?,refuse,pattern,False,이번 주 CD수익률은 시점 변동값이므로 거절 적절.,na,pass,na,na,na,na,pass,pass,pass,pass
+23,커버리지 경계,정기예금을 중도해지하면 이자는 어떻게 계산되나요?,answer,llm,False,정기예금 일반 질문에 주택청약예금·하나더소호 적금 근거를 적용. 대표적인 product mismatch. 정기예금 조건 미확인을 신고했어야 함.,fail,pass,fail,pass,fail,pass,fail,pass,fail,pass
+24,커버리지 경계,자유적금 만기 전에 해지하면 우대금리는 어떻게 되나요?,answer,llm,False,"하나더소호 가맹점 적금 기준이라고 밝히고 미확인도 신고했으나, 일반 자유적금 질문에는 그대로 안내 불가. 상품일치 및 실무활용 fail.",pass,pass,fail,pass,pass,pass,pass,pass,fail,pass
+25,커버리지 경계,소득공제 장기펀드를 5년 안에 중간에 해지하면 세금이 얼마나 나와요?,answer,llm,True,"coverage analyzer는 unmatched였지만 실제 FAQ 근거가 존재하고 답변도 6.6%, 환출 가능, 5년 이상 추징 없음까지 일치.",pass,,pass,,pass,,pass,,pass,
