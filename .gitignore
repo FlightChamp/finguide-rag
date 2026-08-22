@@ -86,3 +86,6 @@ readme_dump.txt
 
 # LLM verdict cache (regenerable)
 data/interim/refusal_llm_verdicts_*.json
+
+data/interim/query_analysis_cache.json
+data/interim/g_judge_v2_cache.json
