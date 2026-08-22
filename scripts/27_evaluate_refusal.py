@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import itertools
 import json
 import sys
@@ -66,8 +67,119 @@ CHUNKS_PATH = PROJECT_ROOT / "data" / "interim" / "chunks.jsonl"
 FAISS_ROOT = PROJECT_ROOT / "data" / "indexes" / "faiss"
 BM25_ROOT = PROJECT_ROOT / "data" / "indexes" / "bm25"
 REPORT_DIR = PROJECT_ROOT / "reports"
+CACHE_DIR = PROJECT_ROOT / "data" / "interim"
 
 TOP_K = 10
+
+
+# ==================================================================
+# LLM 판정 캐시
+# ==================================================================
+#
+# 왜 필요한가
+# ---------
+# temperature=0 이어도 OpenAI API 는 동일 입력에 동일 출력을 보장하지
+# 않는다. 실제로 같은 코드를 두 번 돌렸을 때 과잉거절이 0.100 과 0.200
+# 으로 갈렸다. 4건이 뒤집힌 것이다.
+#
+# 이 상태에서는 어떤 개선도 검증할 수 없다. 수치가 바뀌었을 때 그것이
+# 수정 때문인지 호출 편차인지 구별되지 않기 때문이다. 실제로 거절 규칙을
+# 고친 뒤 과잉거절이 0.100 에서 0.200 으로 오른 것을 보고 규칙 탓으로
+# 오해할 뻔했다.
+#
+# 무엇을 해결하고 무엇을 해결하지 못하는가
+# ----------------------------------
+# 캐싱은 측정의 재현성을 보장한다. 같은 (질문, 근거) 에는 항상 같은
+# 판정이 나오므로, 규칙을 고쳐 재측정했을 때 변화는 전부 규칙 때문이다.
+#
+# 다만 운영 환경의 비결정성 자체는 없애지 못한다. 실제 서비스에서는
+# 같은 질문에 다른 판정이 나올 수 있다. 이것은 별도로 다뤄야 할 문제이며,
+# 여기서는 평가가 흔들리지 않게 하는 것까지만 한다.
+#
+# 캐시 키에 프롬프트를 넣는다
+# ------------------------
+# VERIFY_SYSTEM 을 고치면 키가 달라져 자동으로 다시 호출된다. 프롬프트를
+# 바꿔놓고 옛 판정을 재사용하는 사고를 막는다.
+
+
+def cache_path(model: str, alpha: float, llm_model: str) -> Path:
+    tag = f"{model}_a{alpha}_{llm_model}".replace(".", "")
+    return CACHE_DIR / f"refusal_verify_cache_{tag}.json"
+
+
+class VerifyCache:
+    """verify_with_llm 호출을 가로채 디스크에 캐시한다."""
+
+    def __init__(self, path: Path, refresh: bool = False):
+        self.path = path
+        self.store: dict = {}
+        if path.exists() and not refresh:
+            try:
+                self.store = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                self.store = {}
+        self.hits = 0
+        self.calls = 0
+        self._original = None
+
+    def install(self) -> None:
+        """모듈의 verify_with_llm 을 캐시 버전으로 교체한다."""
+        self._original = refusal_mod.verify_with_llm
+        original = self._original
+        store, outer = self.store, self
+
+        def cached_verify(client, model, question, evidence, prior):
+            key = hashlib.sha256(
+                f"{model}|{refusal_mod.VERIFY_SYSTEM}|{question}|{evidence}"
+                .encode("utf-8")
+            ).hexdigest()[:24]
+
+            if key in store:
+                outer.hits += 1
+                d = store[key]
+            else:
+                r = original(client, model, question, evidence, prior)
+                d = {
+                    "decision": r.decision.value,
+                    "stage": r.stage,
+                    "llm_reason": (r.signals or {}).get("llm_reason", ""),
+                    "tokens": (r.signals or {}).get("llm_tokens", 0),
+                }
+                store[key] = d
+                outer.calls += 1
+
+            # prior 에 담긴 사유는 캐시하지 않는다. 임계값에 따라 달라지므로
+            # 매번 현재 값으로 다시 만든다.
+            if d["decision"] == Decision.ANSWER.value:
+                return refusal_mod.RefusalResult(
+                    decision=Decision.ANSWER, stage=d["stage"], confidence=0.80,
+                    signals={**(prior.signals or {}),
+                             "llm_reason": d["llm_reason"],
+                             "llm_tokens": d["tokens"]},
+                )
+
+            reason = prior.reason or refusal_mod.RefusalReason.NO_EVIDENCE
+            if reason == refusal_mod.RefusalReason.BLANK_VALUE:
+                message = ("문서에 해당 항목은 있으나 구체적인 값이 기재되어 있지 "
+                           "않습니다. 계약 조건에 따라 결정되므로 담당 부서에 확인해 "
+                           "주시기 바랍니다.")
+            else:
+                message = "문서에서 이 질문에 답할 근거를 찾지 못했습니다."
+
+            return refusal_mod.RefusalResult(
+                decision=Decision.REFUSE, reason=reason, stage=d["stage"],
+                confidence=0.80, message=message,
+                signals={**(prior.signals or {}),
+                         "llm_reason": d["llm_reason"],
+                         "llm_tokens": d["tokens"]},
+            )
+
+        refusal_mod.verify_with_llm = cached_verify
+
+    def flush(self) -> None:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(
+            json.dumps(self.store, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 # ==================================================================
@@ -255,6 +367,10 @@ def main() -> None:
     ap.add_argument("--llm-model", default="gpt-4.1-mini")
     ap.add_argument("--no-llm", action="store_true", help="LLM 단계 생략")
     ap.add_argument("--tune", action="store_true", help="임계값 탐색")
+    ap.add_argument("--refresh-cache", action="store_true",
+                    help="LLM 판정 캐시를 버리고 다시 호출")
+    ap.add_argument("--no-cache", action="store_true",
+                    help="캐시를 쓰지 않는다(호출 편차 확인용)")
     args = ap.parse_args()
 
     print("=" * 76)
@@ -325,11 +441,19 @@ def main() -> None:
 
     # --- 단계별 기여도 ---
     client = None
+    verify_cache = None
     if not args.no_llm:
         from dotenv import load_dotenv
         from openai import OpenAI
         load_dotenv()
         client = OpenAI()
+
+        if not args.no_cache:
+            verify_cache = VerifyCache(
+                cache_path(args.model, args.alpha, args.llm_model),
+                args.refresh_cache)
+            verify_cache.install()
+            print(f"\n  LLM 판정 캐시 {len(verify_cache.store)}건 로드")
 
     stages = [
         ("0단계만 (질문 패턴)", True, False, None),
@@ -356,6 +480,14 @@ def main() -> None:
         print(f"  {label:<24}{m['refusal_accuracy']:>10.3f}"
               f"{m['false_answer_rate']:>8.3f}{m['over_refusal_rate']:>9.3f}"
               f"{m['balanced_accuracy']:>8.3f}{calls:>6}")
+
+    if verify_cache is not None:
+        verify_cache.flush()
+        print(f"\n  LLM 판정 캐시 적중 {verify_cache.hits}회 / "
+              f"신규 호출 {verify_cache.calls}회")
+        print(f"    → {cache_path(args.model, args.alpha, args.llm_model).name}")
+        if verify_cache.calls == 0:
+            print(f"    전건 캐시 재사용. 이 실행은 완전히 재현 가능하다.")
 
     final_label = stages[-1][0]
     final = all_records[final_label]
@@ -435,3 +567,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
