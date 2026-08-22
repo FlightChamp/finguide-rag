@@ -75,7 +75,10 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from finguide_rag.generation.product_catalog import normalize  # noqa: E402
+from finguide_rag.generation.product_match import (  # noqa: E402
+    ProductMatcher,
+    judge_product_match,
+)
 from finguide_rag.generation.query_analyzer import QueryAnalyzer  # noqa: E402
 
 EVAL_DIR = PROJECT_ROOT / "data" / "eval"
@@ -83,6 +86,7 @@ REPORT_DIR = PROJECT_ROOT / "reports"
 ANSWERS = PROJECT_ROOT / "data" / "interim" / "g_eval_answers.json"
 JUDGE_CACHE = PROJECT_ROOT / "data" / "interim" / "g_judge_v2_cache.json"
 QA_CACHE = PROJECT_ROOT / "data" / "interim" / "query_analysis_cache.json"
+CATALOG = PROJECT_ROOT / "data" / "interim" / "product_catalog.json"
 RECHECK_MD = EVAL_DIR / "g_eval_recheck.md"
 
 CRITERIA = ["환각", "상품일치", "수치정확", "미확인신고", "실무활용"]
@@ -297,64 +301,17 @@ def score_hallucination(judge: Judge, item: dict) -> tuple[str, list[dict]]:
     return ("fail" if bad else "pass"), details
 
 
-def score_product_match(item: dict, analysis, sent_details: list[dict]) -> tuple[str, str]:
-    """메타데이터 대조. LLM 을 쓰지 않는다.
+def score_product_match(item, analysis, sent_details, matcher):
+    """상품 일치 판정을 product_match 모듈에 위임한다.
 
-    두 가지를 본다.
-      1. 질문의 상품이 근거 문서명에 있는가
-      2. 답변이 서로 다른 문서를 섞어 참조하는가
-
-    (2) 의 조건은 v2 에서 doc_type 이 "설명서" 인 근거만 셌다. 그 결과
-    [03] 을 놓쳤다. 청약통장 설명서와 보금자리론 대출거래약정서를 섞어
-    답했는데, 후자가 약관이라 세지 않아 "설명서 1건"으로 통과했다.
-
-    문서 혼합의 위험은 문서 종류와 무관하다. 서로 다른 상품·제도의 규정을
-    한 답변에 섞으면, 각 문장이 개별 근거에는 충실해도 답변 전체는 존재하지
-    않는 규칙을 만들어낸다. 따라서 종류를 가리지 않고 인용된 문서 수를 센다.
-
-    다만 같은 문서의 다른 조항을 여러 개 인용하는 것은 정상이므로,
-    문서명 기준으로 중복을 제거한 뒤 센다.
+    판정 로직을 평가 스크립트마다 두면 한쪽만 고쳤을 때 25건에서 검증한
+    결과가 96건에 적용된다는 보장이 깨진다. 한 곳에만 둔다.
     """
     evs = item["evidences"]
-    if not evs:
-        return "na", "근거 없음"
-
-    product = (analysis.extracted_product or "").strip()
-    doc_types = {e.get("doc_type", "") for e in evs}
-    all_terms = doc_types and doc_types <= {"약관", "FAQ"}
-
-    # (2) 문서 혼합 — 인용된 서로 다른 문서가 몇 건인가
     by_rank = {e["rank"]: e for e in evs}
     cited = {i for d in sent_details for i in d["evidence"]
              if isinstance(i, int) and i in by_rank}
-    cited_docs = {_doc_key(by_rank[i]) for i in cited}
-    mixed = len(cited_docs) >= 2
-
-    if not product:
-        if mixed:
-            return "fail", f"상품 언급 없음이나 서로 다른 문서 {len(cited_docs)}건 혼합"
-        return "na", "질문에 상품 언급 없음"
-
-    pn = normalize(product)
-    matched = any(pn and (pn in normalize(e["citation"])) for e in evs)
-
-    if matched and mixed:
-        return "fail", f"상품은 일치하나 서로 다른 문서 {len(cited_docs)}건 혼합"
-    if matched:
-        return "pass", "근거 문서명에 질문 상품이 포함됨"
-    if all_terms and not mixed:
-        return "na", "근거가 일반 약관·FAQ 이므로 상품 무관"
-    if all_terms and mixed:
-        return "fail", f"일반 약관이나 서로 다른 문서 {len(cited_docs)}건 혼합"
-    return "fail", f"질문 상품 '{product}' 이 근거 문서명에 없음"
-
-
-def _doc_key(ev: dict) -> str:
-    """조항 번호를 뺀 문서 식별자.
-
-    같은 약관의 제2조와 제11조를 함께 인용하는 것은 정상이므로 하나로 센다.
-    """
-    return re.split(r"\s+제\d+조|\s+제\d+항|\s*\(", ev.get("citation", ""))[0].strip()
+    return judge_product_match(matcher, evs, analysis.extracted_product or "", cited)
 
 
 def score_simple(judge: Judge, task: str, system: str, item: dict) -> tuple[str, str]:
@@ -399,6 +356,7 @@ def main() -> None:
 
     judge = Judge(client, args.llm_model, JUDGE_CACHE, args.refresh)
     analyzer = QueryAnalyzer(client, args.llm_model, QA_CACHE)
+    matcher = ProductMatcher.from_catalog(CATALOG)
 
     print(f"\n  채점 중...")
     results = []
@@ -414,7 +372,7 @@ def main() -> None:
             why = {c: "거절 응답 — 답변 본문 없음" for c in CRITERIA}
         else:
             hall, sent_details = score_hallucination(judge, it)
-            prod, prod_why = score_product_match(it, analysis, sent_details)
+            prod, prod_why = score_product_match(it, analysis, sent_details, matcher)
             num, num_why = score_simple(judge, "number", NUM_SYSTEM, it)
             verdicts = {"환각": hall, "상품일치": prod, "수치정확": num,
                         "미확인신고": "manual", "실무활용": "manual"}

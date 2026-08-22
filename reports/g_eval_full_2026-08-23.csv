@@ -1,0 +1,97 @@
+﻿question,difficulty,doc_type,decision,stage,false_refusal,n_evidence,not_found,tokens,latency_ms,환각,상품일치,수치정확,unsupported,n_sentences,cited_docs,why_상품일치
+14살 미만 애들 현금IC카드 본인이 직접 받을 수 있어?,medium,FAQ,answer,llm,False,3,0,2151,25373,pass,pass,pass,0,2,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 입출금 예금 이율은 바뀌면 언제부터 적용돼요?,medium,약관,answer,llm,False,3,2,2796,2622,pass,pass,pass,0,2,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 환전지갑에서 외화 찾을 때 신분증 꼭 가져가야 해요? 대리인은 어떻게 되나요?,medium,설명서,answer,llm,False,3,0,2742,3099,pass,pass,pass,0,3,2,인용된 근거가 모두 질문 상품에 속함
+주택청약종합저축 가입하고 청약 1순위 되려면 어느 정도 기간과 납입횟수가 필요한가요?,medium,설명서,answer,llm,False,3,0,3067,3632,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+Range Forward 상품은 만기 환율이 정해진 범위 밖으로 나가면 어떻게 처리되나요?,medium,설명서,answer,llm,False,3,0,2693,3988,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+소득공제 장기펀드를 5년 안에 중간에 해지하면 세금이 얼마나 나와요?,medium,FAQ,answer,llm,False,3,0,1872,3288,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?,medium,설명서,refuse,retrieval,True,3,0,0,22,na,na,na,0,0,0,거절 응답
+휴대폰 번호는 안 바꾸고 기기만 바꿨는데 금융인증서 클라우드 계속 쓸 수 있나요?,medium,FAQ,answer,llm,False,3,0,1905,3111,pass,pass,pass,0,2,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 가계 대출받을 때 이자율은 중간에 바꿀 수 있어?,medium,약관,answer,llm,False,3,0,2612,3549,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 CD 수익률은 누가 어떻게 정하는 거예요?,medium,설명서,answer,llm,False,3,0,2587,3852,pass,pass,pass,0,2,2,인용된 근거가 모두 질문 상품에 속함
+하나은행 기업 인터넷뱅킹에서 급여 이체는 언제까지 할 수 있나요?,medium,설명서,refuse,llm,True,3,0,1344,12870,na,na,na,0,0,0,거절 응답
+하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품 가입 후 따로 운용 방법 지시 안 하면 어떻게 돼요?,medium,설명서,answer,llm,False,3,0,2673,3314,fail,pass,pass,1,3,2,인용된 근거가 모두 질문 상품에 속함
+하나은행 디폴트옵션 중립투자형 포트폴리오 2는 중간에 해지하면 원금 손실 가능성이 있나요?,medium,설명서,answer,llm,False,3,0,2991,3147,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나원큐에서 특정 계좌 조회 못하게 하려면 어떻게 해?,medium,FAQ,answer,llm,False,3,0,2635,3035,pass,pass,na,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나원큐 로그인할 때 기본 로그인 방법을 바꾸려면 어떻게 해야 해요?,medium,FAQ,answer,llm,False,3,0,1870,2428,pass,pass,na,0,2,1,인용된 근거가 모두 질문 상품에 속함
+기업 대출할 때 원화 금리는 어떤 기준으로 정해지나요?,medium,약관,answer,llm,False,3,3,2914,3313,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+일임형 개인종합자산관리계좌(ISA) 가입 시 투자 가능한 위험등급 모델포트폴리오 제시 기준은 무엇인가요?,easy,설명서,answer,llm,False,3,0,2615,3746,pass,pass,pass,0,3,2,인용된 근거가 모두 질문 상품에 속함
+기업대출 자금용도별 구분에는 어떤 항목들이 포함되나요?,easy,설명서,answer,llm,False,3,0,2635,3246,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+Enhanced Forward라는 상품은 만기 환율이 예상과 다르게 떨어지면 어떤 위험이 있나요?,medium,설명서,answer,llm,False,3,0,2760,3093,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+이자율 스왑(고객 고정금리 지급) 중도해지는 어떻게 가능한가요?,easy,설명서,answer,llm,False,3,0,2916,3573,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+구 외환은행 프라임등급 계속 유지하려면 어떻게 해야 해요?,medium,FAQ,answer,llm,False,3,0,2558,3835,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 이자율 스왑 상품의 위험등급과 손실범위는 어떻게 되나요?,easy,설명서,answer,llm,False,3,1,2940,3279,pass,fail,pass,0,3,1,질문 상품 '이자율 스왑 상품' 과 일치하는 근거 문서 없음
+청년 주택드림 청약통장 가입할 때 소득 증명서류로는 어떤 게 필요한가요?,medium,설명서,answer,llm,False,3,0,4207,5450,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나일임형ISA 저위험포커스 모델포트폴리오가 포함한 금융상품은 원금보장이 되나요?,easy,설명서,answer,llm,False,3,0,3612,2878,pass,fail,pass,0,3,1,질문 상품 외 문서 혼합: 하나은행 ISA 모델포트폴리오
+하나은행에서 전자금융 거래 내역을 못 받을 때 은행이 어떻게 알려줘야 해?,medium,약관,answer,llm,False,3,0,1960,3575,pass,na,pass,0,3,1,질문에 상품 언급 없음
+해외 출국 전 하나은행 전자금융사기예방서비스 설정은 어떻게 해야 하나요?,easy,FAQ,answer,llm,False,3,0,2973,4796,pass,fail,pass,0,3,2,질문 상품 '하나은행 전자금융사기예방서비스' 과 일치하는 근거 문서 없음
+하나은행 예금 거래는 보통 어디에서 하나요?,medium,약관,answer,llm,False,3,1,2236,3526,pass,fail,pass,0,2,2,상품 언급 없음이나 서로 다른 상품 2건 혼합
+종합부동산세는 하나은행 자료에 따르면 국세인가 지방세인가요?,easy,FAQ,answer,llm,False,3,0,2507,1858,pass,na,pass,0,1,1,질문에 상품 언급 없음
+대출일과 월 납입일이 다르면 첫 이자는 언제 내야 하나요?,hard,설명서,refuse,retrieval,True,3,0,0,15,na,na,na,0,0,0,거절 응답
+하나 합 서비스는 몇 살 이상부터 창구에서 바로 신청할 수 있어?,medium,설명서,answer,llm,False,3,0,2282,2545,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 중도해지 시 과세특례 추징이 발생하는 조건은 무엇인가요?,easy,설명서,answer,llm,False,3,0,2839,3771,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+골드바 살 때는 가격 계산할 때 수수료랑 세금 어떻게 붙어요?,medium,설명서,answer,llm,False,3,0,2786,3346,pass,pass,pass,0,3,2,인용된 근거가 모두 질문 상품에 속함
+하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?,easy,FAQ,answer,llm,False,3,0,2433,3113,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+해외에서 돈 받을 때 해외 사람이 우리 은행에 보내려면 뭘 알려줘야 해?,medium,FAQ,answer,llm,False,3,0,2910,4115,pass,na,pass,0,4,1,질문에 상품 언급 없음
+환전 신청을 했는데 아직 처리 안 됐어요. 이럴 때 더 신청할 수 있나요?,hard,설명서,refuse,retrieval,True,3,0,0,16,na,na,na,0,0,0,거절 응답
+일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?,easy,설명서,answer,llm,False,3,0,1464,2236,pass,pass,pass,0,1,1,인용된 근거가 모두 질문 상품에 속함
+ISA 계약을 중간에 해지할 때 어떤 특별한 사유가 있어야 해지할 수 있나요?,medium,설명서,refuse,llm,True,3,0,1015,1075,na,na,na,0,0,0,거절 응답
+하나은행 브라우저인증서 서비스는 2020년 12월 10일 이후 신규 발급이 가능한가요?,easy,FAQ,answer,llm,False,3,0,1577,2136,pass,pass,pass,0,2,3,인용된 근거가 모두 질문 상품에 속함
+하나은행 카드로 해외에서 현지 돈을 찾으려면 어떤 서비스가 있나요?,medium,FAQ,answer,llm,False,3,0,2284,3357,pass,fail,pass,0,4,2,질문 상품 '하나은행 카드' 과 일치하는 근거 문서 없음
+은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?,hard,약관,answer,llm,False,3,0,3085,2748,pass,fail,pass,0,1,2,상품 언급 없음이나 서로 다른 상품 2건 혼합
+마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?,medium,약관,answer,llm,False,3,0,2740,3013,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+전세자금대출에서 중도상환해약금 산정 기준은 무엇인가요?,easy,설명서,refuse,llm,True,3,0,1295,871,na,na,na,0,0,0,거절 응답
+은행에서 빌린 돈을 10일 넘게 못 갚으면 어떻게 되나요?,hard,약관,refuse,llm,True,3,0,908,816,na,na,na,0,0,0,거절 응답
+사업자 주거래 우대통장 가입 후 최초 다음달까지 제공되는 수수료 우대서비스는 무엇인가요?,easy,설명서,refuse,pattern,True,0,0,0,17,na,na,na,0,0,0,거절 응답
+Enhanced Forward 상품에서 환율 변동이 평가손익에 어떤 영향을 주나요?,medium,설명서,answer,llm,False,3,0,2614,2936,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+통장 없이 거래할 때 도장이나 서명은 꼭 제출해야 하나요?,hard,약관,refuse,llm,True,3,0,1135,818,na,na,na,0,0,0,거절 응답
+예금 토큰 전환이 제한되는 경우는 어떤 상황인가요?,easy,설명서,answer,llm,False,3,0,2577,4218,pass,na,pass,0,2,1,질문에 상품 언급 없음
+최고위험 밸런스 포트폴리오 어떤 사람한테 맞아요?,medium,설명서,answer,llm,False,3,0,3470,3182,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 마이너스통장 대출 이자는 어떤 기준으로 출금되나요?,easy,FAQ,answer,llm,False,3,0,2377,3070,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+외화 송금한 후에 돈 보내는 걸 취소하거나 바꿀 수 있나요?,hard,설명서,answer,llm,False,3,1,2692,2279,pass,na,pass,0,1,1,질문에 상품 언급 없음
+전세자금대출 갚을 때 빚이 여러 개면 어떤 순서로 갚아요?,medium,설명서,refuse,llm,True,3,0,1043,793,na,na,na,0,0,0,거절 응답
+"상속으로 집을 받았는데 그 집이 수도권 밖 85㎡ 이하 단독주택일 때, 다른 지역으로 이사 가면 어떤 상황이 되나요?",hard,설명서,answer,llm,False,3,0,2953,3631,pass,fail,pass,0,3,2,상품 언급 없음이나 서로 다른 상품 2건 혼합
+OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?,easy,FAQ,answer,llm,False,3,0,2220,3512,pass,pass,na,0,3,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 대출 중간에 갚으면 수수료 어떻게 계산돼요?,medium,약관,answer,llm,False,3,3,2434,3706,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+제가 13살인데 해외에서 계좌를 이용하려면 ATM에서 돈을 뺄 수 있나요?,hard,설명서,refuse,llm,True,3,0,1316,881,na,na,na,0,0,0,거절 응답
+하나 화상상담데스크 이용 가능시간은 어떻게 되나요?,easy,설명서,answer,llm,False,3,0,2320,2058,pass,na,pass,0,2,1,질문에 상품 언급 없음
+하나은행 예금 토큰은 모바일 앱에서 어떻게 가입해요?,medium,설명서,answer,llm,False,3,0,2644,2812,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+해외에서 현지 돈을 뽑을 때 수수료가 어떻게 되나요?,hard,설명서,answer,llm,False,3,0,2614,3200,pass,na,fail,0,3,1,질문에 상품 언급 없음
+해외 ATM 출금 서비스의 1회 출금 표준한도는 얼마인가요?,easy,설명서,answer,llm,False,3,0,2619,2497,pass,pass,pass,0,2,2,인용된 근거가 모두 질문 상품에 속함
+하나은행 글로벌ATM에서 해외카드로 잔액 조회할 수 있나요?,medium,FAQ,answer,llm,False,3,0,2200,2660,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+폰뱅킹 신청 시 관공서 서류 제출 기준은?,easy,FAQ,answer,llm,False,3,0,2392,3398,pass,na,pass,0,3,1,질문에 상품 언급 없음
+저축예금 통장에 사기 의심이 생기면 거래가 어떻게 제한돼요?,medium,약관,answer,llm,False,3,0,2602,2830,pass,fail,pass,0,2,2,질문 상품 '저축예금 통장' 과 일치하는 근거 문서 없음
+"월급이 7000만 원 이하이고 집이 없는데, 다음 해 2월 말까지 어떤 서류를 은행에 내야 소득공제를 받을 수 있나요?",hard,설명서,answer,llm,False,3,2,3551,3387,fail,fail,pass,1,3,2,상품 언급 없음이나 서로 다른 상품 2건 혼합
+『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?,easy,설명서,answer,llm,False,3,0,2751,2381,pass,pass,pass,0,2,2,인용된 근거가 모두 질문 상품에 속함
+기업전자금융 서비스에서 개인사업자가 ERP랑 연결하면 기본수수료가 얼마나 나와?,medium,설명서,answer,llm,False,3,1,2393,2589,pass,pass,pass,0,2,1,인용된 근거가 모두 질문 상품에 속함
+내가 가입할 때 다른 사람 정보를 써서 신청하면 계약을 바로 끊나요?,hard,약관,answer,llm,False,3,1,2069,2443,fail,fail,na,1,2,2,상품 언급 없음이나 서로 다른 상품 2건 혼합
+주택청약저축에서 선납한 금액은 언제 인정회차로 산정되나요?,easy,설명서,answer,llm,False,3,0,2537,2704,pass,fail,fail,0,2,3,질문 상품 외 문서 혼합: 주택청약종합저축
+하나은행 인터넷뱅킹에서 1천만원 넘게 이체하려면 어떻게 해야 하나요?,medium,FAQ,answer,llm,False,3,0,2727,3115,pass,fail,pass,0,3,2,상품 언급 없음이나 서로 다른 상품 2건 혼합
+대출받은 뒤에 원금은 안 내고 이자만 낼 수 있는 기간이 있나요?,hard,설명서,answer,llm,False,3,1,2505,3041,pass,fail,pass,0,3,3,상품 언급 없음이나 서로 다른 상품 3건 혼합
+하나은행 심플이체에서 이체 내역을 수정할 수 있나요?,easy,FAQ,answer,llm,False,3,0,1511,2180,pass,pass,na,0,1,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 가계 대출할 때 인지세는 누가 부담해요?,medium,약관,answer,llm,False,3,0,1855,2221,pass,pass,pass,0,2,1,인용된 근거가 모두 질문 상품에 속함
+전세자금 대출할 때 배우자랑 합친 자산이 너무 많으면 우대금리 받을 수 없나요?,medium,약관,answer,llm,False,3,0,2917,3111,pass,fail,pass,0,3,2,질문 상품 외 문서 혼합: 주택도시기금대출(가계용) 상품설명서 제7조
+하나 합(마이데이터 서비스) 이용 시 만 14세 미만 손님의 거래 제한 내용은 무엇인가요?,easy,설명서,answer,llm,False,3,0,2408,2084,pass,pass,pass,0,1,1,인용된 근거가 모두 질문 상품에 속함
+"돈 빌린 사람이 약속을 안 지켜서 은행이 보증인에게 알릴 때, 은행은 얼마나 빨리 알려야 하나요?",hard,약관,answer,llm,False,3,1,2040,2548,pass,fail,pass,0,2,2,상품 언급 없음이나 서로 다른 상품 2건 혼합
+하나은행 환전지갑 선물하기 서비스에서 하나머니 환급 절차는 어떻게 이루어지나요?,easy,설명서,answer,llm,False,3,0,1761,2505,pass,pass,pass,0,2,2,인용된 근거가 모두 질문 상품에 속함
+내가 자급제폰에 안드로이드 10 쓰는데 스마트 간편인증이 안 돼요. 어떻게 해야 하나요?,medium,FAQ,answer,llm,False,3,0,2545,3008,pass,na,pass,0,3,1,질문에 상품 언급 없음
+제가 대출받을 때 알려준 집 보유 수가 사실과 다르면 대출에 문제가 생기나요?,hard,약관,answer,llm,False,3,0,2530,3180,pass,fail,pass,0,3,3,상품 언급 없음이나 서로 다른 상품 3건 혼합
+기업용 대출 연체했을 때 은행이 받는 지연이자는 어떻게 계산돼요?,medium,약관,answer,llm,False,3,0,2873,2769,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+부부 합산 소득이 7천만원 넘으면 어떤 대출을 못 받나요?,hard,약관,answer,llm,False,3,1,2900,2470,pass,fail,pass,0,2,2,상품 언급 없음이나 서로 다른 상품 2건 혼합
+하나은행 내 계좌이체 시 보안매체나 공동인증서 사용 여부는?,easy,FAQ,refuse,pattern,True,0,0,0,15,na,na,na,0,0,0,거절 응답
+제휴사 해외 ATM 출금 서비스에서 특정 제휴사 환율 적용 방식은 무엇인가요?,easy,설명서,answer,llm,False,3,0,2434,2443,pass,pass,pass,0,1,1,인용된 근거가 모두 질문 상품에 속함
+외화를 은행 외화통장에 넣으면 수수료가 어떻게 되나요?,hard,설명서,answer,llm,False,3,0,2738,3400,pass,fail,pass,0,4,3,질문 상품 '외화통장' 과 일치하는 근거 문서 없음
+"하나은행 디폴트옵션 중립투자형 포트폴리오 1 상품, 만기 전에 돈 찾으면 이자가 어떻게 돼요?",medium,설명서,refuse,llm,True,3,0,1352,824,na,na,na,0,0,0,거절 응답
+하나은행 통해 마이데이터 정보 보내달라 할 땐 뭘 알려줘야 해?,medium,약관,refuse,llm,True,3,0,1116,797,na,na,na,0,0,0,거절 응답
+개인형IRP에서 만기 자금 운용 지시가 없을 때 어떻게 운용되나요?,easy,설명서,answer,llm,False,3,0,2476,3119,pass,pass,pass,0,3,1,인용된 근거가 모두 질문 상품에 속함
+소득공제 장기펀드 소득공제 대상자 요건은 무엇인가요?,easy,FAQ,answer,llm,False,3,1,1883,3204,pass,pass,pass,0,2,1,인용된 근거가 모두 질문 상품에 속함
+은행이 서류를 잃어버리거나 다치게 하면 제가 가진 다른 증서로 빚을 갚아야 하나요?,hard,약관,answer,llm,False,3,0,3500,3863,pass,fail,pass,0,4,3,상품 언급 없음이나 서로 다른 상품 3건 혼합
+하나원큐기업 환전지갑 서비스에서 재환전 시 건당 금액이 1백만원 초과하면 어떻게 처리해야 하나요?,easy,설명서,answer,llm,False,3,0,2700,2250,pass,pass,pass,0,1,1,인용된 근거가 모두 질문 상품에 속함
+하나은행 제휴 환전지갑으로 외화 받을 때 직접 가서 신분증 보여줘야 하나요?,medium,설명서,answer,llm,False,3,0,2686,2957,pass,pass,pass,0,3,2,인용된 근거가 모두 질문 상품에 속함
+내 계좌에 돈이 부족하면 인터넷으로 돈 보내기가 안 되나요?,hard,약관,refuse,pattern,True,0,0,0,13,na,na,na,0,0,0,거절 응답
+하나은행 저축예금에서 날짜 없는 수표가 들어오면 어떻게 처리해줘?,medium,약관,answer,llm,False,3,1,2013,2645,pass,na,na,0,2,1,근거가 일반 약관·FAQ 이므로 상품 무관
+하나은행 예금 토큰 해지 시 수수료나 위약금이 발생합니까?,easy,설명서,answer,llm,False,3,0,2330,2795,pass,pass,pass,0,2,1,인용된 근거가 모두 질문 상품에 속함
+자유저축예금 이자는 언제 받을 수 있나요?,medium,약관,answer,llm,False,3,0,2094,2762,pass,na,pass,0,3,1,근거가 일반 약관·FAQ 이므로 상품 무관
+대출금을 제때 못 갚으면 집 팔고 남은 돈 더 내야 하나요?,hard,설명서,refuse,llm,True,3,0,1288,1016,na,na,na,0,0,0,거절 응답
+하나은행 디폴트옵션 안정형 포트폴리오의 투자원금 손실 가능성은 어떻게 설명되어 있나요?,easy,설명서,answer,llm,False,3,0,2160,3335,pass,pass,pass,0,3,2,인용된 근거가 모두 질문 상품에 속함
+외국인도 하나은행 인터넷뱅킹으로 해외송금하려면 어떻게 해야 해?,medium,FAQ,answer,llm,False,3,0,2339,3378,pass,fail,pass,0,4,2,질문 상품 외 문서 혼합: 인터넷을 통한 해외송금은 어떻게 하나요 ?
