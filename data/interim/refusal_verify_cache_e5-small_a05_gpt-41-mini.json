@@ -1,0 +1,266 @@
+{
+  "bb74150d489df9966169b9c5": {
+    "decision": "refuse",
+    "stage": "llm",
+    "llm_reason": "금액별 인지세 정보 없음",
+    "tokens": 798
+  },
+  "0699809af9a0e4444e24c7e3": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "연체가산율 구체적 제시",
+    "tokens": 1339
+  },
+  "d8c1d1109ebbf28a75952d87": {
+    "decision": "refuse",
+    "stage": "llm",
+    "llm_reason": "신용등급 영향 내용 없음",
+    "tokens": 1497
+  },
+  "28cc2815279bfd693d61045c": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "ERP 연계 기본수수료 명시",
+    "tokens": 1156
+  },
+  "bc6a0819b83a5432a1a38e10": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "만료 후 수수료 처리 명시",
+    "tokens": 704
+  },
+  "cd46cd07050a56996801945a": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "관공서 서류 제출 기준 명확",
+    "tokens": 1112
+  },
+  "5604608f325c5ffbb1cd1542": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "약관 변경 통지 절차 명시",
+    "tokens": 1303
+  },
+  "3972a21359c3225651594da6": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "투자성향별 위험등급 기준 제시",
+    "tokens": 1221
+  },
+  "0cfa21154dfedff84f106ae1": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "자금용도별 구분과 항목 제시",
+    "tokens": 1253
+  },
+  "a9dcc15260f89b461bc53855": {
+    "decision": "refuse",
+    "stage": "llm",
+    "llm_reason": "구체적 안내 내용 없음",
+    "tokens": 1116
+  },
+  "511e3a91aa4f4849838f2d51": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "중도해지 과세특례 조건 명확",
+    "tokens": 1342
+  },
+  "d46a62b1912ee14fb4cceac7": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "'한편넣기' 정의 포함",
+    "tokens": 1154
+  },
+  "dbdb895945b6298b37f6d7d0": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "통지 지연 시 상환 시점 명확",
+    "tokens": 1496
+  },
+  "7bb76f9f572750982f425d86": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "환급 절차 구체적 설명 포함",
+    "tokens": 842
+  },
+  "c6946376b1bc72b586ee684e": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "연체이자 계산 기준 제시",
+    "tokens": 1377
+  },
+  "29df4bd2728cfb837da9d7d9": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "만기환율 하락 시 위험 설명",
+    "tokens": 1339
+  },
+  "39e4d315b283badf1b635bed": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "가입자 선택 조치 명확",
+    "tokens": 1333
+  },
+  "78e054c4c9eac72fc2738838": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "오류 해결 절차 구체적 안내",
+    "tokens": 1044
+  },
+  "03df878e8b914ce8593f488c": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "이자 지급일 구체적 명시",
+    "tokens": 1029
+  },
+  "8f481a53121e73efebc1ef9b": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "종합부동산세는 국세임 명확",
+    "tokens": 1245
+  },
+  "e77f173577fb5fd52ca57ba3": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "영업점에서 거래 가능 안내",
+    "tokens": 1064
+  },
+  "0f96c62fa641ce631ce70094": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "부득이한 사유 해지 조건 제시",
+    "tokens": 1016
+  },
+  "4afe0617f346ae4cee19d786": {
+    "decision": "refuse",
+    "stage": "llm",
+    "llm_reason": "대출금액별 인지세 금액 미기재",
+    "tokens": 948
+  },
+  "de25dca6d625d19551f65791": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "연체가산율 구체적 제시",
+    "tokens": 1484
+  },
+  "4680502b69d0a8da7af1f414": {
+    "decision": "refuse",
+    "stage": "llm",
+    "llm_reason": "신용등급 영향 내용 없음",
+    "tokens": 1642
+  },
+  "b186e6c79556a43f6dd79a0f": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "ERP 연계 기본수수료 명시",
+    "tokens": 1301
+  },
+  "32e6dcdc5ffac7af3f782fba": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "만료 후 수수료 처리 명시",
+    "tokens": 849
+  },
+  "e0e208bb6fc1ce9c0c9a26bc": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "관공서 서류 제출 기준 명확",
+    "tokens": 1257
+  },
+  "a4fd9e61fa0bd401784c8c75": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "약관 변경 통지 절차 명시",
+    "tokens": 1448
+  },
+  "daa8b37147cc0105606f934f": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "투자성향별 위험등급 기준 제시",
+    "tokens": 1366
+  },
+  "c933a167ad75ba845fb29c78": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "자금용도별 구분과 항목 명확",
+    "tokens": 1398
+  },
+  "8814d4184f60205c18636741": {
+    "decision": "refuse",
+    "stage": "llm",
+    "llm_reason": "정보전달 절차 구체적 안내 없음",
+    "tokens": 1265
+  },
+  "c0ff2ce019a12fe1d3d4d2ee": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "중도해지 과세특례 조건 명시",
+    "tokens": 1487
+  },
+  "19e703791f3dd18e7713327a": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "'한편넣기' 정의 명확",
+    "tokens": 1300
+  },
+  "9aa5b9a332b19eb564fc6cfe": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "통지 지연 시 상환 시점 명확",
+    "tokens": 1641
+  },
+  "e813ad2611ae45a8bb74bf85": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "환급 절차 구체적 설명 포함",
+    "tokens": 987
+  },
+  "dff5a7ad6ad563e6d01a664e": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "연체이자 계산 기준 제시",
+    "tokens": 1522
+  },
+  "774c3456c68c51879cfbaf7b": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "만기 환율 하락 시 위험 설명 포함",
+    "tokens": 1485
+  },
+  "cedbe474e6e6fb1bf92a3f2b": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "운용방법 변경 시 선택 조치 명시",
+    "tokens": 1481
+  },
+  "9957d63a15281cc63218534b": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "오류 해결 절차 구체적 안내",
+    "tokens": 1189
+  },
+  "59ae1de15428404d09274f09": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "이자 지급일 구체적 명시",
+    "tokens": 1174
+  },
+  "4dd44b73197390fd93d6e30a": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "종합부동산세는 국세임 명확",
+    "tokens": 1390
+  },
+  "41efdb36750197cdd289bd80": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "영업점에서 거래 가능 안내",
+    "tokens": 1209
+  },
+  "7312b745ee18711b3a2b9c9e": {
+    "decision": "answer",
+    "stage": "llm",
+    "llm_reason": "해지 사유 일부 언급됨",
+    "tokens": 1158
+  }
+}
