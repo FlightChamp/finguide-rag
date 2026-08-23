@@ -181,7 +181,7 @@ Dense + Sparse 하이브리드 검색으로 **문서 단위 Recall@5 0.979**를 
 ## 5. 평가를 어떻게 신뢰하는가
 
 이 섹션이 이 프로젝트의 핵심입니다. 전체 분석은
-[`docs/README_평가신뢰성_섹션초안.md`](docs/README_평가신뢰성_섹션초안.md)에 있고,
+[`docs/evaluation-reliability.md`](docs/evaluation-reliability.md)에 있고,
 아래는 요약입니다.
 
 ### 5.1 LLM 판사의 구조적 맹점

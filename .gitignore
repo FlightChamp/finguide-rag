@@ -89,3 +89,7 @@ data/interim/refusal_llm_verdicts_*.json
 
 data/interim/query_analysis_cache.json
 data/interim/g_judge_v2_cache.json
+
+# 작업용 임시 파일
+README.bak.md
+scripts/peek.py
