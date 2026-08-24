@@ -140,10 +140,6 @@ class Answer:
     stage: str = ""                          # pattern / retrieval / llm
     tokens: int = 0
     latency_ms: int = 0
-    # 거절 판정에 쓰인 검색 신호(top1 점수, 점수 격차, 공란 비율 등).
-    # RefusalJudge 가 계산한 값을 그대로 옮겨 담는다. 판정 로직과는
-    # 무관하며, 데모 UI 와 진단 스크립트가 판단 근거를 보기 위한 통로다.
-    signals: dict = field(default_factory=dict)
 
     @property
     def refused(self) -> bool:
@@ -159,7 +155,6 @@ class Answer:
             "stage": self.stage,
             "tokens": self.tokens,
             "latency_ms": self.latency_ms,
-            "signals": dict(self.signals or {}),
             "evidences": [
                 {
                     "rank": e.rank,
@@ -336,7 +331,6 @@ def build_answer(question: str, hits, refusal: RefusalResult,
             stage=refusal.stage,
             tokens=int((refusal.signals or {}).get("llm_tokens", 0)),
             latency_ms=int((time.perf_counter() - started) * 1000),
-            signals=dict(refusal.signals or {}),
         )
 
     evidences = [Evidence.from_hit(h, i)
@@ -350,7 +344,6 @@ def build_answer(question: str, hits, refusal: RefusalResult,
             evidences=evidences,
             stage=refusal.stage or "no_generator",
             latency_ms=int((time.perf_counter() - started) * 1000),
-            signals=dict(refusal.signals or {}),
         )
 
     text, not_found, gen_tokens = generator.generate(question, hits)
@@ -365,5 +358,4 @@ def build_answer(question: str, hits, refusal: RefusalResult,
         stage=refusal.stage,
         tokens=verify_tokens + gen_tokens,
         latency_ms=int((time.perf_counter() - started) * 1000),
-        signals=dict(refusal.signals or {}),
     )
