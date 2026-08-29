@@ -38,6 +38,7 @@ CSS 우선순위 주의
 
 from __future__ import annotations
 
+import csv
 import json
 import os
 import re
@@ -55,6 +56,7 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parent
 CATALOG_PATH = ROOT / "data" / "interim" / "product_catalog.json"
+REFUSAL_EVAL_PATH = ROOT / "data" / "eval" / "refusal_eval.csv"
 
 #: 답변 생성 버튼의 위젯 key. CSS 에서 .st-key-<key> 로 잡아 색을 바꾼다.
 SUBMIT_KEY = "fg_submit"
@@ -84,31 +86,24 @@ STATUS_STYLE = {
         "fg": "#0F5132", "bg": "#E8F5EC", "border": "#B6DCC4",
     },
     "partial": {
-        "label": "부분 답변",
-        "detail": "일부 항목은 문서에서 확인되지 않았습니다", "icon": "⚠️",
+        "label": "일부 항목 미확인",
+        "detail": "문서에서 확인되지 않은 내용이 있습니다", "icon": "⚠",
         "fg": "#7A5B00", "bg": "#FFF6E0", "border": "#EBD9A6",
     },
     "refused": {
         "label": "답변 보류",
-        "detail": "이 질문은 현재 문서 근거만으로 답변할 수 없습니다",
+        "detail": "근거가 불충분하거나 실시간·개인정보 조회가 필요한 질문입니다",
         "icon": "⛔", "fg": "#7F1D1D", "bg": "#FDECEC", "border": "#F0C3C3",
     },
 }
 
 REFUSAL_LABEL = {
-    "personalized": "고객 개인 정보 또는 거래 정보 조회가 필요한 질문입니다.",
-    "time_variant": "현재 금리·환율처럼 시점에 따라 변하는 값은 공개 문서만으로 "
-                    "확정할 수 없습니다.",
-    "out_of_scope": "현재 코퍼스 범위를 벗어난 질문입니다.",
-    "blank_value": "문서에 해당 값이 공란이거나 확정값이 없습니다.",
-    "no_evidence": "검색된 문서에서 질문에 직접 답할 근거를 찾지 못했습니다.",
-    "low_confidence": "검색 신뢰도가 기준에 미달해 답변을 보류했습니다.",
+    "personalized": "개인 정보·이력 조회가 필요한 질문",
+    "time_variant": "시점에 따라 답이 달라지는 질문 (현재 금리 등)",
+    "out_of_scope": "보유 문서 범위를 벗어난 질문",
+    "blank_value": "근거 문서의 해당 값이 공란",
+    "low_confidence": "검색 신뢰도가 기준에 미달",
 }
-
-#: 거절 화면에서 직원에게 보여줄 표준 안내문. 답변 본문이 아니라
-#: 다음 행동을 알려주는 문구이므로 별도 카드로 분리해 표시한다.
-REFUSAL_GUIDE = ("해당 문의는 공개 문서만으로 확정 안내가 어렵습니다. "
-                 "내부 시스템 또는 담당 부서 확인 후 안내해 주세요.")
 
 STAGE_LABEL = {
     "pattern": "0단계 · 질문 패턴 (LLM 호출 없음)",
@@ -525,26 +520,18 @@ def apply_custom_theme() -> None:
 
       /* 상단 배너 */
       .fg-banner {{
-        background:
-          radial-gradient(120% 160% at 100% 0%,
-                          rgba(141,113,80,0.22) 0%, rgba(141,113,80,0) 55%),
-          linear-gradient(135deg, {PRIMARY_DEEP} 0%, {PRIMARY} 45%,
-                          {PRIMARY_SOFT} 100%);
-        border-radius: 16px; padding: 34px 38px 30px 38px;
-        box-shadow: 0 10px 30px rgba(0,45,86,0.22);
+        background: linear-gradient(135deg, {PRIMARY} 0%, {PRIMARY_SOFT} 100%);
+        border-radius: 14px; padding: 26px 30px 22px 30px;
+        box-shadow: 0 6px 20px rgba(0,45,86,0.18);
         border-top: 3px solid {SECONDARY_SOFT};
       }}
       .fg-banner h1 {{
-        color: #FFFFFF !important; margin: 0 0 10px 0; font-size: 2.15rem;
-        font-weight: 700; letter-spacing: -0.025em; line-height: 1.15;
-      }}
-      .fg-banner .rule {{
-        width: 48px; height: 2px; background: {SECONDARY_SOFT};
-        margin: 0 0 14px 0; border-radius: 2px;
+        color: #FFFFFF !important; margin: 0 0 4px 0; font-size: 1.85rem;
+        font-weight: 700; letter-spacing: -0.02em;
       }}
       .fg-banner .sub {{
-        color: {SECONDARY_SOFT} !important; font-size: 1.02rem;
-        font-weight: 600; margin-bottom: 12px; letter-spacing: -0.01em;
+        color: {SECONDARY_SOFT} !important; font-size: 0.98rem;
+        font-weight: 600; margin-bottom: 10px;
       }}
       /* 선택자를 길게 쓰는 이유:
          [1] 블록의 `.block-container [data-testid="stMarkdownContainer"] p`
@@ -554,41 +541,9 @@ def apply_custom_theme() -> None:
       .block-container [data-testid="stMarkdownContainer"] .fg-banner .desc,
       .block-container .fg-banner p,
       .fg-banner .desc, .fg-banner p {{
-        color: #FFFFFF !important; font-size: 0.95rem; line-height: 1.75;
-        margin: 0; opacity: 0.92; white-space: nowrap; overflow: hidden;
-        text-overflow: ellipsis;
+        color: #FFFFFF !important; font-size: 0.92rem; line-height: 1.6;
+        margin: 0; opacity: 0.94;
       }}
-
-      /* ---- 답변 결과 카드 계층 ---- */
-      .fg-section-label {{
-        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
-        text-transform: uppercase; color: {MUTED};
-        margin: 22px 0 8px 0;
-      }}
-      .fg-panel {{
-        background: #FFFFFF; border: 1px solid {LINE}; border-radius: 12px;
-        padding: 18px 22px; box-shadow: 0 1px 3px rgba(16,32,48,0.05);
-      }}
-      .fg-panel-verdict {{ padding: 0; overflow: hidden; }}
-      .fg-verdict-head {{
-        padding: 15px 20px; display: flex; align-items: baseline; gap: 10px;
-        border-bottom: 1px solid rgba(0,0,0,0.06);
-      }}
-      .fg-verdict-head .v-label {{ font-weight: 700; font-size: 1.02rem; }}
-      .fg-verdict-head .v-detail {{ font-size: 0.86rem; opacity: 0.9; }}
-      .fg-verdict-body {{
-        padding: 15px 20px; background: #FFFFFF;
-        font-size: 0.88rem; line-height: 1.7; color: {INK};
-      }}
-      .fg-verdict-body .v-title {{
-        font-weight: 700; color: {PRIMARY}; display: block; margin-bottom: 5px;
-      }}
-      .fg-kv {{ font-size: 0.85rem; line-height: 1.85; color: {MUTED}; }}
-      .fg-kv b {{ color: {INK}; }}
-      .fg-divider {{
-        height: 1px; background: {LINE}; margin: 24px 0 4px 0; border: 0;
-      }}
-
 
       /* 선택된 카테고리 칩 — 네이비 바탕 + 흰 글씨 */
       .stButton > button[kind="primary"] {{
@@ -648,7 +603,7 @@ def apply_custom_theme() -> None:
         background: rgba(255,255,255,0.055);
         border: 1px solid rgba(255,255,255,0.13);
         border-left: 3px solid {SECONDARY_SOFT};
-        border-radius: 8px; padding: 13px 15px; margin-bottom: 11px;
+        border-radius: 8px; padding: 10px 13px; margin-bottom: 8px;
       }}
       section[data-testid="stSidebar"] .fg-metric .m-label,
       section[data-testid="stSidebar"] .fg-metric .m-note {{
@@ -658,8 +613,8 @@ def apply_custom_theme() -> None:
         font-size: 0.74rem; font-weight: 600;
       }}
       section[data-testid="stSidebar"] .fg-metric .m-value {{
-        font-size: 1.32rem; font-weight: 700; color: #FFFFFF !important;
-        line-height: 1.45; margin: 2px 0 1px 0;
+        font-size: 1.3rem; font-weight: 700; color: #FFFFFF !important;
+        line-height: 1.25;
       }}
       section[data-testid="stSidebar"] .fg-metric .m-note {{ font-size: 0.7rem; }}
       section[data-testid="stSidebar"] .fg-hint {{
@@ -808,75 +763,87 @@ def load_metrics() -> dict:
 def build_example_question_map() -> dict[str, list[str]]:
     """카테고리별 예시 질문.
 
-    카테고리별 시연용 질문 목록이다. 예상 답변이나 예상 status 는
-    어디에도 적지 않는다. 화면에 표시되는 모든 값은 실제 파이프라인
-    산출물이며, 이 목록은 입력창을 채우는 프리셋일 뿐이다.
-
-    질문이 의도대로 동작하는지는 scripts/45_check_examples.py 로
-    전량 확인할 수 있다.
+    질문을 새로 지어내지 않는다. 아래 목록은 실제 평가셋에 포함되어
+    파이프라인이 처리한 이력이 있는 질문들이다. 거절 시연 카테고리는
+    거절 평가셋 CSV 에서 직접 읽어온다.
     """
     catalog: dict[str, list[str]] = {
         "예금": [
             "정기예금을 중도해지하면 이자는 어떻게 계산되나요?",
-            "자유저축예금의 이자는 언제 지급되나요?",
-            "하나은행 예금 상품의 이율이 변경되면 언제부터 적용되나요?",
-            "저축예금 통장에 금융사기 의심 거래가 발생하면 거래가 제한될 수 있나요?",
+            "자유저축예금 이자는 언제 받을 수 있나요?",
+            "하나은행 예금 토큰은 모바일 앱에서 어떻게 가입해요?",
+            "저축예금 통장에 사기 의심이 생기면 거래가 어떻게 제한돼요?",
+            "하나은행 입출금 예금 이율은 바뀌면 언제부터 적용돼요?",
         ],
         "적금": [
-            "자유적금을 만기 전에 해지하면 우대금리는 어떻게 되나요?",
-            "하나더소호 가맹점 적금의 우대금리는 어떤 조건에서 적용되나요?",
-            "적금 상품의 우대금리는 만기 해지 시에만 적용되나요?",
-            "적금 상품을 중도해지하면 약정이율과 우대금리가 그대로 적용되나요?",
+            "자유적금 만기 전에 해지하면 우대금리는 어떻게 되나요?",
+            "사업자 주거래 우대통장 가입 후 최초 다음달까지 제공되는 수수료 우대서비스는 무엇인가요?",
         ],
         "청약": [
-            "주택청약종합저축에 가입하고 청약 1순위가 되려면 어느 정도의 가입기간과 납입횟수가 필요한가요?",
-            "청년주택드림 청약통장에 가입할 때 소득 증명서류로는 어떤 것이 필요한가요?",
-            "주택청약저축에서 선납한 금액은 언제 납입회차로 인정되나요?",
-            "청년주택드림 청약통장은 기존 청약통장에서 전환 가입할 수 있나요?",
+            "주택청약종합저축 가입하고 청약 1순위 되려면 어느 정도 기간과 납입횟수가 필요한가요?",
+            "청년 주택드림 청약통장 가입할 때 소득 증명서류로는 어떤 게 필요한가요?",
+            "주택청약저축에서 선납한 금액은 언제 인정회차로 산정되나요?",
         ],
         "대출": [
+            "은행에서 빌린 돈을 10일 넘게 못 갚으면 어떻게 되나요?",
+            "대출받은 뒤에 원금은 안 내고 이자만 낼 수 있는 기간이 있나요?",
+            "전세자금대출에서 중도상환해약금 산정 기준은 무엇인가요?",
             "하나은행 마이너스통장 대출 이자는 어떤 기준으로 출금되나요?",
-            "대출받은 뒤 원금은 갚지 않고 이자만 낼 수 있는 기간이 있나요?",
-            "하나은행 대출이자 계산 시 '한편넣기'란 무엇을 의미하나요?",
-            "하나은행 가계대출을 받을 때 인지세는 누가 부담하나요?",
+            "하나은행 가계 대출할 때 인지세는 누가 부담해요?",
         ],
         "외환 / 해외송금": [
             "해외 ATM 출금 서비스의 1회 출금 표준한도는 얼마인가요?",
-            "해외에서 송금을 받을 때 송금인에게 어떤 정보를 알려줘야 하나요?",
-            "외화 송금 후 송금 내용을 취소하거나 변경할 수 있나요?",
-            "하나은행 환전지갑에서 외화를 찾을 때 신분증이 필요한가요?",
+            "해외에서 돈 받을 때 해외 사람이 우리 은행에 보내려면 뭘 알려줘야 해?",
+            "외화 송금한 후에 돈 보내는 걸 취소하거나 바꿀 수 있나요?",
+            "하나은행 환전지갑에서 외화 찾을 때 신분증 꼭 가져가야 해요? 대리인은 어떻게 되나요?",
         ],
         "전자금융 / 인터넷뱅킹": [
             "하나은행 인터넷뱅킹에서 1천만원 넘게 이체하려면 어떻게 해야 하나요?",
-            "하나원큐에서 특정 계좌를 조회하지 못하게 하려면 어떻게 하나요?",
+            "하나원큐에서 특정 계좌 조회 못하게 하려면 어떻게 해?",
             "하나은행 심플이체에서 이체 내역을 수정할 수 있나요?",
-            "하나원큐 로그인할 때 기본 로그인 방법을 바꾸려면 어떻게 해야 해요?",
+            "내 계좌에 돈이 부족하면 인터넷으로 돈 보내기가 안 되나요?",
         ],
         "마이데이터 / 인증": [
-            "휴대폰 번호는 그대로 두고 기기만 변경했는데 금융인증서 클라우드를 계속 사용할 수 있나요?",
-            "하나 합 마이데이터 서비스에서 만 14세 미만 손님의 거래 제한 내용은 무엇인가요?",
+            "휴대폰 번호는 안 바꾸고 기기만 바꿨는데 금융인증서 클라우드 계속 쓸 수 있나요?",
+            "하나 합(마이데이터 서비스) 이용 시 만 14세 미만 손님의 거래 제한 내용은 무엇인가요?",
             "OTP 이용 중 '보정거래 필요' 오류가 발생하면 어떻게 해야 하나요?",
-            "마이데이터서비스 약관이 변경되면 은행은 고객에게 어떻게 알려야 하나요?",
+            "마이데이터서비스 약관이 갑자기 바뀌면 은행이 어떻게 알려줘요?",
         ],
         "퇴직연금 / 펀드": [
-            "개인형 IRP에서 만기 자금에 대한 운용지시가 없으면 어떻게 운용되나요?",
-            "소득공제 장기펀드를 5년 안에 중도해지하면 세금은 얼마나 나오나요?",
-            "『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법 변경 시 가입자가 선택할 수 있는 조치는 무엇인가요?",
-            "일임형 개인종합자산관리계좌 ISA 계약이 만료된 후 수수료는 어떻게 처리되나요?",
+            "개인형IRP에서 만기 자금 운용 지시가 없을 때 어떻게 운용되나요?",
+            "소득공제 장기펀드를 5년 안에 중간에 해지하면 세금이 얼마나 나와요?",
+            "하나은행 디폴트옵션 안정투자형 포트폴리오 1 상품이 위험등급이 바뀌거나 승인이 취소되면 어떻게 알려주나요?",
+            "일임형 개인종합자산관리계좌(ISA) 계약 만료 후 수수료는 어떻게 처리됩니까?",
         ],
-        "공통약관 / 기타": [
+        "공통 약관 / 기타": [
             "은행이 돈을 다 갚으라고 통보를 늦게 하면 저는 언제부터 바로 갚아야 하나요?",
-            "하나은행 저축예금에서 날짜 없는 수표가 들어오면 어떻게 처리하나요?",
-            "하나은행에서 전자금융 거래 내역을 못 받을 때 은행이 어떻게 알려줘야 하나요?",
-            "은행이 서류를 잃어버리거나 훼손한 경우에도 고객은 다른 증서로 채무를 갚아야 하나요?",
-        ],
-        "거절 시연": [
-            "제 연체 기록이 대출 연체 이자에 어떻게 영향을 미치나요?",
-            "현재 기준금리는 얼마인가요?",
-            "하나은행 정기예금의 현재 적용 금리는 몇 퍼센트인가요?",
-            "제 계좌 잔액 기준으로 어떤 예금 상품이 가장 유리한가요?",
+            "통장 없이 거래할 때 도장이나 서명은 꼭 제출해야 하나요?",
+            "하나은행에서 전자금융 거래 내역을 못 받을 때 은행이 어떻게 알려줘야 해?",
+            "은행이 서류를 잃어버리거나 다치게 하면 제가 가진 다른 증서로 빚을 갚아야 하나요?",
         ],
     }
+
+    # 거절 시연은 거절 평가셋에서 직접 읽는다. 지어낸 질문은 실제로
+    # 거절되지 않을 수 있고, 그러면 시연이 성립하지 않는다.
+    refuse_questions: list[str] = []
+    if REFUSAL_EVAL_PATH.exists():
+        text = read_text(REFUSAL_EVAL_PATH)
+        try:
+            rows = list(csv.DictReader(text.splitlines())) if text else []
+        except csv.Error:
+            rows = []
+        picked: dict[str, str] = {}
+        for row in rows:
+            if str(row.get("expected", "")).strip().lower() != "refuse":
+                continue
+            kind = str(row.get("refusal_type", "")).strip()
+            question = str(row.get("question", "")).strip()
+            if kind and question and kind not in picked:
+                picked[kind] = question
+        refuse_questions = list(picked.values())
+
+    if refuse_questions:
+        catalog["거절 시연"] = refuse_questions
 
     return catalog
 
@@ -966,10 +933,10 @@ def render_header() -> None:
     st.markdown(f"""
     <div class="fg-banner">
       <h1>FinGuide-RAG</h1>
-      <div class="rule"></div>
-      <div class="sub">은행 직원용 근거 제시형 금융 RAG 프로그램</div>
+      <div class="sub">은행 직원용 근거 제시형 금융 RAG 콘솔</div>
       <p class="desc">
-        상품설명서·약관·FAQ 원문 근거를 기반으로 직원이 직접 검증한 뒤 고객에게 안내할 수 있도록 한 B2E RAG 데모 프로그램입니다.
+        상품설명서·약관·FAQ 원문 근거를 함께 제공하여 직원이 직접 검증할 수
+        있도록 설계된 B2E RAG 데모입니다.
       </p>
     </div>
     <div class="fg-notice">
@@ -1057,6 +1024,12 @@ def render_example_questions_by_category(mapping: dict[str, list[str]]) -> None:
             '표시됩니다. 직접 입력해도 됩니다.</div>', unsafe_allow_html=True)
         return
 
+    if category == "거절 시연":
+        st.markdown(
+            '<div class="fg-hint">거절 평가셋에서 유형별로 한 건씩 가져온 '
+            '질문입니다. 답변 대신 보류 사유가 표시되는 것이 정상 동작입니다.'
+            '</div>', unsafe_allow_html=True)
+
     for i, question in enumerate(mapping.get(category, [])):
         if st.button(question, key=f"q_{category}_{i}",
                      use_container_width=True):
@@ -1078,91 +1051,23 @@ def render_question_input() -> bool:
 # 렌더링 — 답변
 # ---------------------------------------------------------------------------
 
-def build_source_notice(result: dict, evidences: list[dict]) -> str:
-    """근거 안내문 문자열을 만든다(렌더링하지 않는다)."""
-    notice = str(safe_get(result, "source_notice", "") or "").strip()
-    if notice:
-        return notice
-
-    titles: list[str] = []
-    for ev in evidences:
-        name = evidence_title(ev)
-        if name and name != "(문서명 없음)" and name not in titles:
-            titles.append(name)
-    if not titles:
-        return ""
-    return ("※ 이 답변은 다음 근거 문서에 기반합니다: "
-            + ", ".join(f"『{t}』" for t in titles) + ".")
-
-
-def render_product_rows(evidences: list[dict], question: str) -> None:
-    """질문 상품과 근거 상품을 나란히 제시한다. 판정하지 않는다."""
-    matcher, names = get_product_tools()
-    # 근거가 없으면 대조할 대상이 없다. 특히 질문 패턴 단계에서 거절된
-    # 경우는 검색조차 하지 않았으므로 상품 대조가 의미를 갖지 못한다.
-    q_products = question_products(matcher, names, question) if evidences else []
-    e_products = evidence_products(matcher, evidences)
-    if not (q_products or e_products):
-        return
-
-    left = ", ".join(f"『{p}』" for p in q_products) or "특정 상품 미인식"
-    right = ", ".join(f"『{p}』" for p in e_products) or "없음"
-    st.markdown(
-        f'<div class="fg-kv" style="margin-top:10px;">'
-        f'질문에서 인식된 상품 <span style="opacity:.7;">(카탈로그 대조, '
-        f'참고용)</span> · <b>{esc(left)}</b><br>'
-        f'근거 문서의 상품 · <b>{esc(right)}</b></div>',
-        unsafe_allow_html=True)
-    st.markdown(
-        '<div class="fg-hint" style="margin-top:6px;">두 값이 다르다면 우측 '
-        '근거 원문을 확인하세요. 자동 상품 판정은 오탐률이 높은 것으로 '
-        '측정되어, 시스템이 불일치를 임의로 단정하지 않고 두 값을 그대로 '
-        '제시합니다.</div>', unsafe_allow_html=True)
-
-
-def render_verdict_card(result: dict, evidences: list[dict],
-                        question: str, status: str) -> str:
-    """판정 요약 카드 — 상태 배지와 근거 기준 안내를 하나로 묶는다.
-
-    직원이 화면을 위에서 아래로 읽을 때 가장 먼저 확인해야 하는 것은
-    '이 답변을 그대로 안내해도 되는가'다. 그래서 상태와 근거 기준을
-    분리된 두 덩어리로 흩어놓지 않고 한 카드에 담는다.
-    """
-    style = STATUS_STYLE[status]
-    notice = build_source_notice(result, evidences)
-
-    # 거절 화면에서는 근거 안내문이 '답변의 근거'처럼 보이면 안 된다.
-    if status == "refused":
-        notice_title = "참고로 검색된 문서" if evidences else ""
-        notice_body = notice if evidences else ""
-    else:
-        notice_title = ""
-        notice_body = notice
-
-    body = ""
-    if notice_body:
-        head = (f'<span class="v-title">{esc(notice_title)}</span>'
-                if notice_title else "")
-        body = (f'<div class="fg-verdict-body">{head}'
-                f'{esc(notice_body)}</div>')
-
+def render_status_badge(result: dict, evidences: list[dict]) -> None:
+    style = STATUS_STYLE[derive_status(result)]
     st.markdown(f"""
-    <div class="fg-panel fg-panel-verdict">
-      <div class="fg-verdict-head" style="background:{style['bg']};
-           color:{style['fg']};">
-        <span>{style['icon']}</span>
-        <span>
-          <span class="v-label">{style['label']}</span>
-          <span class="v-detail"> — {style['detail']}</span>
-        </span>
-      </div>
-      {body}
+    <div class="fg-badge" style="background:{style['bg']};
+         border-color:{style['border']}; color:{style['fg']};">
+      <span class="b-icon">{style['icon']}</span>
+      <span>
+        <span class="b-label" style="color:{style['fg']};">{style['label']}</span>
+        <span class="b-detail" style="color:{style['fg']};">
+          — {style['detail']}</span>
+      </span>
     </div>""", unsafe_allow_html=True)
 
     subs: list[str] = []
     doc_types = {evidence_field(e, "doc_type") for e in evidences}
     doc_types.discard("")
-    if status != "refused" and doc_types and doc_types <= {"약관", "FAQ"}:
+    if doc_types and doc_types <= {"약관", "FAQ"}:
         subs.append("📘 공통 규정 근거 — 특정 상품이 아닌 공통 약관·FAQ 기준")
     if any(e.get("is_latest") is False for e in evidences):
         subs.append("🕓 최신본이 아닐 수 있는 근거 포함 — 시행일 확인 필요")
@@ -1171,107 +1076,109 @@ def render_verdict_card(result: dict, evidences: list[dict],
             "".join(f'<span class="fg-subbadge">{esc(s)}</span>' for s in subs),
             unsafe_allow_html=True)
 
-    if status != "refused":
-        render_product_rows(evidences, question)
+
+def render_source_notice(result: dict, evidences: list[dict],
+                         question: str) -> str:
+    """답변 최상단 근거 안내문을 렌더링하고, 복사용 텍스트를 돌려준다."""
+    notice = str(safe_get(result, "source_notice", "") or "").strip()
+
+    if not notice:
+        titles: list[str] = []
+        for ev in evidences:
+            name = evidence_title(ev)
+            if name and name != "(문서명 없음)" and name not in titles:
+                titles.append(name)
+        notice = (
+            "※ 이 답변은 다음 근거 문서에 기반합니다: "
+            + ", ".join(f"『{t}』" for t in titles) + "."
+            if titles else "※ 표시할 근거 문서가 없습니다."
+        )
+
+    matcher, names = get_product_tools()
+    # 근거가 없으면 대조할 대상이 없다. 특히 질문 패턴 단계에서 거절된
+    # 경우는 검색조차 하지 않았으므로 상품 대조가 의미를 갖지 못한다.
+    q_products = question_products(matcher, names, question) if evidences else []
+    e_products = evidence_products(matcher, evidences)
+
+    rows = ""
+    if q_products or e_products:
+        left = ", ".join(f"『{p}』" for p in q_products) or "특정 상품 미인식"
+        right = ", ".join(f"『{p}』" for p in e_products) or "없음"
+        rows = (
+            f'<div style="margin-top:9px; font-size:0.86rem; line-height:1.75;">'
+            f'질문에서 인식된 상품 <span style="opacity:.7;">(카탈로그 대조, '
+            f'참고용)</span> · {esc(left)}<br>'
+            f'근거 문서의 상품 · {esc(right)}</div>'
+        )
+
+    st.markdown(f'<div class="fg-source"><b>{esc(notice)}</b>{rows}</div>',
+                unsafe_allow_html=True)
+
+    if rows:
+        st.markdown(
+            '<div class="fg-hint">두 값이 다르면 우측 근거 원문을 확인하세요. '
+            '자동 상품 판정은 오탐률이 높은 것으로 측정되어(20건 중 16건), '
+            '시스템이 불일치를 단정하지 않고 두 값을 그대로 제시합니다.</div>',
+            unsafe_allow_html=True)
 
     return notice
 
 
-def render_answer_card(result: dict) -> str:
-    """LLM 답변 본문 카드. 반환값은 고객 안내문 조립에 쓰인다."""
+def render_answer_panel(result: dict, evidences: list[dict],
+                        question: str) -> None:
+    render_status_badge(result, evidences)
+    notice = render_source_notice(result, evidences, question)
+
     answer_text = str(safe_get(result, "answer", "") or "")
-    st.markdown('<div class="fg-section-label">답변</div>',
-                unsafe_allow_html=True)
     st.markdown(
-        f'<div class="fg-panel">{esc(answer_text) or "(답변 본문 없음)"}</div>',
+        f'<div class="fg-answer">{esc(answer_text) or "(답변 본문 없음)"}</div>',
         unsafe_allow_html=True)
-    return answer_text
 
-
-def render_notfound_card(not_found: list) -> None:
-    items = "".join(f"<li>{esc(x)}</li>" for x in not_found)
-    st.markdown('<div class="fg-section-label">확인되지 않은 항목</div>',
-                unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class="fg-panel" style="border-left:3px solid {SECONDARY};">
-      <ul style="margin:0 0 8px 18px; font-size:0.9rem; line-height:1.8;">
-        {items}</ul>
-      <div class="fg-hint">위 항목은 근거 문서에 없어 답변에 포함하지
-      않았습니다. 내부 시스템이나 담당 부서 확인이 필요합니다.</div>
-    </div>""", unsafe_allow_html=True)
-
-
-def render_refusal_card(result: dict) -> None:
-    """거절 화면 — 답변 본문처럼 보이는 영역을 만들지 않는다."""
-    reason = str(safe_get(result, "refusal_reason") or "")
-    detail = REFUSAL_LABEL.get(reason, "")
-
-    st.markdown('<div class="fg-section-label">보류 사유</div>',
-                unsafe_allow_html=True)
-    reason_line = (f'<div style="font-size:0.94rem; line-height:1.7; '
-                   f'color:{INK};">{esc(detail)}</div>' if detail else "")
-    code = (f'<div class="fg-kv" style="margin-top:8px;">사유 코드 · '
-            f'<code>{esc(reason)}</code></div>' if reason else "")
-    st.markdown(f'<div class="fg-panel" style="border-left:3px solid #C0392B;">'
-                f'{reason_line}{code}</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="fg-section-label">직원 안내</div>',
-                unsafe_allow_html=True)
-    st.markdown(f'<div class="fg-panel" style="background:{CANVAS};">'
-                f'{esc(REFUSAL_GUIDE)}</div>', unsafe_allow_html=True)
-
-
-def render_stage_line(result: dict) -> None:
+    reason = safe_get(result, "refusal_reason")
     stage = str(safe_get(result, "stage", "") or "")
+    meta: list[str] = []
+    if reason:
+        meta.append(f"거절 사유 · <code>{esc(reason)}</code> "
+                    f"{esc(REFUSAL_LABEL.get(str(reason), ''))}")
     if stage:
-        st.markdown(
-            f'<div class="fg-kv" style="margin-top:12px;">판정 단계 · '
-            f'{esc(STAGE_LABEL.get(stage, stage))}</div>',
-            unsafe_allow_html=True)
+        meta.append(f"판정 단계 · {esc(STAGE_LABEL.get(stage, stage))}")
+    if meta:
+        st.markdown(f'<div class="fg-ev-meta" style="margin-top:12px;">'
+                    f'{"<br>".join(meta)}</div>', unsafe_allow_html=True)
 
+    not_found = safe_get(result, "not_found") or []
+    if not_found:
+        items = "".join(f"<li>{esc(x)}</li>" for x in not_found)
+        st.markdown(f"""
+        <div class="fg-card" style="border-left:3px solid {SECONDARY};
+             margin-top:12px;">
+          <div class="fg-card-title" style="color:{SECONDARY};">
+            문서에서 확인되지 않은 항목</div>
+          <ul style="margin:0 0 8px 18px; font-size:0.9rem; line-height:1.75;">
+            {items}</ul>
+          <div class="fg-hint">위 항목은 근거 문서에 없어 답변에 포함하지
+          않았습니다. 내부 시스템이나 담당 부서 확인이 필요합니다.</div>
+        </div>""", unsafe_allow_html=True)
 
-def render_customer_message(status: str, notice: str, answer_text: str,
-                            not_found: list) -> None:
-    """고객 안내문 섹션. 우측 원문 확인 후에만 열린다."""
-    st.markdown('<hr class="fg-divider">', unsafe_allow_html=True)
+    st.markdown("---")
     checked = st.checkbox("우측 근거 원문을 확인했습니다.", key="evidence_checked")
     if not checked:
         st.warning("고객 안내 전 우측 근거 문서를 확인하는 것을 권장합니다.")
         return
 
-    if status == "refused":
-        copy_text = REFUSAL_GUIDE
-    else:
-        copy_text = f"{notice}\n\n{answer_text}" if notice else answer_text
-        if not_found:
-            copy_text += "\n\n[문서에서 확인되지 않은 항목]\n" + "\n".join(
-                f"- {x}" for x in not_found)
-
-    st.markdown('<div class="fg-section-label">고객 안내문</div>',
+    copy_text = f"{notice}\n\n{answer_text}"
+    if not_found:
+        copy_text += "\n\n[문서에서 확인되지 않은 항목]\n" + "\n".join(
+            f"- {x}" for x in not_found)
+    st.markdown('<div class="fg-card-title">고객 안내용</div>',
                 unsafe_allow_html=True)
-    st.text_area("복사해서 사용하세요", value=copy_text, height=200,
+    st.text_area("복사해서 사용하세요", value=copy_text, height=210,
                  label_visibility="collapsed")
 
 
-def render_answer_panel(result: dict, evidences: list[dict],
-                        question: str) -> None:
-    """읽는 순서: 판정 확인 → 근거 기준 → 답변 → 원문 확인 → 고객 안내문."""
-    status = derive_status(result)
-    not_found = safe_get(result, "not_found") or []
-
-    notice = render_verdict_card(result, evidences, question, status)
-
-    if status == "refused":
-        render_refusal_card(result)
-        answer_text = ""
-    else:
-        answer_text = render_answer_card(result)
-        if not_found:
-            render_notfound_card(not_found)
-
-    render_stage_line(result)
-    render_customer_message(status, notice, answer_text, not_found)
-
+# ---------------------------------------------------------------------------
+# 렌더링 — 근거
+# ---------------------------------------------------------------------------
 
 def render_evidence_panel(evidences: list[dict], result: dict | None) -> None:
     st.markdown('<div class="fg-card-title">근거 원문</div>',
@@ -1287,9 +1194,9 @@ def render_evidence_panel(evidences: list[dict], result: dict | None) -> None:
     if not evidences:
         if str(safe_get(result, "stage", "") or "") == "pattern":
             st.info(
-                "이 질문은 검색 이전 단계에서 거절되었습니다.\n\n"
-                "개인정보 조회, 실시간 값, 범위 외 질문은 불필요한 검색과 "
-                "LLM 호출을 줄이기 위해 0단계 규칙에서 먼저 차단합니다.")
+                "이 질문은 검색 이전 단계(질문 패턴)에서 판정되었습니다.\n\n"
+                "검색과 LLM 을 모두 호출하지 않았으므로 표시할 근거가 없습니다. "
+                "의도된 동작입니다.")
         else:
             st.warning("표시할 근거가 없습니다.")
         return
@@ -1297,7 +1204,6 @@ def render_evidence_panel(evidences: list[dict], result: dict | None) -> None:
     for i, ev in enumerate(evidences):
         rank = ev.get("rank", i + 1)
         with st.expander(f"근거 {rank}  ·  {evidence_title(ev)}", expanded=True):
-            # 문서명은 헤더에서 이미 강조되므로 본문은 보조 정보만 담는다.
             _render_evidence_body(ev)
 
 
