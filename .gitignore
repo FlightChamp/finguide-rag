@@ -93,3 +93,9 @@ data/interim/g_judge_v2_cache.json
 # 작업용 임시 파일
 README.bak.md
 scripts/peek.py
+
+# 패치 백업 파일
+*.bak_*
+*_backup.py
+app_before_*.py
+scripts/peek.py
