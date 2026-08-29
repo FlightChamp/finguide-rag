@@ -400,56 +400,6 @@ class RagasJudge:
         return score, supported, judged, verdicts
 
     # -- 2) Answer relevancy --------------------------------------------
-    def judge_contexts(self, question: str,
-                       contexts: list[str]) -> list[dict[str, Any]]:
-        """각 근거가 질문에 답하는 데 유용한지 rank 순으로 판정한다.
-
-        정답 라벨을 쓰지 않는다. 검색 평가셋에 없는 질문(id23, id24)까지
-        대상에 넣어야 상품불일치 반례를 검증할 수 있기 때문이다.
-        """
-        n = len(contexts)
-        system = (
-            "너는 검색 근거 평가기다. 각 근거가 주어진 질문에 답하는 데 "
-            "유용한지 판정한다.\n"
-            "판정 기준:\n"
-            "- 각 근거를 독립적으로 판정한다. 다른 근거와 내용이 겹치거나 "
-            "덜 구체적이라는 이유로 유용하지 않다고 하지 마라. 그 근거 "
-            "하나만 놓고 봤을 때 질문에 답하는 데 쓸 수 있으면 유용하다.\n"
-            "- 질문과 주제가 비슷하다는 이유만으로 유용하다고 하지 마라. "
-            "질문이 묻는 항목 자체를 다루지 않으면 유용하지 않다.\n"
-            "- 질문이 특정 상품을 가리키는데 근거가 다른 상품에 대한 "
-            "것이면 유용하지 않다.\n"
-            f"근거는 {n}개다. 반드시 {n}개의 판정을 rank 1부터 {n}까지 "
-            "빠짐없이 낸다. 여러 근거를 묶어서 한 번에 판정하지 마라.\n"
-            'JSON만 출력한다: {"verdicts": [{"rank": 1, "useful": true, '
-            '"reason": "..."}]}'
-        )
-        block = "\n\n".join(
-            f"[근거 {i}]\n{c}" for i, c in enumerate(contexts, start=1))
-        user = f"[질문]\n{question}\n\n{block}\n\n판정 {n}개를 내십시오."
-        key = cache_key("ctxprec", self.model, question, block, str(n))
-        result = self._chat_json(key, system, user)
-        verdicts = [v for v in result.get("verdicts", []) if isinstance(v, dict)]
-
-        by_rank = {}
-        for i, v in enumerate(verdicts, start=1):
-            try:
-                rank = int(v.get("rank", i) or i)
-            except (TypeError, ValueError):
-                rank = i
-            by_rank[rank] = v
-
-        # 누락은 숨기지 않고 드러낸다. 이전 구현은 누락을 조용히
-        # not useful 로 처리해, 판정기가 근거를 묶어 답하던 결함이
-        # 값에 그대로 반영됐다.
-        missing = [i for i in range(1, n + 1) if i not in by_rank]
-        if missing:
-            print(f"        [경고] 근거 판정 누락 rank {missing} "
-                  f"— 유용하지 않음으로 처리합니다.")
-        return [by_rank.get(i, {"rank": i, "useful": False,
-                                "reason": "판정 누락"})
-                for i in range(1, n + 1)]
-
     def generate_questions(self, answer: str) -> tuple[list[str], bool]:
         system = (
             "너는 역질문 생성기다. 주어진 답변만 보고, 그 답변이 직접 답하고 있는 "
@@ -492,29 +442,6 @@ class Embedder:
         norms = np.linalg.norm(vecs, axis=1, keepdims=True)
         norms[norms == 0] = 1.0
         return vecs / norms
-
-
-def context_precision(verdicts: list[dict[str, Any]]) -> float:
-    """순위 가중 정밀도.
-
-    useful 로 판정된 rank 마다 precision@rank 를 구해 평균낸다.
-    유용한 근거가 상위에 있을수록 값이 커진다.
-
-        [O, X, O] -> (1/1 + 2/3) / 2 = 0.833
-        [X, O, X] -> (1/2) / 1       = 0.500
-        [X, X, X] -> 0.0
-    """
-    if not verdicts:
-        return 0.0
-    hits = 0
-    precisions: list[float] = []
-    for rank, v in enumerate(verdicts, start=1):
-        if v.get("useful") is True:
-            hits += 1
-            precisions.append(hits / rank)
-    if not precisions:
-        return 0.0
-    return sum(precisions) / len(precisions)
 
 
 def answer_relevancy(embedder: Embedder, question: str,
@@ -563,14 +490,6 @@ def build_report(rows: list[dict[str, Any]], skipped: list[dict[str, Any]],
         "RAGAs (Es et al., EACL 2024) |")
     add("| Answer Relevancy | 답변에서 역생성한 질문과 원 질문의 코사인 유사도 평균 | "
         "동일 |")
-    add("| Context Precision | 유용한 근거가 상위에 있을수록 높은 순위 가중 정밀도 | "
-        "동일 |")
-    add("")
-    add("> 세 지표 모두 RAGAs 라이브러리를 호출하지 않고 원논문 정의를 참고해 "
-        "**RAGAs-style 로 재구현**한 값이다. 특히 Context Precision 은 정답 "
-        "청크 라벨이 아니라 LLM judge 의 유용성 판정에 기반한다. 검색 평가셋 "
-        "96건에 상품불일치 반례(id23, id24)가 포함돼 있지 않아, 정답 라벨 "
-        "방식으로는 검증하려는 사례가 대상에서 빠지기 때문이다.")
 
     # 전체 평균
     faith = [r["ragas_faithfulness"] for r in rows
@@ -583,42 +502,20 @@ def build_report(rows: list[dict[str, Any]], skipped: list[dict[str, Any]],
     add("|---|---|---|")
     add(f"| Faithfulness | {fmt(sum(faith)/len(faith)) if faith else '-'} | {len(faith)} |")
     add(f"| Answer Relevancy | {fmt(sum(relev)/len(relev)) if relev else '-'} | {len(relev)} |")
-    ctxp = [r.get("ragas_context_precision") for r in rows
-            if isinstance(r.get("ragas_context_precision"), float)]
-    add(f"| Context Precision | {fmt(sum(ctxp)/len(ctxp)) if ctxp else '-'} | {len(ctxp)} |")
 
     # 항목별
     add("\n## 3. 항목별 결과\n")
-    add("| id | 유형 | Faithfulness | 지지/전체 | AnswerRel | CtxPrec | "
-        "유용근거 | 사람_환각 | 사람_상품일치 | 사람_수치정확 |")
-    add("|---|---|---|---|---|---|---|---|---|---|")
+    add("| id | 유형 | Faithfulness | 지지/전체 | AnswerRel | 사람_환각 | "
+        "사람_상품일치 | 사람_수치정확 |")
+    add("|---|---|---|---|---|---|---|---|")
     for r in rows:
-        mark = " **←**" if str(r["id"]) in ("23", "24") else ""
-        add(f"| {r['id']}{mark} | {r.get('doc_type','')} | "
+        add(f"| {r['id']} | {r.get('doc_type','')} | "
             f"{fmt(r['ragas_faithfulness'])} | "
             f"{r['supported']}/{r['judged']} | "
             f"{fmt(r['ragas_answer_relevancy'])} | "
-            f"{fmt(r.get('ragas_context_precision'))} | "
-            f"{r.get('n_useful','-')}/{r.get('n_context','-')} | "
             f"{r.get('human_환각','-') or '-'} | "
             f"{r.get('human_상품일치','-') or '-'} | "
             f"{r.get('human_수치정확','-') or '-'} |")
-    add("\n`←` 표시는 상품불일치 반례로 지목된 항목이다.")
-
-    # 반례 상세
-    focus = [r for r in rows if str(r["id"]) in ("23", "24")]
-    if focus:
-        add("\n### 상품불일치 반례 상세\n")
-        for r in focus:
-            add(f"**id {r['id']}** · {str(r.get('question',''))[:60]}\n")
-            add(f"- Faithfulness {fmt(r['ragas_faithfulness'])} / "
-                f"Answer Relevancy {fmt(r['ragas_answer_relevancy'])} / "
-                f"**Context Precision {fmt(r.get('ragas_context_precision'))}**")
-            add(f"- 유용 판정 근거 {r.get('n_useful','?')}/{r.get('n_context','?')}건")
-            add(f"- 사람 판정 상품일치: {r.get('human_상품일치','-') or '-'}")
-            if r.get("context_verdicts"):
-                add(f"- 근거별 판정: {r['context_verdicts']}")
-            add("")
 
     # 핵심 교차표
     add("\n## 4. 핵심 — 표준 지표가 놓친 도메인 오류\n")
@@ -650,32 +547,7 @@ def build_report(rows: list[dict[str, Any]], skipped: list[dict[str, Any]],
             ids = ", ".join(r["id"] for r in missed)
             add(f"\n놓친 항목 id: {ids}")
 
-    def crosstab_ctx(label_key: str, title: str) -> None:
-        """Context Precision 이 사람 판정을 잡아내는지 본다."""
-        labeled = [r for r in rows
-                   if r.get(label_key) in ("pass", "fail")
-                   and isinstance(r.get("ragas_context_precision"), float)]
-        if not labeled:
-            add(f"\n**{title} — Context Precision**: 라벨이 없어 계산 불가\n")
-            return
-        fails = [r for r in labeled if r[label_key] == "fail"]
-        passes = [r for r in labeled if r[label_key] == "pass"]
-        caught = [r for r in fails if r["ragas_context_precision"] < 1.0]
-        add(f"\n**{title} — Context Precision** "
-            f"(라벨 {len(labeled)}건 중 사람 fail {len(fails)}건)\n")
-        add("| 구분 | 건수 | 의미 |")
-        add("|---|---|---|")
-        add(f"| CtxPrec < 1.0 로 탐지 | {len(caught)} | 표준 지표가 포착 |")
-        add(f"| CtxPrec = 1.0 으로 통과 | {len(fails) - len(caught)} | 놓친 오류 |")
-        if fails:
-            avg_f = sum(r["ragas_context_precision"] for r in fails) / len(fails)
-            add(f"\n- fail 항목 평균 CtxPrec **{avg_f:.3f}**")
-        if passes:
-            avg_p = sum(r["ragas_context_precision"] for r in passes) / len(passes)
-            add(f"- pass 항목 평균 CtxPrec **{avg_p:.3f}**")
-
     crosstab("human_상품일치", "상품불일치")
-    crosstab_ctx("human_상품일치", "상품불일치")
     crosstab("human_환각", "환각")
     crosstab("human_수치정확", "수치오류")
 
@@ -745,9 +617,9 @@ def main() -> None:
         sys.exit("[중단] 측정 가능한 항목이 없습니다. "
                  "거절 응답만 있거나 근거가 저장되지 않았습니다.")
 
-    est_calls = len(targets) * 4
-    print(f"      예상 LLM 호출: 최대 {est_calls}회 (캐시 적중분은 제외됨, "
-          f"항목당 진술추출 1 + 검증 1 + 역질문 1 + 근거유용성 1)")
+    est_calls = len(targets) * 3
+    print(f"      예상 LLM 호출: 최대 {est_calls}회 "
+          f"(캐시 적중분은 제외됨, 항목당 진술추출 1 + 검증 1 + 역질문 1)")
 
     if args.dry_run:
         print("[dry-run] 실제 호출 없이 종료합니다.")
@@ -780,12 +652,9 @@ def main() -> None:
             questions, noncommittal = judge.generate_questions(s["answer"])
             relevancy = answer_relevancy(
                 embedder, s["question"], questions, noncommittal)
-            ctx_verdicts = judge.judge_contexts(s["question"], s["contexts"])
-            ctx_precision = context_precision(ctx_verdicts)
             error = ""
         except Exception as exc:  # 한 건 실패가 전체를 막지 않게 한다
             score, supported, judged, verdicts = None, 0, 0, []
-            ctx_verdicts, ctx_precision = [], None
             relevancy, noncommittal, error = None, False, str(exc)[:200]
             print(f"        [오류] {error}")
 
@@ -796,14 +665,6 @@ def main() -> None:
             "supported": supported,
             "judged": judged,
             "ragas_answer_relevancy": relevancy,
-            "ragas_context_precision": ctx_precision,
-            "n_context": len(s.get("contexts") or []),
-            "n_useful": sum(1 for v in ctx_verdicts
-                            if v.get("useful") is True),
-            "context_verdicts": " | ".join(
-                f"{i}:{'useful' if v.get('useful') is True else 'not'}"
-                f"({str(v.get('reason',''))[:50]})"
-                for i, v in enumerate(ctx_verdicts, start=1)),
             "noncommittal": noncommittal,
             "unsupported_reasons": " | ".join(
                 str(v.get("reason", ""))[:80] for v in verdicts
@@ -824,8 +685,6 @@ def main() -> None:
     fields = ["id", "group", "difficulty", "doc_type", "question", "decision",
               "ragas_faithfulness", "supported", "judged",
               "ragas_answer_relevancy", "noncommittal",
-              "ragas_context_precision", "n_context", "n_useful",
-              "context_verdicts",
               "human_환각", "human_상품일치", "human_수치정확",
               "v2_환각", "v2_상품일치", "v2_수치정확",
               "unsupported_reasons", "error"]

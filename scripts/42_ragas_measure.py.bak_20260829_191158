@@ -407,30 +407,22 @@ class RagasJudge:
         정답 라벨을 쓰지 않는다. 검색 평가셋에 없는 질문(id23, id24)까지
         대상에 넣어야 상품불일치 반례를 검증할 수 있기 때문이다.
         """
-        n = len(contexts)
         system = (
             "너는 검색 근거 평가기다. 각 근거가 주어진 질문에 답하는 데 "
-            "유용한지 판정한다.\n"
-            "판정 기준:\n"
-            "- 각 근거를 독립적으로 판정한다. 다른 근거와 내용이 겹치거나 "
-            "덜 구체적이라는 이유로 유용하지 않다고 하지 마라. 그 근거 "
-            "하나만 놓고 봤을 때 질문에 답하는 데 쓸 수 있으면 유용하다.\n"
-            "- 질문과 주제가 비슷하다는 이유만으로 유용하다고 하지 마라. "
-            "질문이 묻는 항목 자체를 다루지 않으면 유용하지 않다.\n"
-            "- 질문이 특정 상품을 가리키는데 근거가 다른 상품에 대한 "
-            "것이면 유용하지 않다.\n"
-            f"근거는 {n}개다. 반드시 {n}개의 판정을 rank 1부터 {n}까지 "
-            "빠짐없이 낸다. 여러 근거를 묶어서 한 번에 판정하지 마라.\n"
+            "실제로 유용한지 판정한다. 질문과 주제가 비슷하다는 이유만으로 "
+            "유용하다고 하지 마라. 질문이 특정 상품을 가리키는데 근거가 "
+            "다른 상품에 대한 것이면 유용하지 않다. "
             'JSON만 출력한다: {"verdicts": [{"rank": 1, "useful": true, '
             '"reason": "..."}]}'
         )
         block = "\n\n".join(
             f"[근거 {i}]\n{c}" for i, c in enumerate(contexts, start=1))
-        user = f"[질문]\n{question}\n\n{block}\n\n판정 {n}개를 내십시오."
-        key = cache_key("ctxprec", self.model, question, block, str(n))
+        user = f"[질문]\n{question}\n\n{block}"
+        key = cache_key("ctxprec", self.model, question, block)
         result = self._chat_json(key, system, user)
         verdicts = [v for v in result.get("verdicts", []) if isinstance(v, dict)]
 
+        # 판정이 누락된 rank 는 유용하지 않은 것으로 본다(보수적).
         by_rank = {}
         for i, v in enumerate(verdicts, start=1):
             try:
@@ -438,17 +430,9 @@ class RagasJudge:
             except (TypeError, ValueError):
                 rank = i
             by_rank[rank] = v
-
-        # 누락은 숨기지 않고 드러낸다. 이전 구현은 누락을 조용히
-        # not useful 로 처리해, 판정기가 근거를 묶어 답하던 결함이
-        # 값에 그대로 반영됐다.
-        missing = [i for i in range(1, n + 1) if i not in by_rank]
-        if missing:
-            print(f"        [경고] 근거 판정 누락 rank {missing} "
-                  f"— 유용하지 않음으로 처리합니다.")
         return [by_rank.get(i, {"rank": i, "useful": False,
-                                "reason": "판정 누락"})
-                for i in range(1, n + 1)]
+                                "reason": "판정 없음"})
+                for i in range(1, len(contexts) + 1)]
 
     def generate_questions(self, answer: str) -> tuple[list[str], bool]:
         system = (
