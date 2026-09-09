@@ -99,3 +99,24 @@ scripts/peek.py
 *_backup.py
 app_before_*.py
 scripts/peek.py
+
+
+# ============================================================
+# 배포(Streamlit Community Cloud) 관련 예외
+# ============================================================
+
+# [포함] 배포에 필요한 인덱스 - 총 10.7MB.
+#   index.faiss 4.39MB / chunks_meta.jsonl 4.39MB / bm25.pkl 1.95MB
+# 위쪽 data/indexes/** 제외 규칙을 여기서 덮는다.
+# 다른 모델/설정의 인덱스는 계속 제외된다.
+!data/indexes/faiss/e5-small/**
+!data/indexes/bm25/default/**
+
+# [제외] 실제 키가 든 파일. .example 만 커밋한다.
+.streamlit/secrets.toml
+
+# [제외] 배포 준비용 일회성 스크립트. 저장소에 남길 필요 없다.
+prepare_deploy.ps1
+finish_deploy.ps1
+patch_config.ps1
+measure_rss.ps1

@@ -1,45 +1,29 @@
 # ============================================================
-# FinGuide-RAG — 의존성 명세 (사람이 읽는 용도)
+# FinGuide-RAG — 배포 런타임 의존성
 #
-# Python 3.14 기준. 정확한 재현은 requirements.lock.txt 를 사용한다.
-#   설치:   pip install -r requirements.txt
-#   고정:   pip freeze > requirements.lock.txt
-#   재현:   pip install -r requirements.lock.txt
+# app.py 와 src/finguide_rag 가 실제로 임포트하는 패키지만 담는다.
+# 수집·파싱·평가를 포함한 전체 의존성은 requirements-dev.txt 를 쓴다.
 #
-# 하한선(>=)은 2026-08 시점 실제 설치 검증을 마친 버전이다.
+# 런타임 임포트 전수 조사 결과:
+#   streamlit, numpy, faiss, kiwipiepy, rank_bm25,
+#   sentence_transformers, openai
+# langchain / pdfplumber / scikit-learn 등은 앱 실행 경로에서
+# 한 번도 임포트되지 않으므로 제외한다. 기능 축소가 아니다.
+#
+# --extra-index-url 은 CUDA 빌드(약 2.5GB) 대신 CPU 전용 torch 휠을
+# 받게 한다. 플랫폼이 이 지시자를 무시하면 빌드 로그에 nvidia-*
+# 패키지가 보인다. 그 경우에도 설치 자체는 되므로 그대로 두되,
+# 빌드가 실패하면 이 줄을 지우고 재시도한다.
 # ============================================================
 
-# ----- 1) 데이터 수집 -----
-requests>=2.32
-beautifulsoup4>=4.12
-lxml>=5.0
+--extra-index-url https://download.pytorch.org/whl/cpu
 
-# ----- 2) 문서 파싱 -----
-pdfplumber>=0.11          # 텍스트 + 표 추출. 상품설명서의 표 구조 보존에 사용
-pypdf>=5.0                # 페이지 메타데이터 등 경량 작업
-
-# ----- 3) 데이터 처리 -----
-pandas>=2.2
-numpy>=2.5
-
-# ----- 4) 임베딩 & 검색 -----
-sentence-transformers>=5.6
-faiss-cpu>=1.14           # Dense 검색. cp314 휠 제공 확인 완료
-rank-bm25>=0.2.2          # Sparse 검색
-kiwipiepy>=0.23           # 한국어 형태소 분석. Java 의존성 없어 Windows 재현 용이
-
-# ----- 5) LLM / RAG 오케스트레이션 -----
-langchain>=0.3
-langchain-community>=0.3
-openai>=1.40
-python-dotenv>=1.0
-
-# ----- 6) 평가 -----
-scikit-learn>=1.9
-
-# ----- 7) 데모 UI -----
-streamlit>=1.38
-
-# ----- 8) 개발 도구 -----
-ruff>=0.6
-pytest>=8.0
+streamlit==1.60.0
+numpy==2.5.1
+faiss-cpu==1.14.3
+rank-bm25==0.2.2
+kiwipiepy==0.23.2
+kiwipiepy-model==0.23.0
+sentence-transformers==5.6.1
+torch==2.13.0
+openai==2.52.0

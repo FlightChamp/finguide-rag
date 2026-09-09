@@ -1,0 +1,45 @@
+# ============================================================
+# FinGuide-RAG — 의존성 명세 (사람이 읽는 용도)
+#
+# Python 3.14 기준. 정확한 재현은 requirements.lock.txt 를 사용한다.
+#   설치:   pip install -r requirements.txt
+#   고정:   pip freeze > requirements.lock.txt
+#   재현:   pip install -r requirements.lock.txt
+#
+# 하한선(>=)은 2026-08 시점 실제 설치 검증을 마친 버전이다.
+# ============================================================
+
+# ----- 1) 데이터 수집 -----
+requests>=2.32
+beautifulsoup4>=4.12
+lxml>=5.0
+
+# ----- 2) 문서 파싱 -----
+pdfplumber>=0.11          # 텍스트 + 표 추출. 상품설명서의 표 구조 보존에 사용
+pypdf>=5.0                # 페이지 메타데이터 등 경량 작업
+
+# ----- 3) 데이터 처리 -----
+pandas>=2.2
+numpy>=2.5
+
+# ----- 4) 임베딩 & 검색 -----
+sentence-transformers>=5.6
+faiss-cpu>=1.14           # Dense 검색. cp314 휠 제공 확인 완료
+rank-bm25>=0.2.2          # Sparse 검색
+kiwipiepy>=0.23           # 한국어 형태소 분석. Java 의존성 없어 Windows 재현 용이
+
+# ----- 5) LLM / RAG 오케스트레이션 -----
+langchain>=0.3
+langchain-community>=0.3
+openai>=1.40
+python-dotenv>=1.0
+
+# ----- 6) 평가 -----
+scikit-learn>=1.9
+
+# ----- 7) 데모 UI -----
+streamlit>=1.38
+
+# ----- 8) 개발 도구 -----
+ruff>=0.6
+pytest>=8.0

@@ -1,0 +1,21 @@
+# 배포 환경 설정.
+#
+# [theme] 은 두지 않는다. app.py 상단 주석대로, theme 을 지정하면
+# Streamlit 설정 메뉴의 라이트/다크 전환이 사라진다. 이 앱은 CSS 에서
+# 배경과 글자색을 모두 명시하므로 양쪽에서 동일하게 보인다.
+#
+# [server] port 도 두지 않는다. 플랫폼이 지정한 기본 포트를 써야 한다.
+
+[server]
+
+# 파일 감시자는 임포트된 모든 모듈의 __path__ 를 훑는다.
+# transformers 는 지연 로딩이라 이 과정에서 이미지 처리 모듈
+# 수백 개가 실제로 임포트되고, torchvision 부재로 예외를 뿜는다.
+# 로그 오염이자 메모리 낭비이므로 끈다.
+# 배포 환경에서는 코드가 바뀌지 않으므로 감시자가 애초에 무의미하다.
+# 로컬에서 자동 새로고침이 필요하면 "poll" 로 바꾼다.
+fileWatcherType = "none"
+maxUploadSize = 5
+
+[browser]
+gatherUsageStats = false

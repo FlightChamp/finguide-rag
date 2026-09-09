@@ -1,0 +1,7 @@
+{
+  "model_key": "e5-small",
+  "dim": 384,
+  "n_vectors": 2999,
+  "index_type": "IndexFlatIP",
+  "normalized": true
+}
