@@ -120,3 +120,6 @@ prepare_deploy.ps1
 finish_deploy.ps1
 patch_config.ps1
 measure_rss.ps1
+
+patch_readme.ps1
+update_demo_url.ps1
