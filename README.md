@@ -3,7 +3,7 @@
 > 은행 영업점·고객센터 직원이 **상품설명서·약관·FAQ의 원문 근거**를 바탕으로
 > 고객 문의에 정확히 답변하도록 돕는 금융 특화 RAG 시스템 (B2E)
 
-[![demo](https://img.shields.io/badge/live_demo-streamlit-002D56)](https://flightchamp-finguide-rag.streamlit.app/)
+[![demo](https://img.shields.io/badge/live_demo-streamlit-002D56)](https://finguide-rag.streamlit.app/)
 ![version](https://img.shields.io/badge/version-v1.0-002D56)
 ![status](https://img.shields.io/badge/status-검색·거절·생성_측정_완료-brightgreen)
 ![python](https://img.shields.io/badge/python-3.14-blue)
@@ -175,7 +175,7 @@ chunk_id와 함께 펼쳐집니다. 답변 문장을 우측 원문과 대조하�
 streamlit run app.py
 ```
 
-직접 확인하려면 **[공개 데모](https://flightchamp-finguide-rag.streamlit.app/)** 를
+직접 확인하려면 **[공개 데모](https://finguide-rag.streamlit.app/)** 를
 열면 됩니다. 로컬과 동일한 코퍼스(308건 / 2,999청크)와 동일한 인덱스로
 동작하며, 기능을 줄이거나 답변을 미리 저장해 두지 않았습니다.
 
