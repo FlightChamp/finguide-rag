@@ -31,7 +31,7 @@ from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any
 
-SCHEMA_VERSION = "v2.0-draft1"
+SCHEMA_VERSION = "v2.0-draft2"   # draft2: EvidenceRef 에 doc_name/doc_type/institution 추가
 
 
 # ==================================================================
@@ -285,6 +285,9 @@ class EvidenceRef(_Serializable):
     chunk_id: str
     quote: str                     # 원문 그대로. LLM 을 거치지 않는다.
     is_latest: bool = True
+    doc_name: str = ""             # 상품 대조용 표시명
+    doc_type: str = ""             # 설명서 / 약관 / FAQ — 약관·FAQ 는 이름 대조 제외
+    institution: str = "하나은행"   # v2 MVP 코퍼스는 단일 기관
 
 
 @dataclass

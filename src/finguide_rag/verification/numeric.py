@@ -251,7 +251,8 @@ class MatchStatus(str, Enum):
     VALUE_MISMATCH = "VALUE_MISMATCH"
     UNIT_CONFUSION = "UNIT_CONFUSION"        # % ↔ %p
     PERIOD_MISMATCH = "PERIOD_MISMATCH"      # 연 ↔ 월
-    COMPARATOR_MISMATCH = "COMPARATOR_MISMATCH"  # 이상 ↔ 초과
+    COMPARATOR_MISMATCH = "COMPARATOR_MISMATCH"  # 이상 ↔ 초과 (같은 방향, 경계 포함 여부만 다름)
+    COMPARATOR_COMPLEMENT = "COMPARATOR_COMPLEMENT"  # 이상 ↔ 미만 (여집합). 아래 설명 참고
     QUALIFIER_CONFLICT = "QUALIFIER_CONFLICT"    # 기본 ↔ 최고
 
 
@@ -296,6 +297,24 @@ def _eq(a: float, b: float) -> bool:
     return abs(a - b) < _EPS
 
 
+# 여집합 관계. '만 19세 이상 가능' 과 '만 19세 미만 불가' 는 같은 규정이다.
+# 둘이 같은 말인지 반대 말인지는 가능/불가 극성에 달렸고, 그건 의미 판단이라
+# LLM(CONTRADICTED)이 본다. 규칙은 사유 코드를 내지 않고 상태만 남긴다.
+# 51번 dev 점검에서 정상 문장 2건(만 19세 이상↔미만, 7천만원 초과↔이하)이
+# 이 경우로 NUMERIC_MISMATCH 오탐이 났다.
+_COMPLEMENTS = {frozenset({">=", "<"}), frozenset({">", "<="})}
+
+
+def _lower_bound_dropped(cb: str | None, e: NumericSlot) -> bool:
+    """근거의 하한 한정어('최소 1개월 전')를 claim 이 생략한 경우는 과장이 아니다.
+
+    과장은 상한(최고·최대·한도·이하)을 확정값으로 말할 때 생긴다
+    ('최고 연 4.0%' → '연 4.0%'). 하한 생략은 정보가 덜할 뿐 고객에게
+    유리하게 부풀리지 않는다. 51번 dev 점검의 오탐 1건(변경 최소 1개월 전 게시)이 근거.
+    """
+    return cb is None and _bound(e) in (">=", ">")
+
+
 def compare_slot(claim: NumericSlot, evidence: list[NumericSlot]) -> tuple[MatchStatus, str]:
     """claim 수치 하나를 근거 수치들과 대조한다. (상태, 설명)"""
     fam = [e for e in evidence if _family(e.unit) == _family(claim.unit)]
@@ -304,6 +323,13 @@ def compare_slot(claim: NumericSlot, evidence: list[NumericSlot]) -> tuple[Match
 
     same_unit = [e for e in fam if e.unit == claim.unit]
     found: list[tuple[MatchStatus, str]] = []
+
+    # 범위 claim 의 양 끝이 근거에 단일 값으로 각각 있으면 일치로 본다.
+    #   claim '4.9%~6%' ↔ 근거 표 '4.9% … 6%' (중량별 수수료율 표)
+    if claim.is_range:
+        singles = [e.value for e in same_unit if not e.is_range]
+        if any(_eq(claim.value, v) for v in singles) and any(_eq(claim.value_hi, v) for v in singles):
+            found.append((MatchStatus.MATCH, "범위 양 끝이 근거에 각각 존재"))
 
     for e in same_unit:
         # 범위 대 범위
@@ -328,15 +354,18 @@ def compare_slot(claim: NumericSlot, evidence: list[NumericSlot]) -> tuple[Match
             found.append((MatchStatus.QUALIFIER_CONFLICT, f"{claim.qualifier} ↔ {e.qualifier}"))
             continue
         cb, eb = _bound(claim), _bound(e)
-        if cb == eb or (cb is not None and eb is None):
+        if cb == eb or (cb is not None and eb is None) or _lower_bound_dropped(cb, e):
             # 근거가 확정값인데 claim 이 '최대'를 붙인 것은 보수적이므로 허용
             found.append((MatchStatus.MATCH, e.raw))
         elif cb is None:
             found.append((MatchStatus.BOUND_DROPPED, f"근거 '{e.raw}'의 한정어({e.qualifier or eb}) 누락"))
+        elif frozenset({cb, eb}) in _COMPLEMENTS:
+            found.append((MatchStatus.COMPARATOR_COMPLEMENT, f"{cb} ↔ {eb}"))
         else:
             found.append((MatchStatus.COMPARATOR_MISMATCH, f"{cb} ↔ {eb}"))
 
     priority = [MatchStatus.MATCH, MatchStatus.WITHIN_RANGE, MatchStatus.BOUND_DROPPED,
+                MatchStatus.COMPARATOR_COMPLEMENT,
                 MatchStatus.COMPARATOR_MISMATCH, MatchStatus.QUALIFIER_CONFLICT,
                 MatchStatus.PERIOD_MISMATCH]
     for st in priority:

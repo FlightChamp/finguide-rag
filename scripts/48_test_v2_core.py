@@ -167,10 +167,16 @@ COMPARE = [
     ("범위 안 값", "24개월로 가입", "12~36개월", MatchStatus.WITHIN_RANGE),
     ("범위 밖 값", "48개월로 가입", "12~36개월", MatchStatus.VALUE_MISMATCH),
     ("범위 일치", "가입기간 1~3년", "12~36개월", MatchStatus.MATCH),
+    ("범위 양 끝이 근거 표에 각각 존재", "수수료율 4.9%~6%", "10g 6%, 37.5g 5%, 100g 4.9%", MatchStatus.MATCH),
+    ("범위 한쪽 끝만 존재", "수수료율 4.0%~6%", "10g 6%, 100g 4.9%", MatchStatus.VALUE_MISMATCH),
     ("년=개월 등가", "1년 이상", "12개월 이상", MatchStatus.MATCH),
     ("금액 표기 등가", "1,000만원", "1천만원", MatchStatus.MATCH),
     ("근거에 해당 단위 없음", "3회 납입", "연 3.5%", MatchStatus.NOT_FOUND),
     ("나이 경계", "만 14세 이하", "만 14세 미만", MatchStatus.COMPARATOR_MISMATCH),
+    ("여집합은 규칙이 판정 안 함 (이상 ↔ 미만)", "만 19세 이상 가입 가능", "만 19세 미만은 가입 불가",
+     MatchStatus.COMPARATOR_COMPLEMENT),
+    ("하한 한정어 생략은 과장 아님", "변경 1개월 전에 게시", "변경 최소 1개월 전에 게시", MatchStatus.MATCH),
+    ("상한 표현 바꿔 말하기(최대↔한도)는 일치", "한도 1천만원", "최대 1천만원", MatchStatus.MATCH),
 ]
 
 
@@ -200,6 +206,12 @@ def _():
     hits, chk = numeric_reason_hits("연 4.0%를 받습니다", "최고 연 4.0%")
     codes = [h.code for h in hits]
     return codes == [ReasonCode.OVERSTATED], f"{codes}, {chk}"
+
+
+@case("B.대조", "여집합 → 사유 코드 없음 (LLM CONTRADICTED 담당)")
+def _():
+    hits, chk = numeric_reason_hits("연소득 7천만원 초과면 대출 불가", "연소득 7천만원 이하")
+    return hits == [] and chk == "pass", f"{hits}, {chk}"
 
 
 @case("B.대조", "수치 없는 claim → n/a")
