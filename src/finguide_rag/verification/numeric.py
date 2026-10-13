@@ -201,9 +201,17 @@ def extract_numerics(text: str) -> list[NumericSlot]:
     view = "".join(masked)
 
     # 4) 범위: 12~36개월, 12개월~36개월, 연 2.0~3.5%
+    #    구어체: 4.9%에서 6% 사이, 12개월부터 36개월까지
+    #    (50번 구어체 변환에서 '4.9%~6%' → '4.9%에서 6% 사이'로 바뀌어 범위가
+    #     단일 수치 2개로 쪼개진 사례가 근거. 직원은 물결표보다 이 표현을 쓴다)
     range_re = re.compile(
         rf"({_NUM})\s*(?:({_UNIT_ALT}){_UNIT_STOP})?{_RANGE_SEP}({_NUM})\s*({_UNIT_ALT}){_UNIT_STOP}")
-    for m in range_re.finditer(view):
+    spoken_re = re.compile(
+        rf"({_NUM})\s*(?:({_UNIT_ALT}){_UNIT_STOP})?\s*(?:에서|부터)\s*({_NUM})\s*({_UNIT_ALT}){_UNIT_STOP}"
+        rf"(?=\s*(?:사이|까지))")
+    for m in [*range_re.finditer(view), *spoken_re.finditer(view)]:
+        if not free(m.start(), m.end()):
+            continue
         unit_raw = m.group(4)
         if m.group(2) and _UNIT_MAP[m.group(2)][0] != _UNIT_MAP[unit_raw][0]:
             continue

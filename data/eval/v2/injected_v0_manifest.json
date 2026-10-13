@@ -1,0 +1,34 @@
+{
+  "created_at": "2026-10-13T23:08:49",
+  "generator": "inject-rule-v0",
+  "seed": 2026,
+  "input_sha8": "ab07d90c",
+  "n_samples": 120,
+  "by_type": {
+    "NONE": 30,
+    "INSTITUTION": 30,
+    "OVERSTATED": 36,
+    "NUMERIC": 20,
+    "PRODUCT": 4
+  },
+  "by_subtype": {
+    "NONE/clean": 30,
+    "INSTITUTION/insert": 20,
+    "OVERSTATED/intensifier": 29,
+    "NUMERIC/value": 13,
+    "INSTITUTION/replace": 10,
+    "PRODUCT/hard_negative": 1,
+    "OVERSTATED/hedge_drop": 7,
+    "NUMERIC/unit": 3,
+    "NUMERIC/comparator": 4,
+    "PRODUCT/easy_negative": 3
+  },
+  "base_drafts": {
+    "provisional": 30
+  },
+  "excluded_drafts": {},
+  "dropped_injections": {
+    "PRODUCT: 상품군 이름만 있음(치환 제외)": 5,
+    "PRODUCT: 같은 범주에 다른 개별 상품 없음": 1
+  }
+}

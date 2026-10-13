@@ -1,0 +1,171 @@
+﻿sample_id,base_id,error_type,subtype,in_detector_vocab,original_fragment,injected_fragment,expected_codes,eval_sentence,fired,detected,code_correct,false_alarm,label_status
+d001_none,d001,NONE,clean,,,,,휴대폰 번호는 바꾸지 않고 기기만 변경하신 경우에는 기존에 생성하신 금융인증서 클라우드를 그대로 이용하실 수 있습니다.,,,,0,provisional
+d001_none,d001,NONE,clean,,,,,"다만, 금융인증서비스를 이용하시려면 새 기기를 기기등록하셔야 하는데요, 이 과정에서 휴대전화 번호로 문자 또는 ARS 인증이 필요하기 때문에 휴대전화를 소지하신 상태에서 거래를 시도하셔야 합니다.",,,,0,provisional
+d001_ins_insert_d362,d001,INSTITUTION,insert,,,국민은행 기준으로 ,INSTITUTION_MISMATCH,국민은행 기준으로 휴대폰 번호는 바꾸지 않고 기기만 변경하신 경우에는 기존에 생성하신 금융인증서 클라우드를 그대로 이용하실 수 있습니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d001_ove_intensifier_de2a,d001,OVERSTATED,intensifier,Y,,무조건 ,OVERSTATED,"다만, 금융인증서비스를 이용하시려면 새 기기를 기기등록하셔야 하는데요, 이 과정에서 휴대전화 번호로 문자 또는 ARS 인증이 필요하기 때문에 휴대전화를 소지하신 상태에서 거래를 무조건 시도하셔야 합니다.",OVERSTATED,1,1,,provisional
+d002_none,d002,NONE,clean,,,,,"하나원큐에서 특정 계좌 조회를 못하게 하시려면 인터넷뱅킹에서 마이하나 메뉴로 들어가신 다음 뱅킹관리, 계좌정보관리, 전자금융금지계좌 등록 순서로 이용하시면 됩니다.",,,,0,provisional
+d002_none,d002,NONE,clean,,,,,또는 하나원큐 고객센터에서 고객지원 메뉴를 통해 전자금융금지계좌 등록을 하실 수도 있습니다.,,,,0,provisional
+d002_none,d002,NONE,clean,,,,,"다만, 이체회원만 등록이 가능하고 CD나 ATM에서의 조회나 출금 거래는 제외된다는 점 참고해 주세요.",,,,0,provisional
+d002_none,d002,NONE,clean,,,,,그리고 해제는 영업점에 방문하셔야만 가능합니다.,,,,0,provisional
+d002_ins_insert_1891,d002,INSTITUTION,insert,,,농협은행 기준으로 ,INSTITUTION_MISMATCH,"농협은행 기준으로 하나원큐에서 특정 계좌 조회를 못하게 하시려면 인터넷뱅킹에서 마이하나 메뉴로 들어가신 다음 뱅킹관리, 계좌정보관리, 전자금융금지계좌 등록 순서로 이용하시면 됩니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d002_ove_intensifier_c871,d002,OVERSTATED,intensifier,N,,예외 없이 ,OVERSTATED,"다만, 이체회원만 등록이 가능하고 CD나 ATM에서의 조회나 출금 거래는 예외 없이 제외된다는 점 참고해 주세요.",,0,0,,provisional
+d003_none,d003,NONE,clean,,,,,하나원큐 로그인할 때 기본 로그인 방법은 로그인하신 후에 메뉴에서 변경하실 수 있습니다.,,,,0,provisional
+d003_none,d003,NONE,clean,,,,,"메뉴에서 톱니바퀴 모양의 설정을 선택하신 다음에 기본 로그인 방법을 변경하시면 되고요, 또는 인증/보안 메뉴에 들어가셔서 로그인/인증방법 등록·변경에서 변경하실 수도 있습니다.",,,,0,provisional
+d003_ins_insert_c675,d003,INSTITUTION,insert,,,카카오뱅크 기준으로 ,INSTITUTION_MISMATCH,카카오뱅크 기준으로 하나원큐 로그인할 때 기본 로그인 방법은 로그인하신 후에 메뉴에서 변경하실 수 있습니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d003_ove_intensifier_63a5,d003,OVERSTATED,intensifier,Y,,무조건 ,OVERSTATED,하나원큐 로그인할 때 기본 로그인 방법은 무조건 로그인하신 후에 메뉴에서 변경하실 수 있습니다.,OVERSTATED,1,1,,provisional
+d004_none,d004,NONE,clean,,,,,종합부동산세는 국세입니다.,,,,0,provisional
+d004_ins_insert_a631,d004,INSTITUTION,insert,,,신한은행 기준으로 ,INSTITUTION_MISMATCH,신한은행 기준으로 종합부동산세는 국세입니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d004_ove_intensifier_6eb9,d004,OVERSTATED,intensifier,Y,,항상 ,OVERSTATED,종합부동산세는 항상 국세입니다.,OVERSTATED,1,1,,provisional
+d005_none,d005,NONE,clean,,,,,"'한편넣기'는 대출이자 계산할 때 이자 계산기간을 산정하는 방법인데요, 약정개시일은 포함하지만 약정만기일이 토요일이나 공휴일인 경우에는 익영업일로 이연해서 만기일 전일까지의 일수를 계산하는 방식입니다.",,,,0,provisional
+d005_none,d005,NONE,clean,,,,,이 방법은 이자를 1일 단위로 계산할 때 쓰는 실무용어입니다.,,,,0,provisional
+d005_none,d005,NONE,clean,,,,,반대로 '양편넣기'는 약정개시일과 약정만기일을 모두 일수에 포함하는 방식입니다.,,,,0,provisional
+d005_num_value_357b,d005,NUMERIC,value,,1일,2일,NUMERIC_MISMATCH,이 방법은 이자를 2일 단위로 계산할 때 쓰는 실무용어입니다.,NUMERIC_MISMATCH,1,1,,provisional
+d005_ins_insert_1744,d005,INSTITUTION,insert,,,신한은행 기준으로 ,INSTITUTION_MISMATCH,"신한은행 기준으로 '한편넣기'는 대출이자 계산할 때 이자 계산기간을 산정하는 방법인데요, 약정개시일은 포함하지만 약정만기일이 토요일이나 공휴일인 경우에는 익영업일로 이연해서 만기일 전일까지의 일수를 계산하는 방식입니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d005_ove_intensifier_4f56,d005,OVERSTATED,intensifier,Y,,무조건 ,OVERSTATED,"'한편넣기'는 대출이자 계산할 때 이자 계산기간을 산정하는 방법인데요, 약정개시일은 포함하지만 약정만기일이 토요일이나 공휴일인 경우에는 익영업일로 이연해서 만기일 전일까지의 일수를 무조건 계산하는 방식입니다.",OVERSTATED,1,1,,provisional
+d006_none,d006,NONE,clean,,,,,해외에서 송금인이 KEB하나은행으로 송금하실 때는 은행 영문명인 'KEB Hana Bank'와 SWIFT 코드 'KOEXKRSE'를 알려주셔야 합니다.,,,,0,provisional
+d006_none,d006,NONE,clean,,,,,"그리고 수취계좌 지점의 영문주소와 지점명, 송금 받으실 계좌번호(국내 원화 또는 외화예금 계좌번호), 수취인의 영문성명과 전화번호도 함께 알려주셔야 합니다.",,,,0,provisional
+d006_ins_replace_fdcf,d006,INSTITUTION,replace,,하나은행,농협은행,INSTITUTION_MISMATCH,해외에서 송금인이 KEB농협은행으로 송금하실 때는 은행 영문명인 'KEB Hana Bank'와 SWIFT 코드 'KOEXKRSE'를 알려주셔야 합니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d006_ove_intensifier_471d,d006,OVERSTATED,intensifier,N,,100프로 ,OVERSTATED,해외에서 송금인이 KEB하나은행으로 송금하실 때는 은행 영문명인 'KEB Hana Bank'와 SWIFT 코드 'KOEXKRSE'를 100프로 알려주셔야 합니다.,,0,0,,provisional
+d007_none,d007,NONE,clean,,,,,"OTP 이용 중에 '보정거래 필요' 오류가 발생하면 로그인 상태에서 전자금융, 즉 인터넷뱅킹이나 스마트폰뱅킹을 통해 'OTP 보정 등록' 메뉴로 이동하신 후, OTP 기기에서 생성된 값을 입력해서 보정 등록을 완료하셔야 합니다.",,,,0,provisional
+d007_none,d007,NONE,clean,,,,,"만약 오류가 계속된다면 가까운 영업점을 방문하셔서 보정 등록을 진행하시고, 소지하신 OTP가 하나은행에 등록된 OTP인지도 꼭 확인해 주셔야 합니다.",,,,0,provisional
+d007_none,d007,NONE,clean,,,,,"그리고 잘못된 OTP 값을 입력하실 경우에도 동일한 오류가 발생할 수 있으니, 값을 정확히 입력해 주시도록 안내해 드립니다.",,,,0,provisional
+d007_ins_replace_67cd,d007,INSTITUTION,replace,,하나은행,농협은행,INSTITUTION_MISMATCH,"만약 오류가 계속된다면 가까운 영업점을 방문하셔서 보정 등록을 진행하시고, 소지하신 OTP가 농협은행에 등록된 OTP인지도 꼭 확인해 주셔야 합니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d007_ove_intensifier_e527,d007,OVERSTATED,intensifier,Y,,항상 ,OVERSTATED,"그리고 잘못된 OTP 값을 입력하실 경우에도 동일한 오류가 발생할 수 있으니, 값을 항상 정확히 입력해 주시도록 안내해 드립니다.",OVERSTATED,1,1,,provisional
+d008_none,d008,NONE,clean,,,,,"하나은행 심플이체에서는 등록하신 이체 정보를 이체 화면에 그대로 불러와서 보여드리기 때문에, 출금계좌나 입금계좌, 금액, 통장표시정보, 메모 등 원하시는 부분을 직접 수정하셔서 거래하실 수 있습니다.",,,,0,provisional
+d008_ins_replace_5ad0,d008,INSTITUTION,replace,,하나은행,농협은행,INSTITUTION_MISMATCH,"농협은행 심플이체에서는 등록하신 이체 정보를 이체 화면에 그대로 불러와서 보여드리기 때문에, 출금계좌나 입금계좌, 금액, 통장표시정보, 메모 등 원하시는 부분을 직접 수정하셔서 거래하실 수 있습니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d009_none,d009,NONE,clean,,,,,하나은행 환전지갑에서 외화를 찾으실 때는 신청인 본인이 반드시 신분증을 지참하셔야 합니다.,OVERSTATED|OVERSTATED,,,1,provisional
+d009_none,d009,NONE,clean,,,,,"대리 수령은 불가능한데요, 다만 미성년자의 경우에는 법정대리인이 증빙서류를 제출하면 대신 수령할 수 있습니다.",,,,0,provisional
+d009_none,d009,NONE,clean,,,,,수령은 국내 소재 하나은행 영업점에서 은행 영업일 영업시간 내에 하실 수 있습니다.,,,,0,provisional
+d009_ins_replace_4143,d009,INSTITUTION,replace,,하나은행,신한은행,INSTITUTION_MISMATCH,신한은행 환전지갑에서 외화를 찾으실 때는 신청인 본인이 반드시 신분증을 지참하셔야 합니다.,OVERSTATED|OVERSTATED|INSTITUTION_MISMATCH,1,1,,provisional
+d009_ove_intensifier_43ec,d009,OVERSTATED,intensifier,Y,,항상 ,OVERSTATED,"대리 수령은 불가능한데요, 다만 미성년자의 경우에는 법정대리인이 증빙서류를 항상 제출하면 대신 수령할 수 있습니다.",OVERSTATED,1,1,,provisional
+d010_none,d010,NONE,clean,,,,,주택청약종합저축 가입하신 후에 청약 1순위가 되시려면 지역별로 기간과 납입횟수가 다릅니다.,,,,0,provisional
+d010_none,d010,NONE,clean,,,,,"청약과열지역 및 투기과열지구는 가입 후 24개월이 지나고 24회차 납입하셔야 하고요, 수도권은 12개월 경과 및 12회차 납입, 수도권 외 지역은 6개월 경과 및 6회차 납입, 위축지역은 1개월 경과 및 1회 납입이 필요합니다.",NUMERIC_MISMATCH,,,1,provisional
+d010_none,d010,NONE,clean,,,,,납입인정회차가 많을수록 당첨 확률이 높아지니까 약정납입일에 맞춰서 납입하시는 게 중요합니다.,,,,0,provisional
+d010_num_value_d1b6,d010,NUMERIC,value,,24개월,48개월,NUMERIC_MISMATCH,"청약과열지역 및 투기과열지구는 가입 후 48개월이 지나고 24회차 납입하셔야 하고요, 수도권은 12개월 경과 및 12회차 납입, 수도권 외 지역은 6개월 경과 및 6회차 납입, 위축지역은 1개월 경과 및 1회 납입이 필요합니다.",NUMERIC_MISMATCH|NUMERIC_MISMATCH,1,1,,provisional
+d010_pro_hard_negative_1fa1,d010,PRODUCT,hard_negative,,주택청약종합저축,주택청약예금,PRODUCT_MISMATCH,주택청약예금 가입하신 후에 청약 1순위가 되시려면 지역별로 기간과 납입횟수가 다릅니다.,PRODUCT_MISMATCH,1,1,,provisional
+d010_ins_insert_ebaf,d010,INSTITUTION,insert,,,국민은행 기준으로 ,INSTITUTION_MISMATCH,국민은행 기준으로 주택청약종합저축 가입하신 후에 청약 1순위가 되시려면 지역별로 기간과 납입횟수가 다릅니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d010_ove_intensifier_2295,d010,OVERSTATED,intensifier,N,,언제나 ,OVERSTATED,주택청약종합저축 가입하신 후에 청약 1순위가 되시려면 지역별로 기간과 납입횟수가 언제나 다릅니다.,,0,0,,provisional
+d011_none,d011,NONE,clean,,,,,"Range Forward 상품은 만기 환율이 미리 약정된 일정 범위, 즉 하단환율과 상단환율 이내에 있으면 만기 시점의 시장환율로 거래가 됩니다.",,,,0,provisional
+d011_none,d011,NONE,clean,,,,,"그런데 만기 환율이 상단환율보다 상승하면 상단환율로, 하단환율보다 하락하면 하단환율로 매수 또는 매도 처리됩니다.",,,,0,provisional
+d011_none,d011,NONE,clean,,,,,"다시 말씀드리면, 환율이 정해진 범위를 벗어나면 상한 또는 하한 환율로 거래가 이행된다고 보시면 됩니다.",,,,0,provisional
+d011_ins_insert_76af,d011,INSTITUTION,insert,,,우리은행 기준으로 ,INSTITUTION_MISMATCH,"우리은행 기준으로 Range Forward 상품은 만기 환율이 미리 약정된 일정 범위, 즉 하단환율과 상단환율 이내에 있으면 만기 시점의 시장환율로 거래가 됩니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d011_ove_intensifier_a351,d011,OVERSTATED,intensifier,N,,언제나 ,OVERSTATED,"그런데 만기 환율이 상단환율보다 상승하면 상단환율로, 하단환율보다 하락하면 하단환율로 매수 또는 매도 언제나 처리됩니다.",,0,0,,provisional
+d012_none,d012,NONE,clean,,,,,하나일임형ISA 저위험포커스 모델포트폴리오에 편입된 금융상품은 원금보장이 되지 않고 예금자보호 대상도 아닙니다.,OVERSTATED,,,1,provisional
+d012_none,d012,NONE,clean,,,,,그래서 투자원금의 전부 또는 일부가 손실될 수 있습니다.,,,,0,provisional
+d012_none,d012,NONE,clean,,,,,"다만, 예금·적금 상품은 원금과 약정이자 지급으로 원금 손실 위험이 없습니다.",,,,0,provisional
+d012_ins_insert_1478,d012,INSTITUTION,insert,,,카카오뱅크 기준으로 ,INSTITUTION_MISMATCH,카카오뱅크 기준으로 하나일임형ISA 저위험포커스 모델포트폴리오에 편입된 금융상품은 원금보장이 되지 않고 예금자보호 대상도 아닙니다.,OVERSTATED|INSTITUTION_MISMATCH,1,1,,provisional
+d012_ove_intensifier_e1e7,d012,OVERSTATED,intensifier,Y,,항상 ,OVERSTATED,그래서 투자원금의 전부 또는 일부가 항상 손실될 수 있습니다.,OVERSTATED,1,1,,provisional
+d012_ove_hedge_drop_2d63,d012,OVERSTATED,hedge_drop,,될 수 있습니다,됩니다,OVERSTATED,그래서 투자원금의 전부 또는 일부가 손실됩니다.,OVERSTATED,1,1,,provisional
+d013_none,d013,NONE,clean,,,,,"하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 최초가입일로부터 3년이 경과하기 전에 계약을 해지하시거나, 납입하신 금액의 합계액을 계약 초과하여 인출하실 경우에는 과세특례를 적용받은 소득세 상당 세액을 추징하게 됩니다.",,,,0,provisional
+d013_none,d013,NONE,clean,,,,,"이때 투자원금 손실이 발생하더라도 세금이 발생할 수 있고, 금융상품별 매도에 따른 손실 및 수수료 등의 비용도 발생할 수 있습니다.",,,,0,provisional
+d013_none,d013,NONE,clean,,,,,"다만, 납입원금 범위 내에서 중도인출하시는 경우에는 해지로 보지 않으며 감면세액을 추징하지 않습니다.",,,,0,provisional
+d013_num_value_a947,d013,NUMERIC,value,,3년,6년,NUMERIC_MISMATCH,"하나은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 최초가입일로부터 6년이 경과하기 전에 계약을 해지하시거나, 납입하신 금액의 합계액을 계약 초과하여 인출하실 경우에는 과세특례를 적용받은 소득세 상당 세액을 추징하게 됩니다.",NO_EVIDENCE,1,0,,provisional
+d013_ins_replace_a4f5,d013,INSTITUTION,replace,,하나은행,신한은행,INSTITUTION_MISMATCH,"신한은행 ISA 모델포트폴리오(최고위험_밸런스) 상품에서 최초가입일로부터 3년이 경과하기 전에 계약을 해지하시거나, 납입하신 금액의 합계액을 계약 초과하여 인출하실 경우에는 과세특례를 적용받은 소득세 상당 세액을 추징하게 됩니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d013_ove_intensifier_724c,d013,OVERSTATED,intensifier,N,,100프로 ,OVERSTATED,"이때 투자원금 손실이 발생하더라도 세금이 발생할 수 있고, 금융상품별 매도에 따른 손실 및 수수료 등의 비용도 100프로 발생할 수 있습니다.",,0,0,,provisional
+d013_ove_hedge_drop_49f1,d013,OVERSTATED,hedge_drop,,할 수 있습니다,합니다,OVERSTATED,"이때 투자원금 손실이 발생하더라도 세금이 발생할 수 있고, 금융상품별 매도에 따른 손실 및 수수료 등의 비용도 발생합니다.",,0,0,,provisional
+d014_none,d014,NONE,clean,,,,,골드바 구매하실 때 판매가격은 기준가격에 골드바 중량과 (1+판매수수료율)를 곱해서 산출합니다.,,,,0,provisional
+d014_none,d014,NONE,clean,,,,,판매수수료율은 중량에 따라 4.9%에서 6% 사이입니다.,,,,0,provisional
+d014_none,d014,NONE,clean,,,,,그리고 여기에 판매가격의 10%에 해당하는 부가가치세가 별도로 부과됩니다.,,,,0,provisional
+d014_none,d014,NONE,clean,,,,,매매가격은 계산 후 십원 미만 단위는 절사합니다.,,,,0,provisional
+d014_num_unit_4414,d014,NUMERIC,unit,,4.9%에서 6%,4.9%p에서 6%,NUMERIC_MISMATCH,판매수수료율은 중량에 따라 4.9%p에서 6% 사이입니다.,NUMERIC_MISMATCH,1,1,,provisional
+d014_num_value_8c86,d014,NUMERIC,value,,10%,20%,NUMERIC_MISMATCH,그리고 여기에 판매가격의 20%에 해당하는 부가가치세가 별도로 부과됩니다.,NUMERIC_MISMATCH,1,1,,provisional
+d014_num_comparator_1e57,d014,NUMERIC,comparator,,미만,이하,NUMERIC_MISMATCH,매매가격은 계산 후 십원 이하 단위는 절사합니다.,NUMERIC_MISMATCH,1,1,,provisional
+d014_ins_insert_2096,d014,INSTITUTION,insert,,,우리은행 기준으로 ,INSTITUTION_MISMATCH,우리은행 기준으로 골드바 구매하실 때 판매가격은 기준가격에 골드바 중량과 (1+판매수수료율)를 곱해서 산출합니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d014_ove_intensifier_b207,d014,OVERSTATED,intensifier,Y,,무조건 ,OVERSTATED,매매가격은 계산 후 십원 미만 단위는 무조건 절사합니다.,OVERSTATED,1,1,,provisional
+d015_none,d015,NONE,clean,,,,,일임형 개인종합자산관리계좌(ISA) 계약 만료 후에는 수수료를 계산하지 않습니다.,,,,0,provisional
+d015_none,d015,NONE,clean,,,,,"다만, 미지급 수수료가 있을 경우에는 계좌 해지 시에 처리됩니다.",,,,0,provisional
+d015_ins_insert_fea9,d015,INSTITUTION,insert,,,카카오뱅크 기준으로 ,INSTITUTION_MISMATCH,카카오뱅크 기준으로 일임형 개인종합자산관리계좌(ISA) 계약 만료 후에는 수수료를 계산하지 않습니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d015_ove_intensifier_1314,d015,OVERSTATED,intensifier,N,,예외 없이 ,OVERSTATED,일임형 개인종합자산관리계좌(ISA) 계약 만료 후에는 수수료를 예외 없이 계산하지 않습니다.,,0,0,,provisional
+d016_none,d016,NONE,clean,,,,,Enhanced Forward 상품은 거래 당시 결정된 계약환율로 대표통화를 매도하는 거래입니다.,,,,0,provisional
+d016_none,d016,NONE,clean,,,,,그래서 거래 이후 환율이 상승하면 더 높은 환율로 외화를 매도할 기회를 포기하게 돼서 평가손실이 발생합니다.,,,,0,provisional
+d016_none,d016,NONE,clean,,,,,"환율 변동에 따라 평가손익이 변동하는데, 환율이 1원 상승하거나 하락할 경우 평가손익에 민감하게 반응합니다.",NO_EVIDENCE|OVERSTATED,,,1,provisional
+d016_none,d016,NONE,clean,,,,,"그리고 금리변동, 환율 민감도의 변화, 시간가치 같은 요인들도 평가손익에 영향을 줄 수 있습니다.",,,,0,provisional
+d016_num_value_76ac,d016,NUMERIC,value,,1원,2원,NUMERIC_MISMATCH,"환율 변동에 따라 평가손익이 변동하는데, 환율이 2원 상승하거나 하락할 경우 평가손익에 민감하게 반응합니다.",NO_EVIDENCE|OVERSTATED,1,0,,provisional
+d016_ins_insert_912b,d016,INSTITUTION,insert,,,우리은행 기준으로 ,INSTITUTION_MISMATCH,우리은행 기준으로 Enhanced Forward 상품은 거래 당시 결정된 계약환율로 대표통화를 매도하는 거래입니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d016_ove_intensifier_5a57,d016,OVERSTATED,intensifier,Y,,무조건 ,OVERSTATED,"그리고 금리변동, 환율 민감도의 변화, 시간가치 같은 요인들도 평가손익에 영향을 무조건 줄 수 있습니다.",OVERSTATED,1,1,,provisional
+d017_none,d017,NONE,clean,,,,,하나 화상상담데스크 이용 가능시간은 설치 장소와 상관없이 평일 은행 영업시간과 동일하게 운영됩니다.,,,,0,provisional
+d017_none,d017,NONE,clean,,,,,"다만, ‘하나 9시 라운지’는 21:00까지 운영합니다.",,,,0,provisional
+d017_pro_easy_negative_ad5e,d017,PRODUCT,easy_negative,,하나 화상상담데스크,예금 토큰,PRODUCT_MISMATCH,예금 토큰 이용 가능시간은 설치 장소와 상관없이 평일 은행 영업시간과 동일하게 운영됩니다.,PRODUCT_MISMATCH,1,1,,provisional
+d017_ins_insert_96fe,d017,INSTITUTION,insert,,,카카오뱅크 기준으로 ,INSTITUTION_MISMATCH,카카오뱅크 기준으로 하나 화상상담데스크 이용 가능시간은 설치 장소와 상관없이 평일 은행 영업시간과 동일하게 운영됩니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d017_ove_intensifier_349c,d017,OVERSTATED,intensifier,Y,,항상 ,OVERSTATED,하나 화상상담데스크 이용 가능시간은 설치 장소와 상관없이 항상 평일 은행 영업시간과 동일하게 운영됩니다.,OVERSTATED,1,1,,provisional
+d018_none,d018,NONE,clean,,,,,"『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법이 변경되면, 퇴직연금사업자가 변경 승인 후 7일 이내에 가입자분께 변경 사실을 알려드립니다.",,,,0,provisional
+d018_none,d018,NONE,clean,,,,,"만약 변경을 원하지 않으시면, 가입자분께서 직접 다른 운용방법을 선택하실 수 있습니다.",,,,0,provisional
+d018_num_value_2bab,d018,NUMERIC,value,,7일,8일,NUMERIC_MISMATCH,"『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법이 변경되면, 퇴직연금사업자가 변경 승인 후 8일 이내에 가입자분께 변경 사실을 알려드립니다.",NUMERIC_MISMATCH,1,1,,provisional
+d018_num_comparator_f2fc,d018,NUMERIC,comparator,,이내,미만,NUMERIC_MISMATCH,"『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법이 변경되면, 퇴직연금사업자가 변경 승인 후 7일 미만에 가입자분께 변경 사실을 알려드립니다.",NUMERIC_MISMATCH,1,1,,provisional
+d018_ins_replace_f3e5,d018,INSTITUTION,replace,,하나은행,농협은행,INSTITUTION_MISMATCH,"『농협은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법이 변경되면, 퇴직연금사업자가 변경 승인 후 7일 이내에 가입자분께 변경 사실을 알려드립니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d018_ove_intensifier_fcf3,d018,OVERSTATED,intensifier,N,,100프로 ,OVERSTATED,"『하나은행 디폴트옵션 안정투자형 포트폴리오 3』 운용방법이 변경되면, 퇴직연금사업자가 변경 승인 후 7일 이내에 가입자분께 변경 사실을 100프로 알려드립니다.",,0,0,,provisional
+d019_none,d019,NONE,clean,,,,,"기업전자금융 서비스에서 개인사업자가 ERP와 연계하시면 기본수수료가 월 300,000원입니다.",OVERSTATED,,,1,provisional
+d019_none,d019,NONE,clean,,,,,"개인사업자는 기본수수료가 면제되지만, ERP 연계 시에는 법인과 동일하게 월 300,000원이 적용됩니다.",,,,0,provisional
+d019_num_value_f2af,d019,NUMERIC,value,,"300,000원","600,000원",NUMERIC_MISMATCH,"기업전자금융 서비스에서 개인사업자가 ERP와 연계하시면 기본수수료가 월 600,000원입니다.",NUMERIC_MISMATCH|OVERSTATED,1,1,,provisional
+d019_pro_easy_negative_d13c,d019,PRODUCT,easy_negative,,기업전자금융,제휴사 해외 ATM 출금 서비스,PRODUCT_MISMATCH,"제휴사 해외 ATM 출금 서비스 서비스에서 개인사업자가 ERP와 연계하시면 기본수수료가 월 300,000원입니다.",PRODUCT_MISMATCH,1,1,,provisional
+d019_ins_insert_d9b9,d019,INSTITUTION,insert,,,국민은행 기준으로 ,INSTITUTION_MISMATCH,"국민은행 기준으로 기업전자금융 서비스에서 개인사업자가 ERP와 연계하시면 기본수수료가 월 300,000원입니다.",OVERSTATED|INSTITUTION_MISMATCH,1,1,,provisional
+d019_ove_intensifier_04ee,d019,OVERSTATED,intensifier,Y,,무조건 ,OVERSTATED,"기업전자금융 서비스에서 개인사업자가 ERP와 연계하시면 기본수수료가 무조건 월 300,000원입니다.",OVERSTATED,1,1,,provisional
+d020_none,d020,NONE,clean,,,,,외화보통예금통장에 외화현찰로 입금하실 때는 수수료가 발생합니다.,,,,0,provisional
+d020_none,d020,NONE,clean,,,,,"미국달러(USD)는 입금 시 수수료가 면제되지만, 7일 이내에 외화순대체로 인출하시면 수수료가 부과될 수 있습니다.",,,,0,provisional
+d020_none,d020,NONE,clean,,,,,"유로화(EUR)와 일본엔(JPY)는 입금액의 1.5%가 수수료로 부과되고, 기타 통화는 3% 이상의 수수료가 부과됩니다.",,,,0,provisional
+d020_none,d020,NONE,clean,,,,,"다만, 같은 종류의 외화현찰로 인출하실 경우에는 수수료가 면제됩니다.",,,,0,provisional
+d020_num_value_c39a,d020,NUMERIC,value,,7일,14일,NUMERIC_MISMATCH,"미국달러(USD)는 입금 시 수수료가 면제되지만, 14일 이내에 외화순대체로 인출하시면 수수료가 부과될 수 있습니다.",NUMERIC_MISMATCH,1,1,,provisional
+d020_num_comparator_f122,d020,NUMERIC,comparator,,이내,미만,NUMERIC_MISMATCH,"미국달러(USD)는 입금 시 수수료가 면제되지만, 7일 미만에 외화순대체로 인출하시면 수수료가 부과될 수 있습니다.",NUMERIC_MISMATCH,1,1,,provisional
+d020_num_unit_b21f,d020,NUMERIC,unit,,1.5%,1.5%p,NUMERIC_MISMATCH,"유로화(EUR)와 일본엔(JPY)는 입금액의 1.5%p가 수수료로 부과되고, 기타 통화는 3% 이상의 수수료가 부과됩니다.",NUMERIC_MISMATCH,1,1,,provisional
+d020_ins_insert_e1aa,d020,INSTITUTION,insert,,,국민은행 기준으로 ,INSTITUTION_MISMATCH,국민은행 기준으로 외화보통예금통장에 외화현찰로 입금하실 때는 수수료가 발생합니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d020_ove_intensifier_f724,d020,OVERSTATED,intensifier,N,,100프로 ,OVERSTATED,"다만, 같은 종류의 외화현찰로 인출하실 경우에는 수수료가 100프로 면제됩니다.",,0,0,,provisional
+d020_ove_hedge_drop_cb9d,d020,OVERSTATED,hedge_drop,,될 수 있습니다,됩니다,OVERSTATED,"미국달러(USD)는 입금 시 수수료가 면제되지만, 7일 이내에 외화순대체로 인출하시면 수수료가 부과됩니다.",OVERSTATED,1,1,,provisional
+d021_none,d021,NONE,clean,,,,,"개인형IRP에서 만기 자금에 대해 별도의 운용 지시가 없으시면, 만기일로부터 4주 후에도 운용 지시가 없을 경우 가입자님께 알림톡, 이메일, DM으로 통지를 드립니다.",,,,0,provisional
+d021_none,d021,NONE,clean,,,,,"그리고 통지 후 2주 이내에도 운용 지시가 없으면 사전지정운용방법, 즉 디폴트옵션으로 만기 자금을 운용하게 됩니다.",,,,0,provisional
+d021_none,d021,NONE,clean,,,,,만기 자금이 디폴트옵션으로 매수되기 전까지는 금리가 낮은 현금성 자산으로 운용됩니다.,,,,0,provisional
+d021_none,d021,NONE,clean,,,,,"다만, 연속된 동일 상품 만기도래 시에는 최초 1회만 6주 기간이 적용될 수 있습니다.",,,,0,provisional
+d021_num_value_e496,d021,NUMERIC,value,,4주,8주,NUMERIC_MISMATCH,"개인형IRP에서 만기 자금에 대해 별도의 운용 지시가 없으시면, 만기일로부터 8주 후에도 운용 지시가 없을 경우 가입자님께 알림톡, 이메일, DM으로 통지를 드립니다.",NUMERIC_MISMATCH,1,1,,provisional
+d021_num_comparator_7964,d021,NUMERIC,comparator,,이내,미만,NUMERIC_MISMATCH,"그리고 통지 후 2주 미만에도 운용 지시가 없으면 사전지정운용방법, 즉 디폴트옵션으로 만기 자금을 운용하게 됩니다.",,0,0,,provisional
+d021_ins_insert_6142,d021,INSTITUTION,insert,,,카카오뱅크 기준으로 ,INSTITUTION_MISMATCH,"카카오뱅크 기준으로 개인형IRP에서 만기 자금에 대해 별도의 운용 지시가 없으시면, 만기일로부터 4주 후에도 운용 지시가 없을 경우 가입자님께 알림톡, 이메일, DM으로 통지를 드립니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d021_ove_intensifier_b77b,d021,OVERSTATED,intensifier,N,,예외 없이 ,OVERSTATED,"그리고 통지 후 2주 이내에도 운용 지시가 없으면 사전지정운용방법, 즉 디폴트옵션으로 만기 자금을 예외 없이 운용하게 됩니다.",,0,0,,provisional
+d021_ove_hedge_drop_8d15,d021,OVERSTATED,hedge_drop,,될 수 있습니다,됩니다,OVERSTATED,"다만, 연속된 동일 상품 만기도래 시에는 최초 1회만 6주 기간이 적용됩니다.",,0,0,,provisional
+d022_none,d022,NONE,clean,,,,,하나은행 예금 토큰을 해지하실 때는 수수료나 위약금 같은 비용을 은행에서 요구하지 않습니다.,,,,0,provisional
+d022_none,d022,NONE,clean,,,,,"다만, 예금 토큰은 잔액을 모두 연계계좌 예금으로 전환하신 후에만 해지하실 수 있고, 해지 절차에 따라 제한사항이 있을 수 있습니다.",,,,0,provisional
+d022_pro_easy_negative_8f5c,d022,PRODUCT,easy_negative,,예금 토큰,하나 화상상담데스크,PRODUCT_MISMATCH,하나은행 하나 화상상담데스크를 해지하실 때는 수수료나 위약금 같은 비용을 은행에서 요구하지 않습니다.,PRODUCT_MISMATCH,1,1,,provisional
+d022_ins_replace_b03e,d022,INSTITUTION,replace,,하나은행,카카오뱅크,INSTITUTION_MISMATCH,카카오뱅크 예금 토큰을 해지하실 때는 수수료나 위약금 같은 비용을 은행에서 요구하지 않습니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d022_ove_intensifier_0c93,d022,OVERSTATED,intensifier,N,,100프로 ,OVERSTATED,하나은행 예금 토큰을 해지하실 때는 수수료나 위약금 같은 비용을 100프로 은행에서 요구하지 않습니다.,,0,0,,provisional
+d022_ove_hedge_drop_8dc9,d022,OVERSTATED,hedge_drop,,을 수 있습니다,습니다,OVERSTATED,"다만, 예금 토큰은 잔액을 모두 연계계좌 예금으로 전환하신 후에만 해지하실 수 있고, 해지 절차에 따라 제한사항이 있습니다.",,0,0,,provisional
+d023_none,d023,NONE,clean,,,,,"하나은행 입출금이 자유로운 예금의 이율이 변경되면, 바꾼 날로부터 새로운 이율이 적용됩니다.",,,,0,provisional
+d023_none,d023,NONE,clean,,,,,그리고 은행에서는 이율 변경 내용을 영업점과 인터넷 홈페이지에 1개월 동안 게시합니다.,,,,0,provisional
+d023_num_value_cfb3,d023,NUMERIC,value,,1개월,2개월,NUMERIC_MISMATCH,그리고 은행에서는 이율 변경 내용을 영업점과 인터넷 홈페이지에 2개월 동안 게시합니다.,NUMERIC_MISMATCH,1,1,,provisional
+d023_ins_replace_b9b1,d023,INSTITUTION,replace,,하나은행,카카오뱅크,INSTITUTION_MISMATCH,"카카오뱅크 입출금이 자유로운 예금의 이율이 변경되면, 바꾼 날로부터 새로운 이율이 적용됩니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d023_ove_intensifier_8849,d023,OVERSTATED,intensifier,N,,언제나 ,OVERSTATED,"하나은행 입출금이 자유로운 예금의 이율이 변경되면, 바꾼 날로부터 새로운 이율이 언제나 적용됩니다.",,0,0,,provisional
+d024_none,d024,NONE,clean,,,,,"은행이 기한의 이익 상실 사실과 대출잔액 전부에 대해 연체료 부과 가능성을 서면으로 통지하지 않은 경우에는, 고객님께서 실제로 통지를 받으신 날부터 7영업일이 지난 날에 기한의 이익을 상실하게 되어서 그때부터 바로 갚아야 할 의무가 생깁니다.",OVERSTATED,,,1,provisional
+d024_none,d024,NONE,clean,,,,,"즉, 통지를 늦게 받으셨다면 통지 도달일로부터 7영업일 후부터 바로 갚으셔야 합니다.",,,,0,provisional
+d024_num_value_9bfa,d024,NUMERIC,value,,7영업일,14영업일,NUMERIC_MISMATCH,"은행이 기한의 이익 상실 사실과 대출잔액 전부에 대해 연체료 부과 가능성을 서면으로 통지하지 않은 경우에는, 고객님께서 실제로 통지를 받으신 날부터 14영업일이 지난 날에 기한의 이익을 상실하게 되어서 그때부터 바로 갚아야 할 의무가 생깁니다.",NUMERIC_MISMATCH|OVERSTATED,1,1,,provisional
+d024_ins_insert_baef,d024,INSTITUTION,insert,,,카카오뱅크 기준으로 ,INSTITUTION_MISMATCH,"카카오뱅크 기준으로 은행이 기한의 이익 상실 사실과 대출잔액 전부에 대해 연체료 부과 가능성을 서면으로 통지하지 않은 경우에는, 고객님께서 실제로 통지를 받으신 날부터 7영업일이 지난 날에 기한의 이익을 상실하게 되어서 그때부터 바로 갚아야 할 의무가 생깁니다.",OVERSTATED|INSTITUTION_MISMATCH,1,1,,provisional
+d024_ove_intensifier_d240,d024,OVERSTATED,intensifier,Y,,항상 ,OVERSTATED,"은행이 기한의 이익 상실 사실과 대출잔액 전부에 대해 연체료 부과 가능성을 서면으로 통지하지 않은 경우에는, 고객님께서 실제로 통지를 받으신 날부터 7영업일이 지난 날에 기한의 이익을 상실하게 되어서 그때부터 바로 갚아야 할 의무가 항상 생깁니다.",OVERSTATED|OVERSTATED,1,1,,provisional
+d025_none,d025,NONE,clean,,,,,하나은행 가계 대출하실 때 인지세는 대출거래약정서에 따라서 고객님과 은행이 각각 50%씩 부담하게 되어 있습니다.,,,,0,provisional
+d025_none,d025,NONE,clean,,,,,"다만, 고객님이 부담하기로 한 인지세를 은행이 대신 지급하는 경우도 있습니다.",,,,0,provisional
+d025_num_value_dd53,d025,NUMERIC,value,,50%,100%,NUMERIC_MISMATCH,하나은행 가계 대출하실 때 인지세는 대출거래약정서에 따라서 고객님과 은행이 각각 100%씩 부담하게 되어 있습니다.,NUMERIC_MISMATCH|OVERSTATED,1,1,,provisional
+d025_num_unit_bad8,d025,NUMERIC,unit,,50%,50%p,NUMERIC_MISMATCH,하나은행 가계 대출하실 때 인지세는 대출거래약정서에 따라서 고객님과 은행이 각각 50%p씩 부담하게 되어 있습니다.,NUMERIC_MISMATCH,1,1,,provisional
+d025_ins_replace_89d0,d025,INSTITUTION,replace,,하나은행,신한은행,INSTITUTION_MISMATCH,신한은행 가계 대출하실 때 인지세는 대출거래약정서에 따라서 고객님과 은행이 각각 50%씩 부담하게 되어 있습니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d025_ove_intensifier_0617,d025,OVERSTATED,intensifier,Y,,무조건 ,OVERSTATED,"다만, 고객님이 부담하기로 한 인지세를 은행이 대신 지급하는 경우도 무조건 있습니다.",OVERSTATED,1,1,,provisional
+d026_none,d026,NONE,clean,,,,,주택도시기금 전세자금 대출을 받으실 때 본인과 배우자분의 합산 자산이 기준을 초과하면 우대금리 적용이 제외됩니다.,,,,0,provisional
+d026_none,d026,NONE,clean,,,,,"합산 자산은 부동산, 일반자산, 자동차, 금융자산을 모두 합한 금액에서 일반부채와 금융부채를 차감해서 계산합니다.",,,,0,provisional
+d026_none,d026,NONE,clean,,,,,"만약 자산기준을 초과하시면 채무인수, 기한연장, 상환방법, 우대금리 등 대출조건 변경이 불가능하고 가산금리가 적용될 수 있습니다.",,,,0,provisional
+d026_ins_insert_b8dd,d026,INSTITUTION,insert,,,신한은행 기준으로 ,INSTITUTION_MISMATCH,신한은행 기준으로 주택도시기금 전세자금 대출을 받으실 때 본인과 배우자분의 합산 자산이 기준을 초과하면 우대금리 적용이 제외됩니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d026_ove_intensifier_333b,d026,OVERSTATED,intensifier,N,,언제나 ,OVERSTATED,"합산 자산은 부동산, 일반자산, 자동차, 금융자산을 모두 합한 금액에서 일반부채와 금융부채를 언제나 차감해서 계산합니다.",,0,0,,provisional
+d026_ove_hedge_drop_2912,d026,OVERSTATED,hedge_drop,,될 수 있습니다,됩니다,OVERSTATED,"만약 자산기준을 초과하시면 채무인수, 기한연장, 상환방법, 우대금리 등 대출조건 변경이 불가능하고 가산금리가 적용됩니다.",,0,0,,provisional
+d027_none,d027,NONE,clean,,,,,대출 신청하실 때 실제로 보유하신 주택 수와 다르게 신고하시면 대출에 문제가 생길 수 있습니다.,,,,0,provisional
+d027_none,d027,NONE,clean,,,,,"기존에 주택을 보유하신 세대가 추가로 주택 구입 목적의 대출을 받으시려면 제한이 있을 수 있고, 주택 보유 여부와 대출 용도, 목적이 맞지 않으면 대출이 제한됩니다.",,,,0,provisional
+d027_none,d027,NONE,clean,,,,,특히 주택담보대출 관련 약정을 위반하시면 대출금이 회수될 수 있으니 정확한 정보를 제공해 주셔야 합니다.,,,,0,provisional
+d027_ins_insert_991d,d027,INSTITUTION,insert,,,카카오뱅크 기준으로 ,INSTITUTION_MISMATCH,카카오뱅크 기준으로 대출 신청하실 때 실제로 보유하신 주택 수와 다르게 신고하시면 대출에 문제가 생길 수 있습니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d027_ove_intensifier_3684,d027,OVERSTATED,intensifier,Y,,항상 ,OVERSTATED,대출 신청하실 때 실제로 보유하신 주택 수와 다르게 신고하시면 대출에 문제가 항상 생길 수 있습니다.,OVERSTATED,1,1,,provisional
+d027_ove_hedge_drop_e760,d027,OVERSTATED,hedge_drop,,길 수 있습니다,깁니다,OVERSTATED,대출 신청하실 때 실제로 보유하신 주택 수와 다르게 신고하시면 대출에 문제가 생깁니다.,OVERSTATED,1,1,,provisional
+d028_none,d028,NONE,clean,,,,,"기업용 대출을 연체하셨을 때는, 이자를 내기로 약정한 날 다음날부터 14일까지는 대출잔액에 연체이율을 적용해서 연체이자를 납부하셔야 합니다.",,,,0,provisional
+d028_none,d028,NONE,clean,,,,,그리고 14일이 지나면 기한이익이 상실되어서 대출원금에 연체이율을 곱한 연체이자를 내셔야 합니다.,,,,0,provisional
+d028_none,d028,NONE,clean,,,,,"또, 일부 연체이자만 납입하시는 경우에도 연체이자 전액을 납부하셔야 한다는 점 참고해 주시기 바랍니다.",,,,0,provisional
+d028_num_value_5fb6,d028,NUMERIC,value,,14일,28일,NUMERIC_MISMATCH,"기업용 대출을 연체하셨을 때는, 이자를 내기로 약정한 날 다음날부터 28일까지는 대출잔액에 연체이율을 적용해서 연체이자를 납부하셔야 합니다.",NUMERIC_MISMATCH,1,1,,provisional
+d028_ins_insert_5e11,d028,INSTITUTION,insert,,,농협은행 기준으로 ,INSTITUTION_MISMATCH,"농협은행 기준으로 기업용 대출을 연체하셨을 때는, 이자를 내기로 약정한 날 다음날부터 14일까지는 대출잔액에 연체이율을 적용해서 연체이자를 납부하셔야 합니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d028_ove_intensifier_d7ed,d028,OVERSTATED,intensifier,N,,100프로 ,OVERSTATED,"기업용 대출을 연체하셨을 때는, 이자를 내기로 약정한 날 다음날부터 14일까지는 대출잔액에 연체이율을 적용해서 연체이자를 100프로 납부하셔야 합니다.",,0,0,,provisional
+d029_none,d029,NONE,clean,,,,,"은행이 서류를 잃어버리거나 손상시킨 경우에는, 채무자께서는 은행의 장부나 전표 기록에 따라 빚을 갚으셔야 하고, 다른 자료가 있을 때는 서로 대조해서 채무를 확정하게 됩니다.",,,,0,provisional
+d029_none,d029,NONE,clean,,,,,"은행에서 청구하면 대신할 어음이나 증서를 제출하셔야 하지만, 은행이 제3자와의 거래에서 취득한 어음이나 증서는 제출하지 않으셔도 됩니다.",,,,0,provisional
+d029_none,d029,NONE,clean,,,,,"만약 이런 상황 때문에 채무자께서 과실 없이 이중 지급 의무를 지시게 되면, 그 손해는 은행이 부담하게 됩니다.",,,,0,provisional
+d029_none,d029,NONE,clean,,,,,"다만, 은행이 서류의 인영이나 서명을 채무자께서 신고한 인감이나 서명과 주의 깊게 대조해서 처리한 경우에는, 위조·변조·도용 사고로 인한 손해는 채무자께서 부담하셔야 합니다.",,,,0,provisional
+d029_ins_insert_50a5,d029,INSTITUTION,insert,,,신한은행 기준으로 ,INSTITUTION_MISMATCH,"신한은행 기준으로 은행이 서류를 잃어버리거나 손상시킨 경우에는, 채무자께서는 은행의 장부나 전표 기록에 따라 빚을 갚으셔야 하고, 다른 자료가 있을 때는 서로 대조해서 채무를 확정하게 됩니다.",INSTITUTION_MISMATCH,1,1,,provisional
+d029_ove_intensifier_8f93,d029,OVERSTATED,intensifier,N,,100프로 ,OVERSTATED,"다만, 은행이 서류의 인영이나 서명을 채무자께서 신고한 인감이나 서명과 주의 깊게 대조해서 처리한 경우에는, 위조·변조·도용 사고로 인한 손해는 100프로 채무자께서 부담하셔야 합니다.",,0,0,,provisional
+d030_none,d030,NONE,clean,,,,,하나은행 저축예금에서 발행일이 기재되지 않은 수표는 은행이 지급할 때 거래처에 손해가 생겨도 책임지지 않습니다.,,,,0,provisional
+d030_none,d030,NONE,clean,,,,,"즉, 날짜 없는 수표는 지급사무를 함에 있어 요구되는 주의를 다하였어야 하며, 지급 여부는 은행의 판단에 따릅니다.",,,,0,provisional
+d030_ins_replace_af27,d030,INSTITUTION,replace,,하나은행,농협은행,INSTITUTION_MISMATCH,농협은행 저축예금에서 발행일이 기재되지 않은 수표는 은행이 지급할 때 거래처에 손해가 생겨도 책임지지 않습니다.,INSTITUTION_MISMATCH,1,1,,provisional
+d030_ove_intensifier_7d8b,d030,OVERSTATED,intensifier,N,,언제나 ,OVERSTATED,하나은행 저축예금에서 발행일이 기재되지 않은 수표는 은행이 지급할 때 거래처에 손해가 생겨도 언제나 책임지지 않습니다.,,0,0,,provisional
