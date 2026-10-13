@@ -54,6 +54,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from finguide_rag.generation.product_catalog import ProductCatalog  # noqa: E402
 from finguide_rag.generation.product_match import ProductMatcher  # noqa: E402
 from finguide_rag.verification.claim_verifier import (  # noqa: E402
+    PROMPT_VERSION,
     CachedLLM,
     ClaimVerifier,
     EvidenceChunk,
@@ -225,7 +226,7 @@ def selftest() -> int:
     for name, ok in checks:
         print(f"  {'✔' if ok else '✘'} {name}")
     fails = sum(not ok for _, ok in checks)
-    print(f"\n{len(checks)}건 중 실패 {fails}건   prompt_hash={prompt_hash()}")
+    print(f"\n{len(checks)}건 중 실패 {fails}건   prompt_hash={prompt_hash(PROMPT_VERSION)}")
     return 1 if fails else 0
 
 
@@ -239,6 +240,8 @@ def main() -> int:
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--prompt", default=PROMPT_VERSION, choices=["cv-v1", "cv-v2"],
+                    help="정렬 프롬프트 버전 (cv-v1 = 2026-10-14 1~3차 실행)")
     ap.add_argument("--no-product-guard", action="store_true",
                     help="상품 불일치 판정 전 카탈로그 확인을 끔 (2026-10-14 1·2차 실행 재현용)")
     ap.add_argument("--promote-slot", action="store_true",
@@ -256,7 +259,7 @@ def main() -> int:
 
     if args.dry_run:
         llm = CachedLLM(None, MODEL, CACHE)
-        cv = ClaimVerifier(llm, matcher)
+        cv = ClaimVerifier(llm, matcher, prompt_version=args.prompt)
         for s in samples:
             cv.verify(s["question"], s["text"], chunks_for(answers, s["question"]))
         need = 2 * len(samples) - llm.hits
@@ -270,7 +273,8 @@ def main() -> int:
     llm = CachedLLM(OpenAI(), MODEL, CACHE)
     known = None if args.no_product_guard else \
         [e.canonical_name for e in ProductCatalog.load(CATALOG).all_named if e.canonical_name]
-    cv = ClaimVerifier(llm, matcher, promote_customer_slot=args.promote_slot, known_products=known)
+    cv = ClaimVerifier(llm, matcher, promote_customer_slot=args.promote_slot, known_products=known,
+                       prompt_version=args.prompt)
 
     stats = {k: defaultdict(lambda: [0, 0, 0, 0, 0]) for k in CONFIGS}   # n, det, sev, code, code≈
     clean = {k: [0, 0, 0] for k in CONFIGS}                            # claims, soft, hard
@@ -337,7 +341,7 @@ def main() -> int:
 
     prov = sum(1 for s in samples if s["label_status"] != "confirmed")
     out("=" * 92)
-    out(f"ClaimVerifier 평가 — 오류 주입 v0  (model={MODEL}, prompt={prompt_hash()})")
+    out(f"ClaimVerifier 평가 — 오류 주입 v0  (model={MODEL}, prompt={args.prompt}/{prompt_hash(args.prompt)})")
     out("=" * 92)
     if prov:
         out(f"※ 사람 검수 전 기반 초안 포함 {prov}/{len(samples)}건 — 잠정치")
@@ -394,7 +398,7 @@ def main() -> int:
     out(f"호출 API {llm.calls} / 캐시 {llm.hits}, 토큰 {llm.tokens:,}")
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    stem = f"v2_verifier_eval_{date.today().isoformat()}"
+    stem = f"v2_verifier_eval_{date.today().isoformat()}_{args.prompt}"
     with (REPORT_DIR / f"{stem}.csv").open("w", encoding="utf-8-sig", newline="") as f:
         cols = ["sample_id", "type", "injected", "targets"] + \
                [f"{k}_{x}" for k in CONFIGS for x in ("verdict", "codes")]

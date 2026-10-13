@@ -54,7 +54,7 @@ from .schema import (
     Verification,
 )
 
-PROMPT_VERSION = "cv-v1"
+PROMPT_VERSION = "cv-v2"   # 기본값. 이전 버전은 ClaimVerifier(prompt_version="cv-v1") 로 재현
 MAX_EVIDENCE_SENTENCES = 60
 
 # ==================================================================
@@ -103,10 +103,74 @@ ALIGN_SYSTEM = """너는 금융 상담 claim 을 근거 문장과 대조하는 �
 
 ALIGN_USER = "고객 질문:\n{question}\n\n[claim]\n{claims}\n\n[근거 문장]\n{evidence}"
 
+# ------------------------------------------------------------------
+# cv-v2 정렬 프롬프트 — 2026-10-14 3차 평가 진단을 반영
+#   정상 초안 claim 70개 중 9개가 MISSING_CONDITION 단독으로 CHECK 였고, LLM 이 적은
+#   '빠진 조건'을 보니 세 부류였다.
+#     (a) 앞 문장에 이미 있는 조건 — claim 분해가 공통 맥락을 잘라냄 ('외화현찰로 입금할 때')
+#     (b) claim 이 다른 말로 이미 담은 조건 ('로그인 상태에서')
+#     (c) 조건이 아닌 정의·산식·표 세부값 ('환율 민감도(Delta)는 …')
+#   반대로 자연 오류 d029('은행 책임 없는 사유로' 생략)는 SUPPORTED 로 놓쳤다.
+#   → 초안 전문을 함께 주고, '조건'의 정의와 제외 대상, 면책 사유 한정의 중요성을 명시한다.
+#   주의: 이 수정은 평가셋(정상 25건·자연 8건)의 결과를 보고 한 것이므로, 같은 셋의
+#   개선 폭은 낙관적이다. 새 자연 오류 셋으로 다시 확인해야 한다.
+# ------------------------------------------------------------------
+ALIGN_SYSTEM_V2 = """너는 금융 상담 claim 을 근거 문장과 대조하는 검토자다.
+각 claim 마다 아래를 수행한다.
 
-def prompt_hash() -> str:
-    raw = "|".join([PROMPT_VERSION, EXTRACT_SYSTEM, ALIGN_SYSTEM])
+1. evidence_ids: 근거 목록에서 claim 의 내용과 직접 관련된 문장 id 를 최대 3개 고른다. 없으면 [].
+2. code: 다음 중 정확히 하나.
+   SUPPORTED          근거가 claim 을 뒷받침하고, 근거의 조건이 claim(또는 초안의 맥락)에 살아 있다.
+   MISSING_CONDITION  내용은 근거와 맞지만, 근거의 '조건'이 빠져 claim 이 근거보다 넓게 적용되는 것처럼 읽힌다.
+   CONTRADICTED       근거와 반대되거나 다르다 (수치·기간·대상·상품이 다른 경우 포함).
+   NO_EVIDENCE        claim 을 판단할 근거 문장이 목록에 없거나, claim 표현이 모호·불완전해
+                      근거와 같은 뜻인지 확인할 수 없다.
+3. missing_conditions: MISSING_CONDITION 일 때 빠진 조건을 근거 표현 그대로. 아니면 [].
+   MISSING_CONDITION 이면 반드시 1개 이상 적는다.
+4. fix: SUPPORTED 가 아니면 근거 표현을 살려 claim 을 고친 한 문장. SUPPORTED 면 null.
+
+'조건'의 정의
+- 조건이란 claim 이 적용되는 대상·상황·시점·한도·예외를 좁히는 표현이다.
+  예: '~인 경우에 한해', '~로 인한', '~를 제외하고', '단, ~', 'OO 고객에 한함'.
+- 다음은 빠진 조건이 아니다.
+  (a) [초안 전문]의 다른 문장에 이미 있고 이 claim 에도 이어서 적용되는 조건
+  (b) claim 이 다른 표현으로 이미 담고 있는 조건
+  (c) 용어 정의, 산식, 표의 세부 값, 배경 설명
+- 반드시 확인할 것: 책임·면책·손해부담·제재 조항에서 '사유'를 한정하는 표현
+  (예: '은행의 책임 없는 사유로', '고객의 과실로', '정당한 사유 없이')이 빠지면
+  claim 이 근거보다 넓어진다 → MISSING_CONDITION.
+
+주의
+- 근거 문장이 claim 과 다른 상품·서비스·기관에 대한 것이면 SUPPORTED 가 아니다.
+- 근거에 없는 내용을 상식으로 채우지 마라.
+- 판정 라벨(안내 가능 등)이나 다른 코드는 쓰지 마라.
+
+출력은 JSON 하나:
+{"results": [{"claim_id": "c1", "evidence_ids": ["E3"], "code": "SUPPORTED", "missing_conditions": [], "fix": null}]}"""
+
+ALIGN_USER_V2 = ("고객 질문:\n{question}\n\n[초안 전문]\n{draft}\n\n[claim]\n{claims}"
+                 "\n\n[근거 문장]\n{evidence}")
+
+PROMPTS = {
+    "cv-v1": (ALIGN_SYSTEM, ALIGN_USER),
+    "cv-v2": (ALIGN_SYSTEM_V2, ALIGN_USER_V2),
+}
+
+
+def prompt_hash(version: str = "cv-v1") -> str:
+    """프롬프트 버전 지문. 감사 로그와 캐시 키에 쓴다.
+
+    cv-v1 의 값(5ebe0746f3a6)은 기존 캐시 키에 들어 있으므로 계산식을 바꾸지 않는다.
+    """
+    align_system = PROMPTS[version][0]
+    raw = "|".join([version, EXTRACT_SYSTEM, align_system])
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:12]
+
+
+# 추출 프롬프트는 cv-v1 이후 바뀌지 않았다. 추출 호출의 캐시 키는 항상 cv-v1 지문을 써서
+# 정렬 프롬프트만 바꿀 때 추출 결과(=claim 분해)를 재사용한다. 비교 실험에서 claim 이
+# 같아야 정렬 프롬프트의 효과만 분리해서 볼 수 있다.
+EXTRACT_TAG = "cv-v1"
 
 
 # ==================================================================
@@ -138,12 +202,12 @@ class CachedLLM:
                 self.cache = {}
         self.calls = self.hits = self.tokens = 0
 
-    def _key(self, system: str, user: str) -> str:
-        raw = f"{self.model}|{prompt_hash()}|{system}|{user}"
+    def _key(self, system: str, user: str, tag: str) -> str:
+        raw = f"{self.model}|{tag}|{system}|{user}"
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32]
 
-    def json(self, system: str, user: str, max_tokens: int = 1500) -> dict | None:
-        k = self._key(system, user)
+    def json(self, system: str, user: str, max_tokens: int = 1500, tag: str = "") -> dict | None:
+        k = self._key(system, user, tag or prompt_hash("cv-v1"))
         if k in self.cache:
             self.hits += 1
             return self.cache[k]["data"]
@@ -232,7 +296,8 @@ def locate(draft: str, text: str) -> tuple[int, int] | None:
 class ClaimVerifier:
     def __init__(self, llm: CachedLLM, matcher: ProductMatcher,
                  promote_customer_slot: bool = False,
-                 known_products: list[str] | None = None):
+                 known_products: list[str] | None = None,
+                 prompt_version: str = PROMPT_VERSION):
         """promote_customer_slot: LLM 추출 슬롯 needs_customer_data=true 를 사유 코드로 승격할지.
 
         54번 첫 실행(2026-10-14)에서 켜 두었더니 주입 샘플 대상 claim 75개 중 26개에
@@ -246,11 +311,15 @@ class ClaimVerifier:
         self.promote_customer_slot = promote_customer_slot
         # 카탈로그 상품명 목록. 없으면(None) 상품명 존재 여부 확인을 건너뛴다 (rules.check_product)
         self.known_products = known_products
+        if prompt_version not in PROMPTS:
+            raise ValueError(f"알 수 없는 프롬프트 버전: {prompt_version}")
+        self.prompt_version = prompt_version
 
     # ---------- 1~2. 추출 + 위치 ----------
     def extract(self, question: str, draft: str) -> tuple[list[Claim], list[str]]:
         errors: list[str] = []
-        data = self.llm.json(EXTRACT_SYSTEM, EXTRACT_USER.format(question=question, draft=draft))
+        data = self.llm.json(EXTRACT_SYSTEM, EXTRACT_USER.format(question=question, draft=draft),
+                             tag=prompt_hash(EXTRACT_TAG))
         raw = (data or {}).get("claims") if isinstance(data, dict) else None
         if not isinstance(raw, list) or not raw:
             errors.append("extract_failed")
@@ -297,11 +366,12 @@ class ClaimVerifier:
         return out
 
     def align(self, question: str, claims: list[Claim],
-              ev: list[tuple[str, EvidenceChunk, str]]) -> dict[str, dict] | None:
+              ev: list[tuple[str, EvidenceChunk, str]], draft: str = "") -> dict[str, dict] | None:
         claims_txt = "\n".join(f"{c.claim_id}: {c.text}" for c in claims)
         ev_txt = "\n".join(f"{eid}: [{ch.doc_name}] {s}" for eid, ch, s in ev) or "(없음)"
-        data = self.llm.json(ALIGN_SYSTEM, ALIGN_USER.format(
-            question=question, claims=claims_txt, evidence=ev_txt), max_tokens=2000)
+        system, user_tmpl = PROMPTS[self.prompt_version]
+        user = user_tmpl.format(question=question, claims=claims_txt, evidence=ev_txt, draft=draft)
+        data = self.llm.json(system, user, max_tokens=2000, tag=prompt_hash(self.prompt_version))
         if not isinstance(data, dict) or not isinstance(data.get("results"), list):
             return None
         return {str(r.get("claim_id")): r for r in data["results"] if isinstance(r, dict)}
@@ -312,7 +382,7 @@ class ClaimVerifier:
         claims, errors = self.extract(question, draft)
         ev = self.evidence_sentences(chunks)
         ev_by_id = {eid: (ch, s) for eid, ch, s in ev}
-        aligned = self.align(question, claims, ev)   # 추출 실패 시에도 대체 claim 으로 정렬 시도
+        aligned = self.align(question, claims, ev, draft)   # 추출 실패 시에도 대체 claim 으로 정렬 시도
         if aligned is None:
             errors.append("align_failed")
 
@@ -356,7 +426,8 @@ class ClaimVerifier:
             vers.append(v)
 
         final = aggregate_final(vers, audit_id=uuid.uuid4().hex[:12])
-        return VerifyResult(claims, vers, final, llm_codes, rule_hits, errors, prompt_hash())
+        return VerifyResult(claims, vers, final, llm_codes, rule_hits, errors,
+                            prompt_hash(self.prompt_version))
 
 
 __all__ = ["CachedLLM", "ClaimVerifier", "EvidenceChunk", "VerifyResult", "prompt_hash",
