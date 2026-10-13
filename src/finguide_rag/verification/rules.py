@@ -202,21 +202,38 @@ _NAME_COMPARABLE_DOC_TYPES = {"설명서"}
 
 def check_product(claim_product: str | None, evidence: Iterable[EvidenceRef],
                   matcher: ProductMatcher,
-                  catalog_status: CatalogStatus | None = None) -> tuple[list[ReasonHit], str]:
+                  catalog_status: CatalogStatus | None = None,
+                  known_products: Iterable[str] | None = None) -> tuple[list[ReasonHit], str]:
     """claim 의 상품명이 근거 설명서의 상품과 같은지.
 
     claim_product 는 Claim.product 슬롯 값(LLM 추출)이다. 판정은 규칙이 한다.
+
+    PRODUCT_MISMATCH(안내 금지)를 내기 전에 두 가지를 먼저 확인한다 (54번 1차 평가에서
+    정상 초안 claim 7개가 이 규칙으로 PROHIBITED 를 받은 원인 둘을 막기 위해서다).
+      1. claim 상품명이 카탈로그에 있는 상품인가 (known_products).
+         '외화보통예금통장'처럼 카탈로그에 없는 이름은 '다른 상품'이라고 단정할 근거가 없다.
+         v1 catalog_matcher 의 unmatched 처리와 같은 원칙 — 모르면 판정하지 않는다.
+      2. 근거 원문 안에 claim 상품명이 직접 나오는가.
+         '장외파생상품설명서' 한 문서 안에 Range Forward 등 여러 상품이 들어 있다.
+         문서명은 상품군이지만 본문이 그 상품을 설명하면 같은 상품이다.
     """
     if catalog_status == CatalogStatus.AMBIGUOUS:
         return [ReasonHit(ReasonCode.AMBIGUOUS_PRODUCT, Source.RULE,
                           f"상품명 '{claim_product}' 이 여러 상품과 겹침")], "fail"
     if not claim_product or not matcher.informative(claim_product):
         return [], "n/a"
+    if known_products is not None and not any(
+            matcher.same_product(claim_product, k) for k in known_products):
+        return [], "n/a"   # 카탈로그에 없는 상품명 → 불일치를 단정할 수 없음
     comparable = [e for e in evidence if e.doc_type in _NAME_COMPARABLE_DOC_TYPES and e.doc_name]
     if not comparable:
         return [], "n/a"   # 약관·FAQ 근거만 있음 → 이름 대조 불가 (모듈 docstring)
     if any(matcher.same_product(claim_product, e.doc_name) for e in comparable):
         return [], "pass"
+    claim_norm = re.sub(r"\s+", "", claim_product)
+    claim_core = re.sub(r"(상품|서비스|통장)$", "", claim_norm)
+    if claim_core and any(claim_core in re.sub(r"\s+", "", e.quote) for e in evidence):
+        return [], "pass"  # 근거 본문이 그 상품을 직접 설명
     names = sorted({matcher.product_of(e.doc_name) for e in comparable})
     return [ReasonHit(ReasonCode.PRODUCT_MISMATCH, Source.RULE,
                       f"claim 상품 '{claim_product}' ↔ 근거 설명서 {names}")], "fail"
@@ -303,7 +320,8 @@ class RuleResult:
 
 def run_claim_rules(claim_text: str, evidence: list[EvidenceRef], *,
                     claim_product: str | None, matcher: ProductMatcher,
-                    catalog_status: CatalogStatus | None = None) -> RuleResult:
+                    catalog_status: CatalogStatus | None = None,
+                    known_products: Iterable[str] | None = None) -> RuleResult:
     """claim 하나에 대한 모든 규칙 검사.
 
     수치 대조는 numeric.numeric_reason_hits 를 쓴다. 근거 원문은 정렬된 span 들을
@@ -320,7 +338,8 @@ def run_claim_rules(claim_text: str, evidence: list[EvidenceRef], *,
     r.hits += h
     h, r.rule_checks["institution"] = check_institution(claim_text, evidence)
     r.hits += h
-    h, r.rule_checks["product"] = check_product(claim_product, evidence, matcher, catalog_status)
+    h, r.rule_checks["product"] = check_product(claim_product, evidence, matcher, catalog_status,
+                                               known_products)
     r.hits += h
     h, r.needs_customer_data = check_customer_data(claim_text)
     r.hits += h

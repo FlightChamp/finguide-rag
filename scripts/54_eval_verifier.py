@@ -51,6 +51,7 @@ from types import SimpleNamespace
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
+from finguide_rag.generation.product_catalog import ProductCatalog  # noqa: E402
 from finguide_rag.generation.product_match import ProductMatcher  # noqa: E402
 from finguide_rag.verification.claim_verifier import (  # noqa: E402
     CachedLLM,
@@ -71,6 +72,15 @@ REPORT_DIR = PROJECT_ROOT / "reports"
 MODEL = "gpt-4.1-mini"
 SEV = {"OK": 0, "CHECK": 1, "PROHIBITED": 2}
 CONFIGS = ("rules", "llm", "combined")
+
+# LLM 은 규칙 전용 코드(NUMERIC_MISMATCH 등)를 낼 수 없다. 'llm 코드 정확 0.00' 은 측정 정의의
+# 결과일 뿐이므로, 의미상 같은 오류를 가리키는 LLM 코드를 '동등'으로 인정한 지표를 함께 보고한다.
+CODE_EQUIV = {
+    "NUMERIC_MISMATCH": {"CONTRADICTED"},
+    "PRODUCT_MISMATCH": {"CONTRADICTED"},
+    "INSTITUTION_MISMATCH": {"CONTRADICTED"},
+    "OVERSTATED": {"MISSING_CONDITION"},
+}
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
@@ -229,6 +239,10 @@ def main() -> int:
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--no-product-guard", action="store_true",
+                    help="상품 불일치 판정 전 카탈로그 확인을 끔 (2026-10-14 1·2차 실행 재현용)")
+    ap.add_argument("--promote-slot", action="store_true",
+                    help="LLM 슬롯 needs_customer_data 를 사유 코드로 승격 (2026-10-14 첫 실행 재현용)")
     args = ap.parse_args()
     if args.selftest:
         return selftest()
@@ -254,9 +268,11 @@ def main() -> int:
     from openai import OpenAI
     load_dotenv(PROJECT_ROOT / ".env")
     llm = CachedLLM(OpenAI(), MODEL, CACHE)
-    cv = ClaimVerifier(llm, matcher)
+    known = None if args.no_product_guard else \
+        [e.canonical_name for e in ProductCatalog.load(CATALOG).all_named if e.canonical_name]
+    cv = ClaimVerifier(llm, matcher, promote_customer_slot=args.promote_slot, known_products=known)
 
-    stats = {k: defaultdict(lambda: [0, 0, 0, 0]) for k in CONFIGS}   # n, det, sev, code
+    stats = {k: defaultdict(lambda: [0, 0, 0, 0, 0]) for k in CONFIGS}   # n, det, sev, code, code≈
     clean = {k: [0, 0, 0] for k in CONFIGS}                            # claims, soft, hard
     clean_draft = [0, 0]
     unaligned = defaultdict(int)
@@ -305,6 +321,8 @@ def main() -> int:
                 st[1] += worst > 0
                 st[2] += worst >= SEV[s["expected_min_verdict"]]
                 st[3] += any(c in codes for c in expected)
+                equiv = set(expected) | {e for c in expected for e in CODE_EQUIV.get(c, ())}
+                st[4] += bool(codes & equiv)
                 row[f"{k}_verdict"] = ["OK", "CHECK", "PROHIBITED"][worst]
                 row[f"{k}_codes"] = "|".join(sorted(codes))
             rows.append(row)
@@ -325,19 +343,23 @@ def main() -> int:
         out(f"※ 사람 검수 전 기반 초안 포함 {prov}/{len(samples)}건 — 잠정치")
     out(f"\n[탐지율]  {'유형':<30}" + "".join(f"{k:>20}" for k in CONFIGS) + "   미정렬")
     keys = sorted(stats["combined"])
-    tot = {k: [0, 0, 0, 0] for k in CONFIGS}
+    tot = {k: [0, 0, 0, 0, 0] for k in CONFIGS}
     for key in keys:
         n = stats["combined"][key][0]
         line = f"  {key:<36}"
         for k in CONFIGS:
             st = stats[k][key]
             line += f"{rate(st[1], st[0]):>20}"
-            for j in range(4):
+            for j in range(5):
                 tot[k][j] += st[j]
         out(line + f"   {unaligned[key]}/{n}")
     out(f"  {'(전체)':<36}" + "".join(f"{rate(tot[k][1], tot[k][0]):>20}" for k in CONFIGS))
     out(f"\n[심각도 정확]  " + "  ".join(f"{k} {rate(tot[k][2], tot[k][0])}" for k in CONFIGS))
     out(f"[코드 정확]    " + "  ".join(f"{k} {rate(tot[k][3], tot[k][0])}" for k in CONFIGS))
+    out(f"[코드≈ 동등]   " + "  ".join(f"{k} {rate(tot[k][4], tot[k][0])}" for k in CONFIGS)
+        + "   (CONTRADICTED≈수치·상품·기관, MISSING_CONDITION≈과장)")
+    out("※ '탐지'는 아무 코드로나 걸린 것. 엉뚱한 코드로 걸린 우연 탐지가 섞이므로 '코드 정확'을 함께 볼 것")
+    out(f"   설정: promote_customer_slot={args.promote_slot}, product_guard={not args.no_product_guard}")
     out("\n[대조군 — 정상 초안]")
     for k in CONFIGS:
         n, soft, hard = clean[k]
@@ -349,9 +371,10 @@ def main() -> int:
     if NATURAL.exists() and not args.limit:
         with NATURAL.open(encoding="utf-8-sig", newline="") as f:
             nat = list(csv.DictReader(f))
-        out("\n[자연 오류 셋] 초안 단위 — claim 하나라도 OK 가 아니면 탐지")
+        out("\n[자연 오류 셋] 초안 단위 — claim 하나라도 OK 가 아니면 탐지, '적중'은 기대 코드가 나온 것")
         out(f"  {'id':<8}{'gold':<34}" + "".join(f"{k:>12}" for k in CONFIGS) + "   발급 코드(combined)")
         hit = {k: 0 for k in CONFIGS}
+        code_hit = 0
         for r in nat:
             res = cv.verify(r["question"], r["text"], chunks_for(answers, r["question"]))
             worst = {k: max((SEV[variant_verdicts(res, c.claim_id)[k][0]] for c in res.claims), default=0)
@@ -359,10 +382,13 @@ def main() -> int:
             codes = sorted({h.code.value for v in res.verifications for h in v.reasons} - {"SUPPORTED"})
             for k in CONFIGS:
                 hit[k] += worst[k] > 0
-            out(f"  {r['nat_id']:<8}{r['expected_codes'][:32]:<34}"
+            ok_code = bool(set(codes) & set(r["expected_codes"].split("|")))
+            code_hit += ok_code
+            out(f"  {'✔' if ok_code else ' '}{r['nat_id']:<7}{r['expected_codes'][:32]:<34}"
                 + "".join(f"{['OK', 'CHECK', 'PROHIB'][worst[k]]:>12}" for k in CONFIGS)
                 + f"   {','.join(codes)[:60]}")
         out("  탐지율  " + "  ".join(f"{k} {rate(hit[k], len(nat))}" for k in CONFIGS) + f"  (n={len(nat)})")
+        out(f"  기대 코드 적중(combined)  {rate(code_hit, len(nat))}")
         llm.flush()
 
     out(f"호출 API {llm.calls} / 캐시 {llm.hits}, 토큰 {llm.tokens:,}")

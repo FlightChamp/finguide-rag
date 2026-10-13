@@ -230,8 +230,22 @@ def locate(draft: str, text: str) -> tuple[int, int] | None:
 
 
 class ClaimVerifier:
-    def __init__(self, llm: CachedLLM, matcher: ProductMatcher):
+    def __init__(self, llm: CachedLLM, matcher: ProductMatcher,
+                 promote_customer_slot: bool = False,
+                 known_products: list[str] | None = None):
+        """promote_customer_slot: LLM 추출 슬롯 needs_customer_data=true 를 사유 코드로 승격할지.
+
+        54번 첫 실행(2026-10-14)에서 켜 두었더니 주입 샘플 대상 claim 75개 중 26개에
+        NEEDS_CUSTOMER_DATA 가 붙었다. 대부분 고객 개인 정보와 무관한 일반 규정 문장이었고,
+        자연 오류 셋의 '탐지' 6건 중 3건이 기대 코드가 아닌 이 코드로만 걸렸다 —
+        우연히 맞힌 경보다. 그래서 기본값을 끄고, 고객정보 판정은 51번 dev 셋에서
+        오탐을 확인한 규칙(rules.check_customer_data)만 쓴다. 슬롯 값은 Claim 에 그대로 남겨
+        화면 참고 정보로만 쓴다. 비교 재현이 필요하면 True 로 켠다.
+        """
         self.llm, self.matcher = llm, matcher
+        self.promote_customer_slot = promote_customer_slot
+        # 카탈로그 상품명 목록. 없으면(None) 상품명 존재 여부 확인을 건너뛴다 (rules.check_product)
+        self.known_products = known_products
 
     # ---------- 1~2. 추출 + 위치 ----------
     def extract(self, question: str, draft: str) -> tuple[list[Claim], list[str]]:
@@ -324,8 +338,8 @@ class ClaimVerifier:
             llm_codes[c.claim_id] = codes
 
             rr = run_claim_rules(c.text, refs, claim_product=c.product, matcher=self.matcher,
-                                 catalog_status=catalog_status)
-            if c.needs_customer_data and not rr.needs_customer_data:
+                                 catalog_status=catalog_status, known_products=self.known_products)
+            if self.promote_customer_slot and c.needs_customer_data and not rr.needs_customer_data:
                 # '추출은 LLM, 판정은 코드': LLM 이 채운 슬롯(needs_customer_data=true)을
                 # 규칙이 사유 코드로 바꾼다. 슬롯 출처를 detail 에 남겨 감사 시 구분한다.
                 rr.hits.append(ReasonHit(ReasonCode.NEEDS_CUSTOMER_DATA, Source.RULE,
@@ -334,6 +348,11 @@ class ClaimVerifier:
             fix = (r or {}).get("fix") or None
             v = build_verification(c.claim_id, codes, rr.hits, evidence=refs,
                                    rule_checks=rr.rule_checks, fix_suggestion=fix)
+            # LLM 이 낸 '빠진 조건'을 사유 상세에 남긴다 (감사·진단용). 판정에는 영향 없음
+            missing = [str(x) for x in (r or {}).get("missing_conditions", []) if str(x).strip()]
+            for h in v.reasons:
+                if h.code == ReasonCode.MISSING_CONDITION and h.source == Source.LLM:
+                    h.detail = "빠진 조건: " + " / ".join(missing) if missing else "빠진 조건: (LLM 미기재)"
             vers.append(v)
 
         final = aggregate_final(vers, audit_id=uuid.uuid4().hex[:12])

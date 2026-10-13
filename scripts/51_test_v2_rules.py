@@ -224,6 +224,29 @@ def _():
     return not hits and chk == "n/a", chk
 
 
+KNOWN = ["주택청약종합저축", "주택청약예금", "하나 화상상담데스크", "장외파생"]
+
+
+@case("G.상품", "카탈로그에 없는 상품명('외화보통예금통장') → n/a (불일치 단정 안 함)")
+def _():
+    hits, chk = check_product("외화보통예금통장", [EV(doc_name="『고객센터 환전지갑 서비스 설명서』")],
+                              MATCHER, known_products=KNOWN)
+    return not hits and chk == "n/a", chk
+
+
+@case("G.상품", "근거 본문에 상품명이 직접 나옴(상품군 문서) → pass")
+def _():
+    ev = [EV("< 상품명 : Range Forward(고객이 조건부로 외화매수) >", doc_name="장외파생상품설명서")]
+    hits, chk = check_product("Range Forward 상품", ev, MATCHER, known_products=KNOWN + ["Range Forward"])
+    return not hits and chk == "pass", chk
+
+
+@case("G.상품", "카탈로그 상품끼리 불일치는 여전히 PRODUCT_MISMATCH")
+def _():
+    hits, chk = check_product("주택청약예금", [EV("연 3.0%", doc_name=DESC_JUTAEK)], MATCHER, known_products=KNOWN)
+    return codes(hits) == [ReasonCode.PRODUCT_MISMATCH], chk
+
+
 @case("G.상품", "catalog ambiguous → AMBIGUOUS_PRODUCT")
 def _():
     hits, _ = check_product("주택청약", [EV(doc_name=DESC_JUTAEK)], MATCHER, CatalogStatus.AMBIGUOUS)
