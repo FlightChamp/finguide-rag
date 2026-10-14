@@ -1,0 +1,42 @@
+{
+  "frozen_at": "2026-10-14T23:26:06",
+  "sheet": "data\\eval\\v2\\heldout_v1_review.csv",
+  "sheet_sha256": "1d15e969a4f76a51a4eba9ab1ed22bc7fc7d7ffdb880f188e66de856be34cc9e",
+  "answers_sha256": "b99b66296a1bf449f16e75699e42bbda19d0f35489ead226e0fe32f3a1123a30",
+  "questions_sha256": "6e7d32c37bc517fd73e6d62ad54225c2a8fb62d9a957d9b589dfd305ec2a9b21",
+  "counts": {
+    "Y": 37,
+    "N": 13
+  },
+  "reasons": {
+    "WRONG": 5,
+    "SCOPE_MISMATCH": 6,
+    "OVERSTATED": 4,
+    "MISSING_CONDITION": 1,
+    "OMITTED": 2,
+    "MIXED_SCOPE": 2
+  },
+  "code_at_freeze": {
+    "all": "473eada7ec10dc1e",
+    "files": {
+      "__init__.py": "5e5324cf21",
+      "claim_verifier.py": "ea63399f02",
+      "numeric.py": "e5631f8890",
+      "policy.py": "4833e216b6",
+      "rules.py": "8f56588a9e",
+      "schema.py": "c0df9cda39",
+      "scope.py": "f323c81af0",
+      "product_match.py": "4fe112b0c9",
+      "product_catalog.py": "123067ef00",
+      "refusal.py": "30e7bf7588",
+      "product_catalog.json": "d9d1cc80f6"
+    }
+  },
+  "answer_env": {
+    "backend": "sentence-transformers",
+    "n": 20,
+    "min_cos": 0.9999999403953552,
+    "mean_cos": 1.0
+  },
+  "note": "verifier 결과를 보기 전에 확정한 라벨. 이 파일 이후 첫 eval 이 공식 결과다."
+}
