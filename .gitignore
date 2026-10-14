@@ -127,3 +127,7 @@ update_demo_url.ps1
 # v2 review packets and LLM caches (local only)
 data/interim/*_packet.html
 data/interim/v2_*_cache.json
+
+# v2 local LLM results and caches
+data/interim/v2_verifier_results.jsonl
+data/interim/heldout_v1_question_cache.json
