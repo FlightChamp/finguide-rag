@@ -1,0 +1,51 @@
+﻿draft_id,label,reasons,doc_type,note,claim_final,claim_codes,claim+scope_final,claim+scope_codes
+h002,Y,,설명서,,OK,,OK,
+h004,Y,,설명서,,PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+h005,Y,,설명서,,OK,,OK,
+h007,Y,,설명서,,OK,,OK,
+h008,Y,,설명서,,PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+h009,N,WRONG|SCOPE_MISMATCH,설명서,질문은 “4년째 어떤 이율”인데 답변은 특정 보금자리론 예시표의 4년차 이자액 196만원을 일반 답처럼 가져옴. 이율을 답하지도 않았고 특정 가정의 금액을 일반화함.,OK,,OK,
+h010,Y,,설명서,,OK,,OK,
+h011,Y,,설명서,,OK,,OK,
+h013,Y,,설명서,,OK,,OK,
+h018,Y,,설명서,,OK,,OK,
+h020,Y,,설명서,,OK,,OK,
+h021,Y,,설명서,,OK,,OK,
+h023,Y,,설명서,,PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+h025,N,SCOPE_MISMATCH|WRONG,설명서,질문은 “은행이 금을 사는 가격”인데 답변 첫 부분은 고객이 금을 살 때의 은행 판매가격 산식과 부가세를 설명함. 이후 고객이 팔 때 매입가격도 설명하지만 질문 관점과 반대되는 내,OK,,OK,
+h026,N,WRONG|SCOPE_MISMATCH,설명서,"근로소득 5천만원 초과, 종합소득 3천8백만원 초과는 서민형 ISA 기준 초과이지 ISA 자체 가입 불가를 뜻하지 않음. 일반형과 서민형을 혼동함.",CHECK,MISSING_CONDITION,CHECK,MISSING_CONDITION
+h027,Y,,설명서,,OK,,OK,
+h029,Y,,설명서,,OK,,OK,
+h030,N,WRONG|OVERSTATED,설명서,"우대금리 1.9%는 군급여 실적 조건이 맞지만, 근거상 수수료 우대서비스는 통장 보유 시 제공되는 것으로 적혀 있어 “군급여가 매달 들어와야 수수료 우대서비스도 받는다”는 답변은 ",PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+h031,N,MISSING_CONDITION,약관,"답변은 수도권·규제지역 및 다주택 매도인 조건은 잡았지만, 근거에는 본인·배우자가 무주택인 채무자, 특정 임대차계약 요건 등 중요한 전제가 더 있음. 그대로 일반화하면 조건이 빠짐",CHECK,MISSING_CONDITION,CHECK,MISSING_CONDITION
+h033,N,OMITTED,약관,"근거는 연장 시 금리변경 처리 및 변경된 이자율을 15일 이내 통지한다는 내용임. 질문은 “연장 때 이자율이 어떻게 적용되나”인데, 답변은 어떤 기준으로 새 금리가 적용되는지를 설",OK,,OK,
+h038,N,SCOPE_MISMATCH|OVERSTATED,약관,"근거는 처분기한 미이행 시 기한이익 상실과 즉시 변제의무를 설명하는데, 답변 끝의 “돈 받는 절차가 빨리 끝날 수 있다”는 표현은 근거가 직접 뒷받침하지 않고 질문의 의미도 잘못 ",PARTIAL,MISSING_CONDITION,PARTIAL,MISSING_CONDITION
+h040,N,SCOPE_MISMATCH|OVERSTATED,약관,제시 근거는 약관 사본 교부와 중요내용 설명 방법에 관한 규정임. 답변은 이를 “은행의 중요한 안내는 이런 방식으로 제공된다”는 일반 통지 규칙으로 확장함.,CHECK,MISSING_CONDITION,CHECK,MISSING_CONDITION
+h042,N,OVERSTATED|SCOPE_MISMATCH,약관,"근거는 가계대출 금리감면용 추가약정서에서 적금 실적 인정 기준을 설명한 것인데, 답변은 이를 “하나은행 적금상품의 혜택” 일반 규칙처럼 설명함. 적용 범위가 넓어짐.",PARTIAL,MISSING_CONDITION,PARTIAL,MISSING_CONDITION
+h043,Y,,약관,,PARTIAL,MISSING_CONDITION,PARTIAL,MISSING_CONDITION
+h046,Y,,약관,,OK,,OK,
+h047,Y,,약관,,PARTIAL,VERIFIER_ERROR,PARTIAL,VERIFIER_ERROR
+h048,N,OMITTED,약관,"질문의 핵심이 “몇 개월 동안 안 변하느냐”인데 답변은 “약정된 기간 동안”이라고만 해서 핵심 수치를 답하지 못함. 근거에도 정확한 개월 수는 없어, 이 질문에 대한 완결된 안내는",PARTIAL,MISSING_CONDITION,PARTIAL,MISSING_CONDITION|SCOPE_MISMATCH
+h049,N,MIXED_SCOPE,약관,"연체이자 적용 설명은 맞지만, “기한이익 상실 7영업일 전 통지”는 이자·분할상환 지체에 따른 기한이익 상실 절차이고 단순히 만기일까지 못 갚은 모든 경우의 연체료 설명으로 붙이면",PROHIBITED,MISSING_CONDITION|OVERSTATED|PRODUCT_MISMATCH,PROHIBITED,MISSING_CONDITION|OVERSTATED|PRODUCT_MISMATCH
+h052,Y,,약관,,PARTIAL,MISSING_CONDITION,PARTIAL,MISSING_CONDITION
+h053,Y,,약관,,PARTIAL,MISSING_CONDITION|OVERSTATED,PARTIAL,MISSING_CONDITION|OVERSTATED
+h054,N,WRONG,약관,"답변 첫 문장이 “은행이 어음 만기 전에 환매채무를 이행”한다고 되어 있는데, 근거상 환매채무를 이행하는 주체는 채무자이고 은행은 할인료 상당액을 돌려주는 주체임. 주체가 뒤바뀜.",OK,,OK,
+h055,Y,,약관,,OK,,OK,
+h056,N,MIXED_SCOPE,약관,"10년 고정 후 변동금리 설명은 맞지만, 뒤의 “이후에는 매월 동일한 원금이 상환”은 원금균등분할상환이라는 별도 상환방식을 금리변동 구조에 붙여 일반화함. 모든 10년 고정 후 변",PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+h057,Y,,FAQ,,PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+h059,Y,,FAQ,,OK,,OK,
+h060,Y,,FAQ,,OK,,OK,
+h062,Y,,FAQ,,PARTIAL,MISSING_CONDITION|OVERSTATED,PARTIAL,MISSING_CONDITION|OVERSTATED
+h063,Y,,FAQ,,OK,,OK,
+h064,Y,,FAQ,,OK,,OK,
+h065,Y,,FAQ,,CHECK,MISSING_CONDITION|VERIFIER_ERROR,CHECK,MISSING_CONDITION|VERIFIER_ERROR
+h066,Y,,FAQ,,OK,,OK,
+h067,Y,,FAQ,,OK,,OK,
+h069,Y,,FAQ,,OK,,OK,
+h070,Y,,FAQ,,OK,,OK,
+h072,Y,,FAQ,,OK,,OK,
+h073,Y,,FAQ,,OK,,OK,
+h074,Y,,FAQ,,PROHIBITED,CONTRADICTED,PROHIBITED,CONTRADICTED
+h075,Y,,FAQ,,OK,,OK,
+h076,Y,,FAQ,,OK,,OK,
+h077,Y,,FAQ,,OK,,OK,
