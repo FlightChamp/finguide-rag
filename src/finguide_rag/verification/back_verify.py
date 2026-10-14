@@ -156,21 +156,22 @@ _HEDGE_POSSIBILITY = HEDGE_GROUPS["가능성"]
 # 원문이 '손실이 가능하나', '손실 가능성이 있습니다'처럼 명사·형용사로 가능성을 말한 경우 (64번 b_q024 과차단).
 # 약화 판정에서 원문 쪽만 너그럽게 본다 — '조회가 가능합니다'(능력)도 걸리지만, 그 결과는 '약화 아님'이라 안전한 방향이다.
 _SRC_POSSIBILITY = re.compile(r"가능성|가능하나|가능하며|가능하지만|우려")
+_EXTRA_COVERED = 0.85  # 목록 외 조건 인용이 쉬운 설명에 이만큼 있으면 '빠짐'으로 보지 않음
 _EXTRA_MAX_LEN = 60   # 목록 외 조건 인용 최대 길이 (공백 제외). 그보다 길면 조건이 아니라 claim 전체를 인용한 것
 
 
-def _quote_is_covered(q: str, cust: str, claim_texts) -> bool:
-    """목록 외 조건 인용을 버릴지.
+def _quote_is_covered(q: str, cust: str, claim_texts=None) -> bool:
+    """목록 외 조건 인용을 버릴지: 인용의 2-gram 85% 이상이 쉬운 설명에 있으면 '빠진 것'이 아니다.
 
-    64번 b_q019 과차단: LLM 이 claim 문장 거의 전체('…초과하지 않아야 하며')를 '빠진 조건'으로 인용했는데,
-    쉬운 설명에는 어미만 바뀐 같은 문장('…초과하지 않아야 합니다')이 있었다.
-      - 인용의 2-gram 80% 이상이 쉬운 설명에 있으면 → 빠진 것이 아님
-      - 인용이 어떤 claim 의 80% 이상을 덮으면 → 조건이 아니라 claim 자체 (누락은 CLAIM_UNCOVERED 가 본다)
+    64번 b_q019 과차단: LLM 이 claim 문장('…초과하지 않아야 하며')을 '빠진 조건'으로 인용했는데,
+    쉬운 설명에는 어미만 바뀐 같은 문장이 있었다 (겹침 0.94).
+
+    10-15 1차 수정에는 '인용이 claim 전체면 버림' 기준도 있었는데, 조건 교란 cp_b_q101 에서
+    '단, 미성년자의 경우 …' claim 전체를 인용한 진짜 조건 삭제(쉬운 설명 겹침 0.50)까지 버려 놓침이 생겼다.
+    → 그 기준은 뺐다. claim_texts 인자는 호출부 호환용으로만 남긴다.
     """
-    gq, gc = _bigrams(q), _bigrams(cust)
-    if gq and _contain(gq, gc) >= 0.8:
-        return True
-    return any(_contain(_bigrams(t), gq) >= 0.8 for t in claim_texts if t)
+    gq = _bigrams(q)
+    return bool(gq) and _contain(gq, _bigrams(cust)) >= _EXTRA_COVERED
 
 
 def bv_prompt_hash(version: str = BV_PROMPT_VERSION) -> str:

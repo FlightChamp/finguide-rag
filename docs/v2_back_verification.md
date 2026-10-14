@@ -128,10 +128,13 @@ A 의 held-out 규칙을 그대로 따른다.
 |---|---|---|
 | b_q027 | '2주일 이내' ↔ '2주일 안에' — '안에'를 비교어로 못 읽어 상한 누락(STRENGTHENED) | B 안에서 '안에·내에'를 '이내'로 맞춘 뒤 수치 대조 |
 | b_q024 | 원문 '손실이 가능하나' / '손실 가능성이 있습니다' → '손실이 날 수 있지만' 을 약화(HEDGE_ADDED)로 봄 | 약화 판정에서 원문의 '가능성·가능하나' 도 헤지로 인정 |
-| b_q019 | LLM 이 claim 문장 전체를 '목록 외 빠진 조건'으로 인용 (쉬운 설명에는 어미만 바뀐 같은 문장) | 인용의 2-gram 80% 이상이 쉬운 설명에 있거나, 인용이 claim 의 80% 이상이면 버림 |
+| b_q019 | LLM 이 claim 문장 전체를 '목록 외 빠진 조건'으로 인용 (쉬운 설명에는 어미만 바뀐 같은 문장) | 인용의 2-gram 85% 이상이 쉬운 설명에 있으면 버림. (처음엔 '인용이 claim 전체면 버림'도 넣었으나 조건 교란 cp_b_q101 의 진짜 삭제까지 버려 제거) |
 | b_d011 | c4(앞 두 claim 의 요약)가 반영되지 않음 → CLAIM_UNCOVERED | 유지. 요약 claim 의 중복 여부는 의미 판단이라 규칙으로 풀지 않는다 |
 
 1회 수정 경로: 사람 N 13건 중 수정 후 PASS 9 · BLOCK 4 / 사람 Y 4건 중 PASS 3 · BLOCK 1.
+재측정: 과차단 4/37 → 1/37 (b_d011 만 남음). 대신 조건 교란 full 놓침이 2/22 → 4/22 로 늘었다.
+  - cp_b_q027: 이전에는 b_q027 의 '안에' 오탐(STRENGTHENED)이 교란본도 우연히 막고 있었다. 오탐을 고치자 LLM 의 실제 놓침이 드러남 — 이전 2/22 는 오탐 덕에 좋아 보였던 수치다.
+  - cp_b_q101: 위 인용 필터의 두 번째 기준이 원인 → 제거 (예상 3/22).
 수정 후 PASS 된 설명이 실제로 맞는지 사람이 보는 시트(`b_dev_fix_review_v0.csv`)를 추가했다 — 틀린 수정본이 PASS 하면 '수정 경로의 False Pass' 다.
 
 이 수정들은 모두 개발 셋을 보고 한 것이다. 개발 셋 수치의 개선은 효과의 근거가 아니며, 효과는 B held-out 으로만 주장한다.
@@ -156,7 +159,7 @@ A 의 held-out 규칙을 그대로 따른다.
 ## 재현
 
 ```
-python scripts/62_test_v2_simplify.py            # LLM 없이 68건
+python scripts/62_test_v2_simplify.py            # LLM 없이 69건
 python scripts/63_b_dev_build.py --dry-run
 python scripts/63_b_dev_build.py
 python scripts/65_b_dev_diagnose.py              # 놓친 교란 원인 · Identity · 쉬움 지표

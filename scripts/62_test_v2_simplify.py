@@ -738,6 +738,18 @@ def _():
     assert "CONDITION_DROPPED" in codes(bv), codes(bv)
 
 
+@case("H", "목록 외 조건: claim 전체를 인용했어도 조건이 실제로 빠졌으면 받는다 (cp_b_q101 회귀)")
+def _():
+    src = "단, 미성년자의 경우 법정대리인이 증빙서류를 제출하면 대신 수령할 수 있습니다."
+    claims = [Claim("c2", src, (0, 0))]
+    vers = [_v("c2", Verdict.OK, [ReasonCode.SUPPORTED])]
+    data = {"core": [{"text": "법정대리인이 증빙서류를 내면 대신 외화를 받을 수 있습니다.", "claim_ids": ["c2"]}]}
+    e, _, _ = Simplifier(FakeLLM(simplify=data)).simplify(Q, claims, vers)
+    cond = {"results": [], "extra": [{"source_quote": src, "claim_id": "c2"}]}
+    bv = BackVerifier(FakeLLM(cond=cond), None, KNOWN).verify(e, BVContext.build(claims, vers))
+    assert "CONDITION_DROPPED" in codes(bv), codes(bv)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--verbose", action="store_true")
