@@ -78,14 +78,43 @@ BLOCK 이면 고객용 쉬운 설명은 숨기고, 직원 화면에 OK claim **�
 3. `64_b_dev_eval.py` — 사람 Y 기반에 교란 10종(수치 4 · 상품 · 기관 · 강조어 · 헤지 · 조건 삭제 · CHECK 유입)을 넣고, rules / full 두 구성으로 False Pass·과차단을 본다.
 4. 이 결과로 규칙·프롬프트를 고친다. 개발 셋 수치는 공식 수치로 쓰지 않는다.
 
-### 공식 평가 (다음 단계) — 새 held-out
+### 공식 평가 — B held-out v1 (`scripts/67_b_heldout.py`)
 
-A 의 held-out 규칙을 그대로 따른다.
-- 개발 평가로 규칙을 확정한 뒤, 새 입력으로 쉬운 설명을 만들고 **사람 라벨을 먼저 확정·freeze** 한 다음 역검증을 1회 돌린다.
-- freeze 후 결과를 보고 규칙을 고치면, 그 셋은 더 이상 held-out 이 아니다.
-- 교란 held-out 도 freeze 시점에 생성 시드와 교란 목록을 해시로 고정한다.
-- 1회 수정본은 수정 경로 결과를 모르는 상태에서 사람이 따로 라벨링한다.
-- 입력원(새 질문 생성 또는 held-out v1 의 Y 초안 재사용)은 개발 평가 결과를 본 뒤 정하고, 어느 쪽이든 그 선택과 이유를 이 문서에 남긴다. held-out v1 초안을 쓰더라도 B 라벨(쉬운 설명의 뜻 보존)은 새로 만드는 것이다.
+**셋의 성격**: A held-out v1 에서 사람 라벨이 Y 였던 초안 37건. *A 평가에서는 사용되었지만, B 의 simplifier/back-verifier
+개발·프롬프트 조정·B 라벨링에는 사용되지 않은 task-specific held-out set* 이다. 프로젝트 전체에서 처음 보는 데이터가 아니다.
+B 가 평가하는 대상(쉬운 설명이 OK claim 의 뜻을 보존했는가)과 그 라벨은 이 단계에서 새로 만든다.
+
+**시작 조건**: 개발 셋 수정본 확인(`b_dev_fix_review_v0.csv`)이 모두 Y. 하나라도 N 이면 수정 프롬프트를 고치고 개발 평가를 다시 한다 (67번 generate 가 이 조건을 검사한다).
+
+**순서** (2단계 freeze — 수정본은 1차 역검증 결과에 따라 생기므로, 기반 라벨을 먼저 고정한다)
+1. `generate` — 쉬운 설명(sp-v2)과 조건 교란 생성. 역검증은 돌리지 않는다.
+2. 사람 라벨: `b_heldout_review_v1.csv`(human_faithful) · `b_heldout_condpert_review_v1.csv`(valid). 역검증 결과는 보이지 않는다.
+3. `freeze-base` — 라벨·데이터 해시, 코드·프롬프트 지문, **통과 기준** 기록 → 커밋.
+4. `fixgen` — 1차 역검증(결과 비공개) → NEEDS_FIX 건의 수정본 생성. freeze-base 이후 코드가 바뀌었으면 거부.
+5. 사람 라벨: `b_heldout_fix_review_v1.csv`(fix_ok). 2차 역검증 결과는 보이지 않는다.
+6. `freeze` → 커밋.
+7. `eval` — 단 1회 공식 평가. 두 번째 평가부터, 또는 freeze 이후 코드가 바뀌었으면 `UNOFFICIAL`.
+
+**결과를 본 뒤 B 프롬프트·규칙을 고치면, 이 37건은 그 시점부터 개발 셋이다.** 공식 성능 주장에 다시 쓰지 않는다.
+
+**통과 기준** (freeze 파일에 결과 이전에 기록)
+
+| 기준 | 값 |
+|---|---|
+| 규칙·일반 교란 False Pass | ≤ 0.05 |
+| 조건 교란 False Pass (사람 valid=Y) | ≤ 0.20 |
+| 정상 쉬운 설명 과차단 (사람 Y) | ≤ 0.30 |
+| 수정 후 PASS 의 사람 기준 False Pass | 0건 |
+| 가독성 (주지표) | 의미 보존(사람 Y · 역검증 PASS) 설명의 평균 문장당 어절 < Identity |
+
+가독성 보조 기록: 전체 어절 수, 문장 수, Identity 대비 어절 수 감소율 — 고객 문구 전체(조건 블록 포함)와 핵심 설명만을 따로.
+문장을 잘게 쪼개 문장당 어절만 줄인 경우를 가려내기 위해서다. 가독성은 의미 보존을 통과한 설명에 대해서만 해석한다.
+모든 비율은 **분자/분모(n/N)** 와 Wilson 95% 구간을 함께 적는다.
+
+### backlog — fresh sanity set (선택)
+
+공모전 제출 직전 비용·시간 여유가 있을 때만: 완전히 새로운 질문 10~20건으로 같은 절차(생성 → 블라인드 검수 → freeze → 1회 평가)를
+한 번 더 돌려, 37건 결과가 특정 질문 분포에만 맞은 것이 아닌지 확인한다. 필수 아님.
 
 ## 개발 기록
 
@@ -166,4 +195,5 @@ python scripts/65_b_dev_diagnose.py              # 놓친 교란 원인 · Ident
 python scripts/66_b_cond_perturb.py              # 조건 교란 생성 → 사람 확인
 python scripts/64_b_dev_eval.py --config rules
 python scripts/64_b_dev_eval.py --config full --with-fix
+python scripts/67_b_heldout.py generate | freeze-base | fixgen | freeze | eval
 ```
