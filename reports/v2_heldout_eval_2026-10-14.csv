@@ -1,0 +1,44 @@
+﻿draft_id,label,doc_type,note,cv-v1_final,cv-v1_codes,cv-v2_final,cv-v2_codes
+q001,Y,FAQ,[review:packet],PARTIAL,MISSING_CONDITION,OK,
+q007,Y,FAQ,[review:packet],OK,,OK,
+q011,Y,약관,[review:packet],OK,,OK,
+q012,N,설명서,"CD수익률 산출·공시 주체를 “한국자산평가와 채권전문 평가사”라고 특정한 부분이 의심스럽고, 첨부된 현재 텍스트에는 이를 뒷받침하는 근거가 펼쳐져 있지 않음. 정상 gold로 쓰기에는 위험하다고 판단. [review",OK,,OK,
+q014,N,설명서,"“가입 후 별도 지시가 없으면 곧바로 자동 운용된다”는 흐름과 개별 구성상품 매매 제한·옵트아웃 설명을 하나로 묶었는데, 디폴트옵션의 실제 적용 절차와 시점을 구분하지 않아 과도하게 단순화됨. [review:pack",PARTIAL,MISSING_CONDITION,OK,
+q015,N,설명서,원리금보장상품이 포함된 경우까지 포트폴리오 전체의 “원금 보장은 명시돼 있지 않다”고 처리하는 표현이 불명확함. 구성상품별 원금보장 여부와 포트폴리오 손실 가능성을 구분해야 함. [review:packet],OK,,OK,
+q018,N,약관,"고정금리 산출의 큰 틀과 기준상품은 맞지만, 답변의 “한국금융기관 등”이라는 기관명은 제시 근거에서 완결되게 확인되지 않고 표현도 부정확함. not_found=3인 상태에서 근거 이상으로 구체화됨. [review:p",OK,,OK,
+q019,Y,설명서,[review:packet],OK,,OK,
+q020,Y,설명서,[review:packet],PARTIAL,MISSING_CONDITION,OK,
+q021,N,설명서,"질문은 환율이 하락할 때의 위험인데, 답변 중간부터 “환율 상승 폭에 비례하여 환차손”, “최대 손실 무한대”로 방향을 바꿔 서술함. 한 답변 안에서 위험 방향이 일관되지 않음. [review:packet]",OK,,OK,
+q022,Y,설명서,[review:packet],OK,,PARTIAL,OVERSTATED
+q023,Y,FAQ,[review:packet],OK,,OK,
+q024,Y,설명서,[review:packet],PARTIAL,MISSING_CONDITION,OK,
+q025,N,설명서,가입 시 소득입증서류와 비과세 신청용 별도 제출서류를 한꺼번에 “가입할 때 필요한 서류”처럼 합쳐 안내함. 주민등록등본·가족관계증명서·비과세 신청용 각서 등은 모든 가입자가 공통으로 제출해야 하는 소득증빙이 아님. ,PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+q027,Y,약관,[review:packet],OK,,OK,
+q028,Y,FAQ,[review:packet],OK,,OK,
+q032,Y,설명서,[review:packet],OK,,OK,
+q042,Y,FAQ,[review:packet],OK,,OK,
+q043,N,FAQ,국가간 ATM 서비스(EXK)와 앱 기반 해외 ATM 출금 서비스를 하나의 서비스처럼 합쳐 설명함. 둘은 제시 근거상 별개의 이용 구조임. EXK 6개국 정보와 하나원큐/하나머니 기반 서비스의 일본·라오스·베트남 제,OK,,OK,
+q046,N,약관,일반적인 약관 변경 사전통지와 긴급 변경 절차를 같은 “1개월 전/1개월 이상 통지” 규칙처럼 처리한 부분이 의심됨. 긴급 변경의 효력·게시 규칙은 일반 변경과 구분해서 써야 함. [review:packet],PARTIAL,MISSING_CONDITION,OK,
+q049,Y,설명서,[review:packet],PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+q052,N,설명서,압류·가압류나 피해의심/사기이용계좌의 경우 원문은 “제한될 수 있습니다 / 제한조치를 할 수 있습니다”인데 답변은 세 경우 모두 제한되는 확정 조건처럼 표현함. OVERSTATED 경고가 타당함. [review:pa,CHECK,MISSING_CONDITION|OVERSTATED,CHECK,MISSING_CONDITION|OVERSTATED
+q053,Y,설명서,[review:packet],CHECK,MISSING_CONDITION,CHECK,MISSING_CONDITION
+q054,Y,FAQ,[review:packet],OK,,OK,
+q055,N,설명서,질문은 일반적인 “외화 송금 후 취소·변경”인데 답변은 easy-one 외화송금서비스에 한해서만 성립하는 규정을 일반 답변처럼 제시함. 근거에도 일반 인터넷 해외송금은 ‘조회/변경거래’가 언급돼 있어 상품 범위가 다,OK,,OK,
+q059,N,약관,질문은 중도상환수수료 계산인데 첫 문장의 연 6푼 범위 내 약정금리 × 일수는 중도상환수수료 공식이 아님. 제시된 보금자리론 근거에는 실제로 중도상환원금 × 중도상환수수료율 × [(3년-경과일수)/3년] 공식이 따로,PARTIAL,MISSING_CONDITION,OK,
+q062,Y,설명서,[review:packet],PARTIAL,MISSING_CONDITION,PARTIAL,MISSING_CONDITION
+q064,N,설명서,"“일본은 1회 930,880원 상당액”처럼 환율에 따라 변하는 원화 환산값을 고정 한도로 제시함. 시간에 따라 달라질 수 있는 값을 정답 수치처럼 사용한 것은 정상 gold 답변으로 부적절함. [review:pack",OK,,OK,
+q065,Y,FAQ,[review:packet],PARTIAL,MISSING_CONDITION,OK,
+q067,Y,FAQ,[review:packet],OK,,OK,
+q068,N,약관,저축예금 약관의 사기이용계좌 제한과 다른 상품설명서의 피해의심계좌·송금지연·지급정지 내용을 합쳐서 저축예금 통장 일반 규정처럼 제시함. 서로 다른 근거 범위를 혼합함. [review:packet],PROHIBITED,PRODUCT_MISMATCH,PROHIBITED,PRODUCT_MISMATCH
+q074,Y,FAQ,[review:packet],PARTIAL,TIME_VARIANT,PARTIAL,MISSING_CONDITION|TIME_VARIANT
+q080,Y,설명서,[review:packet],OK,,OK,
+q082,Y,설명서,[review:packet],OK,,OK,
+q083,Y,FAQ,[review:packet],OK,,OK,
+q086,N,약관,근거가 말하는 것은 “부부합산 연소득 7천만원 이하”가 실수요자 요건의 한 요소라는 점임. 이를 곧바로 “7천만원 초과면 보금자리론 자체를 받을 수 없다”로 단정한 것은 근거보다 강한 결론임. [review:pack,PARTIAL,MISSING_CONDITION,OK,
+q087,Y,FAQ,[review:packet],PARTIAL,NO_EVIDENCE,PARTIAL,NO_EVIDENCE
+q088,Y,설명서,[review:packet],OK,,OK,
+q100,Y,설명서,[review:packet],OK,,OK,
+q101,Y,설명서,[review:packet],PARTIAL,OVERSTATED,PARTIAL,OVERSTATED
+q107,Y,약관,[review:packet],OK,,OK,
+q109,N,설명서,"위험등급 수치 3.5~4.2, 4.3~5와 “손실 0~100%”까지 여러 구체 수치를 한꺼번에 단정하고 있는데, 현재 첨부 텍스트에는 이를 확인할 근거가 펼쳐져 있지 않음. 특히 투자성향 등급 숫자 표현이 일반적인 ",PARTIAL,MISSING_CONDITION,OK,
+q110,Y,FAQ,[review:packet],OK,,OK,

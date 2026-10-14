@@ -22,6 +22,10 @@ v1_answer 와 draft_text 를 나란히 보면 되지만, 정답 여부는 근거
     python scripts/55_review_packet.py                     # 리뷰 페이지 생성 후 브라우저로 열기
     python scripts/55_review_packet.py --import "<다운로드한 review_labels.csv 경로>"
 
+    # 다른 시트(예: 58번이 만든 held-out 검수 시트)를 검수할 때. 문체 열이 없는 시트는 --no-style
+    python scripts/55_review_packet.py --sheet data/eval/v2/heldout_review_v0.csv --no-style --scan dev
+    python scripts/55_review_packet.py --sheet data/eval/v2/heldout_review_v0.csv --no-style --import "<경로>"
+
 산출물
 -----
     data/interim/v2_review_packet.html   (하나은행 문서 원문이 들어 있으므로 커밋하지 않는다)
@@ -49,6 +53,7 @@ ANSWERS = PROJECT_ROOT / "data" / "interim" / "g_full_answers.json"
 MISMATCH_REVIEW = PROJECT_ROOT / "data" / "eval" / "mismatch_review.md"
 SCAN_GLOB = "v2_rules_clean_scan_test_*.csv"
 OUT = PROJECT_ROOT / "data" / "interim" / "v2_review_packet.html"
+NO_STYLE = False   # True 면 문체 열을 묻지 않는다 (변환하지 않은 원문 검수)
 OK_STATUSES = {MatchStatus.MATCH, MatchStatus.WITHIN_RANGE}
 
 
@@ -134,12 +139,12 @@ details{margin-top:8px} summary{cursor:pointer;color:var(--mute)} .ev{font-size:
 __CARDS__
 </main>
 <script>
-const KEY="v2_review_labels";let st={};try{st=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){st={}}
+const KEY="__KEY__";const NEED_S=__NEED_S__;let st={};try{st=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){st={}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}prog()}
 function set(id,k,v){st[id]=st[id]||{};st[id][k]=v;save();mark(id)}
-function mark(id){const c=document.getElementById("c_"+id);const s=st[id]||{};c.classList.toggle("done",!!(s.c&&s.s))}
+function mark(id){const c=document.getElementById("c_"+id);const s=st[id]||{};c.classList.toggle("done",!!(s.c&&(s.s||!NEED_S)))}
 function prog(){const ids=[...document.querySelectorAll(".card")].map(c=>c.dataset.id);
- const d=ids.filter(i=>st[i]&&st[i].c&&st[i].s).length;document.getElementById("prog").textContent=d+" / "+ids.length+" 완료"}
+ const d=ids.filter(i=>st[i]&&st[i].c&&(st[i].s||!NEED_S)).length;document.getElementById("prog").textContent=d+" / "+ids.length+" 완료"}
 function exportCsv(){const ids=[...document.querySelectorAll(".card")].map(c=>c.dataset.id);
  const esc=x=>'"'+String(x||"").replace(/"/g,'""')+'"';
  const rows=["draft_id,human_is_correct,human_style_ok,note"].concat(ids.map(i=>{const s=st[i]||{};return [i,s.c||"",s.s||"",esc(s.n)].join(",")}));
@@ -188,12 +193,15 @@ def build() -> int:
 <div class="lab">v1 답변</div><div class="box">{ans_html}</div>
 <div class="lab">구어체 초안</div><div class="box">{draft_html}</div>
 <details{' open' if flags else ''}><summary>근거 원문 {len(evid)}개</summary>{ev_html}</details>
-<div class="q">{radio('c', '정답 여부')}{radio('s', '문체 보존')}</div>
+<div class="q">{radio('c', '정답 여부')}{'' if NO_STYLE else radio('s', '문체 보존')}</div>
 <textarea rows="1" placeholder="메모 (N 이면 이유)" oninput="st['{i}']=st['{i}']||{{}};st['{i}'].n=this.value;save()"></textarea>
 </section>"""))
     cards.sort(key=lambda x: (x[0], x[1]))   # 플래그 있는 문항 먼저
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(PAGE.replace("__CARDS__", "".join(c[2] for c in cards)), encoding="utf-8")
+    page = (PAGE.replace("__CARDS__", "".join(c[2] for c in cards))
+            .replace("__KEY__", "v2_review_labels_" + SHEET.stem)       # 시트마다 따로 저장
+            .replace("__NEED_S__", "false" if NO_STYLE else "true"))
+    OUT.write_text(page, encoding="utf-8")
     n_flag = sum(not c[0] for c in cards)
     print(f"리뷰 페이지 생성: {OUT.relative_to(PROJECT_ROOT)}")
     print(f"  {len(cards)}건 중 우선 확인 {n_flag}건 (위쪽에 정렬)")
@@ -208,6 +216,8 @@ def do_import(path: Path) -> int:
     changed = incomplete = 0
     for r in rows:
         lab = labels.get(r["draft_id"])
+        if NO_STYLE and lab is not None:
+            lab["human_style_ok"] = "NA"
         if not lab or not lab.get("human_is_correct") or not lab.get("human_style_ok"):
             incomplete += 1
             continue
@@ -222,7 +232,7 @@ def do_import(path: Path) -> int:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(rows)
-    yy = sum(r["human_is_correct"] == "Y" and r["human_style_ok"] == "Y" for r in rows)
+    yy = sum(r["human_is_correct"] == "Y" and r["human_style_ok"] in ("Y", "NA") for r in rows)
     n_n = sum("N" in (r["human_is_correct"], r["human_style_ok"]) for r in rows)
     print(f"병합 완료: 값이 바뀐 문항 {changed}건, 미완료 {incomplete}건")
     print(f"  Y/Y {yy}건 · N 포함 {n_n}건 (N 은 52번에서 제외됨)")
@@ -235,7 +245,17 @@ def do_import(path: Path) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--import", dest="imp", type=Path)
+    ap.add_argument("--sheet", type=Path, help="검수할 시트 (기본: clean_drafts_v1.csv)")
+    ap.add_argument("--no-style", action="store_true", help="문체 열을 묻지 않음")
+    ap.add_argument("--scan", choices=["test", "dev"], default="test",
+                    help="우선 확인 플래그에 쓸 51번 사전 점검 결과")
     args = ap.parse_args()
+    global SHEET, OUT, NO_STYLE, SCAN_GLOB
+    if args.sheet:
+        SHEET = args.sheet if args.sheet.is_absolute() else PROJECT_ROOT / args.sheet
+        OUT = PROJECT_ROOT / "data" / "interim" / f"{SHEET.stem}_packet.html"
+    NO_STYLE = args.no_style
+    SCAN_GLOB = f"v2_rules_clean_scan_{args.scan}_*.csv"
     return do_import(args.imp) if args.imp else build()
 
 
