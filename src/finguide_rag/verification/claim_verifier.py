@@ -54,7 +54,13 @@ from .schema import (
     Verification,
 )
 
-PROMPT_VERSION = "cv-v2"   # 기본값. 이전 버전은 ClaimVerifier(prompt_version="cv-v1") 로 재현
+# 기본값은 cv-v1. cv-v2 는 held-out 비교에서 기각했다 (2026-10-14, reports/v2_heldout_eval_2026-10-14.md).
+#   튜닝 셋(자연 오류 8건)   cv-v1 3/8 → cv-v2 4/8 적중      ← 이 셋을 보고 고쳤으므로 낙관적
+#   held-out(오류 15·정상 28)  오류 탐지 cv-v1 8/15 · cv-v2 3/15, 정상 soft 오탐 10/28 · 7/28, hard 0 · 0
+#   결과가 갈린 10건 중 cv-v2 가 맞은 4건은 전부 정상 초안의 오탐 감소, cv-v1 이 맞은 6건 중 5건은
+#   실제 오류 탐지였다. 놓친 오류가 더 비싼 검증기에서 '덜 말하는' 쪽으로 간 변경이므로 되돌린다.
+#   cv-v2 프롬프트는 재현용으로 남긴다 (ClaimVerifier(prompt_version="cv-v2")).
+PROMPT_VERSION = "cv-v1"
 MAX_EVIDENCE_SENTENCES = 60
 
 # ==================================================================
