@@ -13,6 +13,9 @@ claim 판정
        — 근거 문서의 수치는 과거 시점 값이라 '현재 금리' 주장과 비교할 수 없다.
          대신 TIME_VARIANT 자체가 CHECK 를 보장한다.
 
+역검증(쉬운 설명) 판정 — decide_bv_status
+    문제 없음 → PASS / 고칠 수 없는 문제 → BLOCK / 그 외 → NEEDS_FIX 1회 → 재검증 실패 시 BLOCK
+
 최종 판정
     PROHIBITED claim 이 하나라도 있으면           → PROHIBITED
     전부 OK 이고 초안 수준 사유도 없으면          → OK
@@ -222,3 +225,20 @@ def next_bv_status(problems_found: bool, attempts_done: int,
     if attempts_done < max_attempts:
         return BVStatus.NEEDS_FIX
     return BVStatus.BLOCK
+
+
+def decide_bv_status(problems: list, attempts_done: int,
+                     max_attempts: int = MAX_BV_FIX_ATTEMPTS) -> BVStatus:
+    """역검증 문제 목록 → PASS / NEEDS_FIX / BLOCK.
+
+    문제 없음                                → PASS
+    고칠 수 없는 문제(BV_SPECS.fixable=False)가 하나라도 → BLOCK (수정 시도 없음)
+        - 쉬운 설명 생성 실패, 역검증 LLM 실패, 확인 필요 항목 누락(코드 결함)
+        - 검증 자체가 안 된 상태에서 '고쳐 보기'를 하면, 고친 결과도 검증할 수 없다.
+    그 외                                    → next_bv_status (1회 수정 후 재검증, 실패 시 BLOCK)
+    """
+    if not problems:
+        return BVStatus.PASS
+    if any(not p.fixable for p in problems):
+        return BVStatus.BLOCK
+    return next_bv_status(True, attempts_done, max_attempts)

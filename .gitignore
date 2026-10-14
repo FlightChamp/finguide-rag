@@ -123,3 +123,7 @@ measure_rss.ps1
 
 patch_readme.ps1
 update_demo_url.ps1
+
+# v2 review packets and LLM caches (local only)
+data/interim/*_packet.html
+data/interim/v2_*_cache.json

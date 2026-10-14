@@ -31,7 +31,8 @@ from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any
 
-SCHEMA_VERSION = "v2.0-draft3"   # draft3: 초안 수준 범위 코드(MIXED_SCOPE, SCOPE_MISMATCH) 추가
+SCHEMA_VERSION = "v2.0-draft4"   # draft4: 쉬운 설명(Simplifier) 출력과 역검증 문제 코드(BVCode) 추가
+#                                  draft3: 초안 수준 범위 코드(MIXED_SCOPE, SCOPE_MISMATCH) 추가
 
 
 # ==================================================================
@@ -321,15 +322,157 @@ class Verification(_Serializable):
     fix_suggestion: str | None = None
 
 
+# ==================================================================
+# 쉬운 설명(Simplifier) · 역검증(BackVerifier)  — v2-B
+# ==================================================================
+#
+# 원칙 (2026-10-14 확정)
+#   - OK claim 만 쉬운 설명으로 바꾼다.
+#   - CHECK claim 은 '직원 확인 필요' 영역에 원문 그대로 둔다 (LLM 을 거치지 않음).
+#   - PROHIBITED claim 은 고객 안내문 생성 대상에서 뺀다 (직원 화면에만 표시).
+#   - 역검증 PASS 전에는 고객용 쉬운 설명을 노출하지 않는다.
+#   - 자동 수정은 최대 1회. 수정 후 재검증에서도 문제가 있으면 BLOCK.
+#   - B 는 틀린 답을 고치는 장치가 아니다. 검증된 내용을 쉽게 말하고, 뜻이 그대로인지 다시 본다.
+
+
+class BVCode(str, Enum):
+    """역검증 문제 코드. ReasonCode(초안 검증)와 섞지 않는다 — 비교 대상이 다르기 때문이다.
+
+    ReasonCode 는 '초안 claim ↔ 근거 원문', BVCode 는 '쉬운 설명 ↔ OK claim 원문'을 비교한다.
+    """
+
+    NUMERIC_CHANGED = "NUMERIC_CHANGED"        # 값·단위·기간·비교어가 달라짐
+    NUMERIC_ADDED = "NUMERIC_ADDED"            # 원문에 없는 수치
+    NUMERIC_DROPPED = "NUMERIC_DROPPED"        # 원문 수치가 사라짐
+    PRODUCT_ADDED = "PRODUCT_ADDED"            # 원문에 없는 상품명
+    PRODUCT_DROPPED = "PRODUCT_DROPPED"        # 원문 상품명이 사라짐
+    INSTITUTION_ADDED = "INSTITUTION_ADDED"    # 원문·근거에 없는 기관명
+    STRENGTHENED = "STRENGTHENED"              # 강조어 추가 · 상한(최고/최대) 누락
+    HEDGE_LOST = "HEDGE_LOST"                  # '~될 수 있습니다' 등 가능성·한정 표현 소실
+    CONDITION_DROPPED = "CONDITION_DROPPED"    # 조건·예외가 빠짐 (LLM 판단 → 코드 판정)
+    CONDITION_ALTERED = "CONDITION_ALTERED"    # 조건·예외의 뜻이 바뀜 (LLM 판단 → 코드 판정)
+    CONDITION_UNVERIFIED = "CONDITION_UNVERIFIED"  # LLM 이 '보존'이라 했지만 위치를 대지 못함
+    CLAIM_UNCOVERED = "CLAIM_UNCOVERED"        # OK claim 이 쉬운 설명 어디에도 반영되지 않음
+    CHECK_LEAK = "CHECK_LEAK"                  # CHECK claim 내용이 고객 문구에 들어감
+    PROHIBITED_LEAK = "PROHIBITED_LEAK"        # PROHIBITED claim 내용이 고객 문구에 들어감
+    UNKNOWN_SOURCE = "UNKNOWN_SOURCE"          # 문구가 존재하지 않는 claim id 를 근거로 댐
+    LOST_CHECK = "LOST_CHECK"                  # CHECK claim 이 직원 확인 영역에서 사라짐 (코드 결함)
+    SIMPLIFIER_ERROR = "SIMPLIFIER_ERROR"      # 쉬운 설명 생성 실패 · 형식 오류
+    BV_ERROR = "BV_ERROR"                      # 역검증 LLM 응답 실패 · 형식 오류
+
+
+@dataclass(frozen=True)
+class BVSpec:
+    fixable: bool          # True → NEEDS_FIX(1회 수정 기회), False → 즉시 BLOCK
+    source: Source
+    staff_message: str
+
+
+BV_SPECS: dict[BVCode, BVSpec] = {
+    BVCode.NUMERIC_CHANGED: BVSpec(True, _R, "수치·단위·기간·비교어가 원문과 다릅니다."),
+    BVCode.NUMERIC_ADDED: BVSpec(True, _R, "원문에 없는 수치가 들어갔습니다."),
+    BVCode.NUMERIC_DROPPED: BVSpec(True, _R, "원문 수치가 빠졌습니다."),
+    BVCode.PRODUCT_ADDED: BVSpec(True, _R, "원문에 없는 상품명이 들어갔습니다."),
+    BVCode.PRODUCT_DROPPED: BVSpec(True, _R, "원문 상품명이 빠졌습니다."),
+    BVCode.INSTITUTION_ADDED: BVSpec(True, _R, "다른 기관명이 들어갔습니다."),
+    BVCode.STRENGTHENED: BVSpec(True, _R, "원문보다 단정적인 표현입니다."),
+    BVCode.HEDGE_LOST: BVSpec(True, _R, "원문의 가능성·한정 표현이 빠졌습니다."),
+    BVCode.CONDITION_DROPPED: BVSpec(True, _L, "원문의 조건·예외가 빠졌습니다."),
+    BVCode.CONDITION_ALTERED: BVSpec(True, _L, "원문의 조건·예외의 뜻이 바뀌었습니다."),
+    BVCode.CONDITION_UNVERIFIED: BVSpec(True, _S, "조건 보존 여부를 확인하지 못했습니다."),
+    BVCode.CLAIM_UNCOVERED: BVSpec(True, _R, "안내 가능 내용 일부가 쉬운 설명에서 빠졌습니다."),
+    BVCode.CHECK_LEAK: BVSpec(True, _R, "확인 필요 내용이 고객 문구에 들어갔습니다."),
+    BVCode.PROHIBITED_LEAK: BVSpec(True, _R, "안내 금지 내용이 고객 문구에 들어갔습니다."),
+    BVCode.UNKNOWN_SOURCE: BVSpec(True, _R, "근거 claim 을 알 수 없는 문구가 있습니다."),
+    BVCode.LOST_CHECK: BVSpec(False, _S, "확인 필요 항목이 누락되었습니다 (시스템 오류)."),
+    BVCode.SIMPLIFIER_ERROR: BVSpec(False, _S, "쉬운 설명을 만들지 못했습니다."),
+    BVCode.BV_ERROR: BVSpec(False, _S, "역검증을 완료하지 못했습니다."),
+}
+
+
+@dataclass
+class BVProblem(_Serializable):
+    code: BVCode
+    detail: str = ""
+    item_id: str = ""        # 문제가 난 쉬운 설명 문구 id (k1, s2 …). 전체 대상이면 ""
+
+    @property
+    def fixable(self) -> bool:
+        return BV_SPECS[self.code].fixable
+
+
+@dataclass
+class SimpleItem(_Serializable):
+    """고객용 쉬운 설명의 한 문구."""
+
+    item_id: str                     # core: s1, s2 … / conditions: k1 … 와 겹치지 않게 n1, n2 …
+    text: str
+    claim_ids: list[str]             # 이 문구가 옮긴 OK claim id. 비면 출처 불명 → 역검증 문제
+    condition_ids: list[str] = field(default_factory=list)   # 조건 블록 문구가 담은 조건 id
+
+
+@dataclass
+class RequiredCondition(_Serializable):
+    """쉬운 설명이 반드시 보존해야 하는 조건 (OK claim 추출 슬롯 Claim.conditions 에서 옴).
+
+    Simplifier 가 정하지 않는다. 쉬운 설명을 만드는 쪽이 '지켜야 할 목록'을 정하면
+    빠뜨린 것도 목록에서 같이 빠지기 때문이다.
+    """
+
+    cond_id: str                     # k1, k2 …
+    text: str                        # 초안 표기 그대로
+    claim_id: str
+
+
+@dataclass
+class StaffCheckItem(_Serializable):
+    """'직원 확인 필요' 영역. CHECK claim 원문 + 사유. LLM 을 거치지 않는다."""
+
+    claim_id: str
+    text: str
+    reasons: list[str]
+
+
+@dataclass
+class SimplifiedExplanation(_Serializable):
+    """쉬운 설명 3블록 + 제외 목록.
+
+    고객에게 보일 수 있는 것은 core + conditions 뿐이며, 그것도 역검증 PASS 일 때만이다.
+    staff_check · excluded 는 직원 화면 전용이다.
+    """
+
+    core: list[SimpleItem] = field(default_factory=list)          # 핵심 설명 (OK claim 만)
+    conditions: list[SimpleItem] = field(default_factory=list)    # 꼭 확인할 조건·예외
+    staff_check: list[StaffCheckItem] = field(default_factory=list)   # 직원 확인 필요 (CHECK)
+    excluded: list[str] = field(default_factory=list)             # PROHIBITED claim id
+    required_conditions: list[RequiredCondition] = field(default_factory=list)
+    prompt_hash: str = ""
+
+    def customer_items(self) -> list[SimpleItem]:
+        return list(self.core) + list(self.conditions)
+
+    def customer_text(self) -> str:
+        lines = [i.text for i in self.core]
+        if self.conditions:
+            lines.append("꼭 확인하세요")
+            lines += [f"- {i.text}" for i in self.conditions]
+        return "\n".join(lines)
+
+
 @dataclass
 class BackVerification(_Serializable):
     status: BVStatus
+    # 아래 4개는 draft1 부터 있던 요약 필드. problems 에서 채운다 (화면·감사 로그 호환)
     dropped_conditions: list[str] = field(default_factory=list)
     numeric_diff: list[str] = field(default_factory=list)
     strengthened_phrases: list[str] = field(default_factory=list)
     lost_check_items: list[str] = field(default_factory=list)
     revised_text: str | None = None
     attempts: int = 0
+    # draft4
+    problems: list[BVProblem] = field(default_factory=list)
+    condition_results: dict[str, str] = field(default_factory=dict)   # cond_id → PRESERVED|DROPPED|ALTERED|NO_RESULT
+    customer_visible: bool = False   # status == PASS 일 때만 True
 
 
 @dataclass
