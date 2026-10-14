@@ -12,7 +12,8 @@
     정상 기반(사람 Y)        → PASS 가 아니면 과차단         Over-block Rate
     자연 오류(사람 N)        → PASS 면 놓침                 (자연) False Pass
     교란본(사람 Y 기반 × 10종) → PASS 면 놓침                 (교란) False Pass Rate  ← 핵심 안전 지표
-        조건 보존 탐지율   = CONDITION_DROP 교란 중 PASS 아닌 비율
+        조건 보존 탐지율   = 66번 조건 교란(LLM 생성 · 사람 확인 valid=Y) 중 PASS 아닌 비율  ← 주 지표 (10-15 변경)
+                            규칙 교란 CONDITION_DROP 은 라벨 잡음이 커서 참고로만 본다
         수치 보존 탐지율   = NUM_VALUE · NUM_UNIT · NUM_COMPARATOR · BOUND_DROP
         상품 보존 탐지율   = PRODUCT_SWAP
     모든 비율은 1차 역검증(attempts=0) 기준이다. 수정 경로는 따로 센다 (--with-fix).
@@ -79,7 +80,7 @@ SP_CACHE = INTERIM / "v2_simplify_cache.json"
 REPORT_DIR = PROJECT_ROOT / "reports"
 MODEL = "gpt-4.1-mini"
 GROUPS = {"수치": ["NUM_VALUE", "NUM_UNIT", "NUM_COMPARATOR", "BOUND_DROP"], "상품": ["PRODUCT_SWAP"],
-          "조건": ["CONDITION_DROP"]}
+          "조건(규칙 교란·참고)": ["CONDITION_DROP"]}
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> str:
@@ -108,6 +109,56 @@ def rebuild(row: dict):
             for cid, v in row["verdicts"].items()]
     ctx = BVContext.build(claims, vers, row.get("evidence_institutions") or ["하나은행"])
     return claims, vers, ctx, explanation_from_json(row["explanation"])
+
+
+CONDPERT = V2 / "b_dev_condpert_v0.jsonl"
+CONDPERT_REVIEW = V2 / "b_dev_condpert_review_v0.csv"
+
+
+def cond_section(rows, lab, labeled, bv, args, out, detail_rows) -> None:
+    """66번 조건 교란 (LLM 생성 → 사람 확인 valid=Y) — 조건 보존 검사의 주 지표."""
+    if not CONDPERT.exists():
+        out("\n[조건 교란 (66번)] 없음 — 66번을 먼저 실행")
+        return
+    base_by_id = {r["b_id"]: r for r in rows}
+    valid = {}
+    if CONDPERT_REVIEW.exists():
+        valid = {x["cp_id"]: (x.get("valid") or "").strip().upper()
+                 for x in csv.DictReader(CONDPERT_REVIEW.open(encoding="utf-8-sig"))}
+    cps = [json.loads(x) for x in CONDPERT.read_text(encoding="utf-8").splitlines() if x.strip()]
+    confirmed = any(v in ("Y", "N") for v in valid.values())
+    use = [c for c in cps if c["b_id"] in base_by_id
+           and (valid.get(c["cp_id"]) == "Y" if confirmed else True)
+           and (not labeled or lab.get(c["b_id"]) == "Y")]
+    rules_only = BackVerifier(None, bv.matcher, bv.known_products, condition_check=False)
+    res = []
+    for c in use:
+        _, _, ctx, _ = rebuild(base_by_id[c["b_id"]])
+        e = explanation_from_json(c["explanation"])
+        r_full = bv.verify(e, ctx) if bv.condition_check else None
+        r_rule = rules_only.verify(e, ctx)
+        res.append((c, r_full, r_rule))
+        detail_rows.append({"b_id": c["b_id"], "kind": "CONDPERT_" + c["kind"], "label": valid.get(c["cp_id"]) or "-",
+                            "status": (r_full or r_rule).status.value,
+                            "codes": "|".join(sorted({x.code.value for x in (r_full or r_rule).problems})),
+                            "detail": c["cond_text"]})
+    head = "사람 확인 valid=Y" if confirmed else "※ 사람 확인 전 — 전체 교란 (라벨 잡음 포함)"
+    out(f"\n[조건 교란 (66번, LLM 생성) — 조건 보존의 주 지표]  {head}")
+    for kind in ("DROP", "ALTER", None):
+        xs = [x for x in res if kind is None or x[0]["kind"] == kind]
+        name = kind or "전체"
+        miss_rule = [x for x in xs if x[2].status == BVStatus.PASS]
+        line = f"  {name:<6} 규칙만 놓침 {wilson(len(miss_rule), len(xs)):<24}"
+        if args.config == "full":
+            miss_full = [x for x in xs if x[1].status == BVStatus.PASS]
+            llm_only = [x for x in xs if x[2].status == BVStatus.PASS and x[1].status != BVStatus.PASS]
+            line += f" full 놓침 {wilson(len(miss_full), len(xs)):<24} LLM 만 잡은 것 {len(llm_only)}"
+        out(line)
+    if args.config == "full":
+        for c, rf, _ in res:
+            if rf.status == BVStatus.PASS:
+                out(f"    놓침 {c['cp_id']}  '{c['cond_text'][:40]}'  LLM {rf.condition_results.get(c['cond_id'], '-')}"
+                    f" 위치 {rf.condition_where.get(c['cond_id'], [])}")
 
 
 def main() -> int:
@@ -152,8 +203,10 @@ def main() -> int:
         if labeled and lab[r["b_id"]] != "Y":
             continue                         # 교란은 사람이 '정상'이라 한 기반에만 넣는다
         products = [c.product for c in ctx.ok_claims() if c.product]
+        claim_texts = {c.claim_id: c.text for c in claims}
         for t in TYPES:
-            p = perturb(expl, t, seed_of(r["b_id"], t), products=products, known_products=known, matcher=matcher)
+            p = perturb(expl, t, seed_of(r["b_id"], t), products=products, known_products=known, matcher=matcher,
+                        claim_texts=claim_texts)
             if p is None:
                 continue
             pres = bv.verify(p[0], ctx)
@@ -200,9 +253,11 @@ def main() -> int:
         det = [x for x in xs if x[2].status != BVStatus.PASS]
         out(f"  {g} 보존  {wilson(len(det), len(xs))}")
 
+    cond_section(rows, lab, labeled, bv, args, out, detail_rows)
+
     miss_cond = [x for x in pert["CONDITION_DROP"] if x[2].status == BVStatus.PASS]
     if miss_cond:
-        out("\n[조건 삭제 교란 놓침 — 사람 확인 필요: 조건이 다른 문구에 다른 말로 남았을 수 있음]")
+        out("\n[규칙 교란 CONDITION_DROP 놓침 — 참고용 (10-15 진단: 대부분 조건이 핵심 설명에 남은 라벨 잡음)]")
         for b, d, _ in miss_cond:
             out(f"  {b}: {d[:110]}")
 

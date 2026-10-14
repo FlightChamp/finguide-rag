@@ -349,6 +349,8 @@ class BVCode(str, Enum):
     INSTITUTION_ADDED = "INSTITUTION_ADDED"    # 원문·근거에 없는 기관명
     STRENGTHENED = "STRENGTHENED"              # 강조어 추가 · 상한(최고/최대) 누락
     HEDGE_LOST = "HEDGE_LOST"                  # '~될 수 있습니다' 등 가능성·한정 표현 소실
+    HEDGE_ADDED = "HEDGE_ADDED"                # 원문에 없던 가능성 표현 추가 — 확정 사실을 불확실하게 바꿈 (약화)
+    SENTENCE_FRAGMENT = "SENTENCE_FRAGMENT"    # 고객 문구가 완결된 문장이 아님 ('환율이 상승하면')
     CONDITION_DROPPED = "CONDITION_DROPPED"    # 조건·예외가 빠짐 (LLM 판단 → 코드 판정)
     CONDITION_ALTERED = "CONDITION_ALTERED"    # 조건·예외의 뜻이 바뀜 (LLM 판단 → 코드 판정)
     CONDITION_UNVERIFIED = "CONDITION_UNVERIFIED"  # LLM 이 '보존'이라 했지만 위치를 대지 못함
@@ -377,6 +379,10 @@ BV_SPECS: dict[BVCode, BVSpec] = {
     BVCode.INSTITUTION_ADDED: BVSpec(True, _R, "다른 기관명이 들어갔습니다."),
     BVCode.STRENGTHENED: BVSpec(True, _R, "원문보다 단정적인 표현입니다."),
     BVCode.HEDGE_LOST: BVSpec(True, _R, "원문의 가능성·한정 표현이 빠졌습니다."),
+    # 2026-10-15 추가 (64번 진단): 개발 셋 51건 중 최소 3건에서 Simplifier 가 '적용됩니다'를
+    # '적용될 수 있습니다'로 바꿨다. 수수료·제한이 확정인데 '그럴 수도 있다'로 읽히면 고객이 오해한다.
+    BVCode.HEDGE_ADDED: BVSpec(True, _R, "원문에 없는 '~수 있습니다' 표현으로 확정 내용을 약하게 바꿨습니다."),
+    BVCode.SENTENCE_FRAGMENT: BVSpec(True, _R, "완결된 문장이 아닌 문구가 있습니다."),
     BVCode.CONDITION_DROPPED: BVSpec(True, _L, "원문의 조건·예외가 빠졌습니다."),
     BVCode.CONDITION_ALTERED: BVSpec(True, _L, "원문의 조건·예외의 뜻이 바뀌었습니다."),
     BVCode.CONDITION_UNVERIFIED: BVSpec(True, _S, "조건 보존 여부를 확인하지 못했습니다."),
@@ -473,6 +479,7 @@ class BackVerification(_Serializable):
     problems: list[BVProblem] = field(default_factory=list)
     condition_results: dict[str, str] = field(default_factory=dict)   # cond_id → PRESERVED|DROPPED|ALTERED|NO_RESULT
     customer_visible: bool = False   # status == PASS 일 때만 True
+    condition_where: dict[str, list[str]] = field(default_factory=dict)   # cond_id → LLM 이 댄 문구 id (진단용)
 
 
 @dataclass

@@ -18,6 +18,7 @@ LLM 자리에는 가짜 클라이언트를 넣는다. 가짜 조건 검사기는
     D  조건 보존 판정 (LLM 응답 → 코드 판정, fail-closed)
     E  상태 전이 (1회 수정, BLOCK, 노출 여부)
     F  교란 생성기 자체
+    G  2026-10-15 추가 — 64·65번 개발 진단에서 나온 결함 (약화, 외화, 조각 문구, 목록 외 조건, 교란 라벨 잡음)
 
 실행
 ----
@@ -148,6 +149,7 @@ def clean_expl():
 
 
 CTX = BVContext.build(CLAIMS, VERS)
+CLAIM_TEXTS = {c.claim_id: c.text for c in CLAIMS}
 
 
 def rules_bv():
@@ -323,7 +325,8 @@ for _t in RULE_TYPES:
             base = clean_expl()
             made, out = 0, []
             for seed in range(5):
-                r = perturb(base, t, seed, products=["하나의정기예금"], known_products=KNOWN)
+                r = perturb(base, t, seed, products=["하나의정기예금"], known_products=KNOWN,
+                            claim_texts=CLAIM_TEXTS)
                 if r is None:
                     continue
                 made += 1
@@ -442,7 +445,7 @@ def _():
 def _():
     base = {"results": [{"cond_id": "k1", "status": "PRESERVED", "where": ["n1"]},
                         {"cond_id": "k2", "status": "PRESERVED", "where": ["n2"]}]}
-    good = dict(base, extra=[{"source_quote": "만기 전에 해지하면", "claim_id": "c1"}])
+    good = dict(base, extra=[{"source_quote": "경과 후 해지 시", "claim_id": "c2"}])
     bad = dict(base, extra=[{"source_quote": "법인 고객은 제외", "claim_id": "c1"}])
     bv1 = BackVerifier(FakeLLM(cond=good), None, KNOWN).verify(clean_expl(), CTX)
     bv2 = BackVerifier(FakeLLM(cond=bad), None, KNOWN).verify(clean_expl(), CTX)
@@ -550,6 +553,101 @@ def _():
     assert key_token("급여이체 실적이 있는 경우에 한해") == "급여이체"
     assert still_present("가입기간 6개월 이상 경과 후", "6개월 이상 지나면")
     assert not still_present("급여이체 실적이 있는 경우에 한해", "우대금리가 더해집니다")
+
+
+# ---------------- G 개발 진단 반영 (2026-10-15) ----------------
+def _one(claim_text, item_text, conds=None, cond_items=None):
+    claims = [Claim("c1", claim_text, (0, 0), conditions=conds or [])]
+    vers = [_v("c1", Verdict.OK, [ReasonCode.SUPPORTED])]
+    data = {"core": [{"text": item_text, "claim_ids": ["c1"]}], "conditions": cond_items or []}
+    e, gen, _ = Simplifier(FakeLLM(simplify=data)).simplify(Q, claims, vers)
+    assert not gen, gen
+    return rules_bv().verify(e, BVContext.build(claims, vers)), e, claims, vers
+
+
+@case("G", "약화: 원문 '적용됩니다' → '적용될 수 있습니다' 는 HEDGE_ADDED")
+def _():
+    bv, *_ = _one("ERP 연계 시에는 월 300,000원이 적용됩니다.", "ERP를 연계하면 월 300,000원이 적용될 수 있습니다.")
+    assert "HEDGE_ADDED" in codes(bv), codes(bv)
+
+
+@case("G", "원문에 헤지가 있으면 같은 헤지는 HEDGE_ADDED 아님")
+def _():
+    bv, *_ = _one("잔액 조회가 제한될 수 있습니다.", "잔액 조회가 제한될 수 있습니다.")
+    assert bv.status == BVStatus.PASS, codes(bv)
+
+
+@case("G", "능력 표현 '송금할 수 있습니다' 는 약화가 아니다")
+def _():
+    bv, *_ = _one("인터넷뱅킹으로 해외송금이 가능합니다.", "인터넷뱅킹으로 해외송금을 하실 수 있습니다.")
+    assert "HEDGE_ADDED" not in codes(bv), codes(bv)
+
+
+@case("G", "외화: '5만불 이하' → '5만불 미만' 은 NUMERIC_CHANGED")
+def _():
+    bv, *_ = _one("연간 미화 5만불 이하 송금 시 입증서류가 필요 없습니다.",
+                  "1년 동안 미화 5만불 미만을 보낼 때는 입증서류가 필요 없습니다.")
+    assert "NUMERIC_CHANGED" in codes(bv), codes(bv)
+
+
+@case("G", "외화: 금액이 사라지면 NUMERIC_DROPPED, 같으면 PASS")
+def _():
+    bv, *_ = _one("연간 미화 5만불 이하 송금 시 입증서류가 필요 없습니다.", "송금할 때 입증서류가 필요 없습니다.")
+    assert "NUMERIC_DROPPED" in codes(bv), codes(bv)
+    bv2, *_ = _one("연간 미화 5만불 이하 송금 시 입증서류가 필요 없습니다.",
+                   "1년에 미화 5만불 이하를 보낼 때는 입증서류가 필요 없습니다.")
+    assert bv2.status == BVStatus.PASS, codes(bv2)
+
+
+@case("G", "조각 문구 '환율이 상승하면' → SENTENCE_FRAGMENT")
+def _():
+    bv, *_ = _one("환율이 상승하면 평가손실이 발생합니다.", "환율이 오르면 평가손실이 생깁니다.",
+                  conds=["환율이 상승하면"],
+                  cond_items=[{"text": "환율이 상승하면", "claim_ids": ["c1"], "condition_ids": ["k1"]}])
+    assert codes(bv) == ["SENTENCE_FRAGMENT"], codes(bv)
+
+
+@case("G", "목록 외 조건: 쉬운 설명에 그대로 있는 인용 · 60자 넘는 인용은 버린다 (Identity 오탐 b_q019)")
+def _():
+    base = {"results": [{"cond_id": "k1", "status": "PRESERVED", "where": ["n1"]},
+                        {"cond_id": "k2", "status": "PRESERVED", "where": ["n2"]}]}
+    present = dict(base, extra=[{"source_quote": "만기 전에 해지하면", "claim_id": "c1"}])
+    long_q = dict(base, extra=[{"source_quote": CLAIMS[1].text + " " + CLAIMS[2].text, "claim_id": "c2"}])
+    for cond in (present, long_q):
+        bv = BackVerifier(FakeLLM(cond=cond), None, KNOWN).verify(clean_expl(), CTX)
+        assert bv.status == BVStatus.PASS and bv.condition_results.get("extra1") == "REJECTED", codes(bv)
+
+
+@case("G", "Identity baseline (원문 그대로) 은 PASS")
+def _():
+    e = clean_expl()
+    e.core = [SimpleItem(f"s{i}", c.text, [c.claim_id]) for i, c in enumerate(CLAIMS[:3], 1)]
+    e.conditions = [SimpleItem(f"n{i}", k.text + "에 적용됩니다.", [k.claim_id], [k.cond_id])
+                    for i, k in enumerate(e.required_conditions, 1)]
+    bv = BackVerifier(FakeLLM(), None, KNOWN).verify(e, CTX)
+    assert bv.status == BVStatus.PASS, codes(bv) + [p.detail for p in bv.problems]
+
+
+@case("G", "헤지 삭제 교란은 원문에 헤지가 있을 때만 (덧붙인 헤지를 지우면 원문 뜻으로 돌아감)")
+def _():
+    e = clean_expl()
+    e.core[0].text = "하나의정기예금은 만기 전에 해지하면 중도해지이율이 적용될 수 있습니다."   # c1 원문은 확정
+    e.core[1].text = "가입하고 6개월 이상 지난 뒤 해지하면 기본이율의 최고 50%가 적용됩니다."   # c2 헤지 제거
+    assert perturb(e, "HEDGE_DROP", 0, claim_texts=CLAIM_TEXTS) is None
+
+
+@case("G", "강조어 교란: 원문에 '해야'가 있으면 '반드시'는 만들지 않고, 서술어 덩어리를 쪼개지 않는다")
+def _():
+    claims = {"c1": "영업점을 방문하여 처리해야 합니다."}
+    e = clean_expl()
+    e.core = [SimpleItem("s1", "영업점에 방문해서 처리해야 합니다.", ["c1"])]
+    e.conditions = []
+    for seed in range(8):
+        r = perturb(e, "INTENSIFIER", seed, claim_texts=claims)
+        assert r is not None
+        t = r[0].core[0].text
+        assert "반드시" not in t, t
+        assert "처리해야 합니다" in t, t
 
 
 def main() -> int:

@@ -36,16 +36,29 @@ from .schema import (
     Verification,
 )
 
-SIMPLIFY_PROMPT_VERSION = "sp-v1"
+# 기본값 sp-v2 (2026-10-15). sp-v1 은 재현용으로 남긴다.
+#   sp-v1 개발 셋 51건 진단(65번):
+#     - 확정 표현을 '~될 수 있습니다'로 약화한 문장 최소 3건 (b_d016, b_d019, b_q065)
+#     - 조건 블록에 '환율이 상승하면', '개인사업자' 같은 조각 문구
+#     - 문장당 어절 10.54 로 원문 그대로(Identity) 9.52 보다 오히려 길었다 — 쉬워지지 않았다
+#   → 약화 금지, 조건 문구는 완결 문장, 짧은 문장(한 문장 한 사실)을 명시
+#   이 수정은 개발 셋을 보고 한 것이다. 효과는 B held-out 으로만 주장한다.
+SIMPLIFY_PROMPT_VERSION = "sp-v2"
 
-SIMPLIFY_SYSTEM = """너는 은행 직원이 확인을 마친 상담 내용을 고객이 이해하기 쉬운 말로 옮기는 작성자다.
+_COMMON_HEAD = """너는 은행 직원이 확인을 마친 상담 내용을 고객이 이해하기 쉬운 말로 옮기는 작성자다.
 [안내 가능 내용]의 문장들은 근거 문서와 대조가 끝난 것이다. 뜻을 바꾸지 말고 쉬운 말로만 옮긴다.
 
 반드시 지킬 것
 1. 새 정보를 더하지 마라. 입력에 없는 수치·상품·기관·조건·예시·권유·인사말을 쓰지 마라.
 2. 수치는 입력 표기 그대로 쓴다. 값, 단위(%, %p, 원, 개월, 일, 영업일 등), '연/월',
    '이상/초과/이하/미만/이내/까지/부터', '최고/최대/최저/최소/기본/우대'를 바꾸거나 빼지 마라.
-3. 상품명·서비스명·기관명은 입력 표기 그대로 쓴다. 다른 기관명을 쓰지 마라.
+3. 상품명·서비스명·기관명은 입력 표기 그대로 쓴다. 다른 기관명을 쓰지 마라."""
+
+_OUTPUT = """출력은 JSON 하나:
+{"core": [{"text": "...", "claim_ids": ["c1"]}],
+ "conditions": [{"text": "...", "claim_ids": ["c1"], "condition_ids": ["k1"]}]}"""
+
+SIMPLIFY_SYSTEM_V1 = _COMMON_HEAD + """
 4. 원문보다 단정적으로 말하지 마라. '~될 수 있습니다', '~에 한해', '원칙적으로' 같은 표현은 유지한다.
    '반드시·항상·무조건·누구나·언제든지' 같은 강조어를 새로 넣지 마라.
 5. [지켜야 할 조건]의 조건은 하나도 빠짐없이 conditions 블록에 쉬운 말로 담는다.
@@ -57,22 +70,49 @@ SIMPLIFY_SYSTEM = """너는 은행 직원이 확인을 마친 상담 내용을 �
    conditions 문구에는 담은 조건 id 를 condition_ids 로 단다.
 9. 모든 claim 을 core 에 한 번 이상 반영한다.
 
-출력은 JSON 하나:
-{"core": [{"text": "...", "claim_ids": ["c1"]}],
- "conditions": [{"text": "...", "claim_ids": ["c1"], "condition_ids": ["k1"]}]}"""
+""" + _OUTPUT
+
+SIMPLIFY_SYSTEM_V2 = _COMMON_HEAD + """
+4. 원문과 같은 강도로 말한다.
+   - 더 세게 말하지 마라: '반드시·항상·무조건·누구나·언제든지' 같은 강조어를 새로 넣지 마라.
+   - 더 약하게 말하지도 마라: 원문이 '~됩니다', '~해야 합니다'처럼 확정이면 '~될 수 있습니다'로 바꾸지 마라.
+     원문에 '~될 수 있습니다', '~에 한해', '원칙적으로'가 있으면 그대로 유지한다.
+5. [지켜야 할 조건]의 조건은 하나도 빠짐없이 conditions 블록에 담는다. 핵심 설명에 이미 있어도 다시 쓴다.
+   조건 문구는 그 조건이 무엇에 적용되는지 알 수 있는 완결된 문장으로 쓴다.
+   예: '환율이 오르면 평가손실이 생깁니다.' (조각 '환율이 상승하면'은 안 된다)
+   조건의 범위를 넓히거나 좁히지 마라. 조건 목록이 '(없음)'이면 conditions 는 [] 로 둔다.
+6. 짧게 쓴다. 한 문장에는 한 가지 사실만 담고, 한 문장이 15어절을 넘지 않게 한다.
+   원문 문장이 길면 두세 문장으로 나눠도 된다(나눈 문장은 같은 claim_ids 를 단다).
+7. 어려운 용어는 쉬운 말로 풀고 원래 용어를 괄호로 남긴다.
+   예: 만기 전에 해지할 때 적용되는 이율(중도해지이율)
+8. 존댓말(~습니다/~입니다)로 쓴다. 모든 문구는 '~다.'로 끝나는 완결된 문장이다.
+9. 각 문구에 그 문구가 옮긴 claim id 를 claim_ids 로 단다.
+   conditions 문구에는 담은 조건 id 를 condition_ids 로 단다.
+10. 모든 claim 을 core 에 한 번 이상 반영한다.
+
+""" + _OUTPUT
 
 SIMPLIFY_USER = "고객 질문:\n{question}\n\n[안내 가능 내용]\n{claims}\n\n[지켜야 할 조건]\n{conditions}"
 
-FIX_SYSTEM = SIMPLIFY_SYSTEM + """
+_FIX_TAIL = """
 
 이번에는 이전 결과를 고친다. [발견된 문제]를 모두 해소하고, 문제가 없는 문구는 그대로 둔다.
 문제를 고치려고 새 정보를 더하지 마라. 원문 표현으로 되돌리는 것이 가장 안전하다."""
 
 FIX_USER = SIMPLIFY_USER + "\n\n[이전 결과]\n{previous}\n\n[발견된 문제]\n{problems}"
 
+# version → (simplify_system, fix_system)
+PROMPTS = {
+    "sp-v1": (SIMPLIFY_SYSTEM_V1, SIMPLIFY_SYSTEM_V1 + _FIX_TAIL),
+    "sp-v2": (SIMPLIFY_SYSTEM_V2, SIMPLIFY_SYSTEM_V2 + _FIX_TAIL),
+}
+# 하위 호환 (테스트·다른 스크립트가 이 이름을 쓴다): 기본 버전의 프롬프트
+SIMPLIFY_SYSTEM, FIX_SYSTEM = PROMPTS[SIMPLIFY_PROMPT_VERSION]
+
 
 def simplify_prompt_hash(version: str = SIMPLIFY_PROMPT_VERSION) -> str:
-    raw = "|".join([version, SIMPLIFY_SYSTEM, SIMPLIFY_USER, FIX_SYSTEM, FIX_USER])
+    sys_p, fix_p = PROMPTS[version]
+    raw = "|".join([version, sys_p, SIMPLIFY_USER, fix_p, FIX_USER])
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:12]
 
 
@@ -151,8 +191,11 @@ def parse_items(data, cond_ids: set[str]) -> tuple[list[SimpleItem], list[Simple
 class Simplifier:
     def __init__(self, llm, version: str = SIMPLIFY_PROMPT_VERSION):
         """llm: claim_verifier.CachedLLM (디스크 캐시 → 같은 입력이면 같은 출력)."""
+        if version not in PROMPTS:
+            raise ValueError(f"알 수 없는 Simplifier 프롬프트: {version}")
         self.llm = llm
         self.version = version
+        self.system, self.fix_system = PROMPTS[version]
         self.tag = f"{version}:{simplify_prompt_hash(version)}"
 
     # ---------- 입력 구성 ----------
@@ -183,7 +226,7 @@ class Simplifier:
             return expl, [], ok
         user = SIMPLIFY_USER.format(question=question, claims=self._claims_block(ok),
                                     conditions=self._conds_block(expl.required_conditions))
-        data = self.llm.json(SIMPLIFY_SYSTEM, user, max_tokens=1500, tag=self.tag)
+        data = self.llm.json(self.system, user, max_tokens=1500, tag=self.tag)
         return self._fill(expl, data, ok)
 
     def fix(self, question: str, previous: SimplifiedExplanation, ok_claims: list[Claim],
@@ -198,7 +241,7 @@ class Simplifier:
         user = FIX_USER.format(question=question, claims=self._claims_block(ok_claims),
                                conditions=self._conds_block(previous.required_conditions),
                                previous=prev_json, problems=probs)
-        data = self.llm.json(FIX_SYSTEM, user, max_tokens=1500, tag=self.tag + ":fix")
+        data = self.llm.json(self.fix_system, user, max_tokens=1500, tag=self.tag + ":fix")
         expl = SimplifiedExplanation(staff_check=previous.staff_check, excluded=previous.excluded,
                                      required_conditions=previous.required_conditions,
                                      prompt_hash=self.tag + ":fix")
@@ -214,5 +257,5 @@ class Simplifier:
         return expl, [], ok
 
 
-__all__ = ["Simplifier", "SIMPLIFY_PROMPT_VERSION", "simplify_prompt_hash", "partition",
+__all__ = ["Simplifier", "SIMPLIFY_PROMPT_VERSION", "PROMPTS", "simplify_prompt_hash", "partition",
            "required_conditions", "parse_items"]

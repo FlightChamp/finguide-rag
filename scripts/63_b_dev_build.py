@@ -4,7 +4,8 @@
 ----------------------------------------
     정상 초안 25건 (clean_drafts_v1, Y)  +  개발 43건 중 사람=Y
     → ClaimVerifier(cv-v1) 결과는 LLM 캐시에서 읽는다 (54·58·59번을 돌렸다면 API 0콜)
-    → OK claim 이 1개 이상인 초안만 Simplifier(sp-v1) 로 쉬운 설명을 만든다 (초안당 1콜, 캐시)
+    → OK claim 이 1개 이상인 초안만 Simplifier(기본 sp-v2) 로 쉬운 설명을 만든다 (초안당 1콜, 캐시)
+      sp-v1 결과를 다시 보려면 --prompt sp-v1 (캐시에 있으면 0콜)
 
 이 단계는 역검증을 돌리지 않는다. 검수할 때 역검증 결과를 보지 않게 하기 위해서다.
 
@@ -18,7 +19,8 @@
         X  판단 불가
     를 적는다. memo 는 자유. 읽기 편한 화면: data/interim/b_dev_review_packet.html
     (하나은행 원문 문장이 들어 있으므로 커밋하지 않는다 — .gitignore 에 추가됨)
-    다시 실행해도 이미 적은 라벨은 보존된다.
+    다시 실행해도 이미 적은 라벨은 보존된다. 단, 쉬운 설명 문장이 바뀐 행(프롬프트 변경 등)은
+    text_sha 가 달라지므로 라벨을 지운다 — 예전 문장에 대한 판단을 새 문장에 붙이지 않기 위해서다.
 
 실행
 ----
@@ -36,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import html
 import json
 import sys
@@ -49,7 +52,12 @@ from finguide_rag.generation.product_match import ProductMatcher  # noqa: E402
 from finguide_rag.verification.back_verify import explanation_from_json  # noqa: E402
 from finguide_rag.verification.claim_verifier import CachedLLM, ClaimVerifier, EvidenceChunk  # noqa: E402
 from finguide_rag.verification.schema import Verdict  # noqa: E402
-from finguide_rag.verification.simplify import Simplifier, partition  # noqa: E402
+from finguide_rag.verification.simplify import (  # noqa: E402
+    PROMPTS,
+    SIMPLIFY_PROMPT_VERSION,
+    Simplifier,
+    partition,
+)
 
 V2 = PROJECT_ROOT / "data" / "eval" / "v2"
 INTERIM = PROJECT_ROOT / "data" / "interim"
@@ -62,7 +70,7 @@ REVIEW = V2 / "b_dev_review_v0.csv"
 PACKET = INTERIM / "b_dev_review_packet.html"
 MODEL = "gpt-4.1-mini"
 REVIEW_FIELDS = ["b_id", "group", "question", "ok_claims", "required_conditions", "staff_check",
-                 "customer_text", "human_faithful", "reasons", "memo"]
+                 "customer_text", "prompt", "text_sha", "human_faithful", "reasons", "memo"]
 
 
 def read_csv(p: Path) -> list[dict]:
@@ -91,6 +99,8 @@ def openai_client():
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="API 호출 없이 대상 수와 캐시 상태만")
+    ap.add_argument("--prompt", default=SIMPLIFY_PROMPT_VERSION, choices=sorted(PROMPTS),
+                    help="Simplifier 프롬프트 버전 (기본 sp-v2)")
     args = ap.parse_args()
 
     answers = json.loads(ANSWERS.read_text(encoding="utf-8"))
@@ -99,7 +109,7 @@ def main() -> int:
     cv = ClaimVerifier(CachedLLM(None, MODEL, CV_CACHE), matcher, known_products=known,
                        prompt_version="cv-v1")                       # 검증은 캐시만
     sp_llm = CachedLLM(None if args.dry_run else openai_client(), MODEL, SP_CACHE)
-    simplifier = Simplifier(sp_llm)
+    simplifier = Simplifier(sp_llm, version=args.prompt)
 
     rows, skipped_cache, skipped_no_ok, failed = [], [], [], []
     for it in dev_items():
@@ -125,6 +135,7 @@ def main() -> int:
             "evidence_institutions": inst,
             "explanation": expl.to_dict(),
             "generation_error": gen[0].detail if gen else "",
+            "prompt": args.prompt,
         })
 
     print("=" * 70)
@@ -149,20 +160,25 @@ def main() -> int:
 
     BASE.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n", encoding="utf-8")
     prev = {r["b_id"]: r for r in read_csv(REVIEW)} if REVIEW.exists() else {}
-    out = []
+    out, relabel = [], []
     for r in rows:
         e = r["explanation"]
         ok_ids = [k for k, v in r["verdicts"].items() if v == "OK"]
         cmap = {c["claim_id"]: c["text"] for c in r["claims"]}
         ex = explanation_from_json(e)
+        ctext = ex.customer_text() if not r["generation_error"] else f"(생성 실패: {r['generation_error']})"
+        sha = hashlib.sha256(ctext.encode("utf-8")).hexdigest()[:10]
         old = prev.get(r["b_id"], {})
+        if old and old.get("text_sha") != sha:
+            relabel.append(r["b_id"])
+            old = {}          # 쉬운 설명 문장이 바뀌었으면 예전 라벨은 이 문장에 대한 판단이 아니다
         out.append({
             "b_id": r["b_id"], "group": r["group"], "question": r["question"],
             "ok_claims": "\n".join(f"{k}: {cmap[k]}" for k in ok_ids),
             "required_conditions": "\n".join(f"{k['cond_id']} ({k['claim_id']}): {k['text']}"
                                              for k in e["required_conditions"]),
             "staff_check": "\n".join(f"{s['claim_id']}: {s['text']}" for s in e["staff_check"]),
-            "customer_text": ex.customer_text() if not r["generation_error"] else f"(생성 실패: {r['generation_error']})",
+            "customer_text": ctext, "prompt": args.prompt, "text_sha": sha,
             "human_faithful": old.get("human_faithful", ""), "reasons": old.get("reasons", ""),
             "memo": old.get("memo", ""),
         })
@@ -174,6 +190,8 @@ def main() -> int:
     done = sum(1 for r in out if r["human_faithful"] in ("Y", "N", "X"))
     print(f"\n→ {BASE.relative_to(PROJECT_ROOT)}")
     print(f"→ {REVIEW.relative_to(PROJECT_ROOT)}   (검수 {done}/{len(out)})")
+    if relabel:
+        print(f"  ※ 문장이 바뀌어 라벨을 지운 행 {len(relabel)}건: {relabel[:6]}")
     print(f"→ {PACKET.relative_to(PROJECT_ROOT)}   (읽기용 · 커밋 금지)")
     return 0
 

@@ -13,6 +13,9 @@
         기관 보존       원문·근거에 없는 기관명 추가 (rules.detect_institutions 재사용)
         단정 강화       강조어 추가 (rules 와 같은 강조어·동의어 표) / 가능성·한정 표현 소실
         구조            출처 claim id 검사, CHECK·PROHIBITED 내용 유입, OK claim 누락, 직원 확인 항목 누락
+        약화 (10-15)    원문에 없는 '~될 수 있습니다' 추가 → HEDGE_ADDED
+        외화 (10-15)    '미화 5만불 이하' 같은 외화 금액 (A 의 수치 규칙은 원화만 봄)
+        형식 (10-15)    완결 문장이 아닌 고객 문구 → SENTENCE_FRAGMENT
     LLM 판단 + 코드 판정
         조건·예외 보존  조건 목록(RequiredCondition)마다 PRESERVED / DROPPED / ALTERED 를 LLM 이 고르고
                         '어느 문구에 있는지(where)'를 문구 id 로 대게 한다. 판정은 코드가 한다.
@@ -76,6 +79,57 @@ _NUM_CODE = {
 _LIMIT_LENIENT = re.compile(r"에\s*한(하|해|함|하여)|경우에만|경우만|에만|만\s*해당|한정|해당하는|대상")
 _LEAK_MIN, _LEAK_MARGIN = 0.6, 0.25
 
+# 외화 금액 — numeric.extract_numerics 는 '원'만 금액으로 본다. '미화 5만불 이하'가 빠지던 문제(64번 b_q110)를
+# B 안에서만 보완한다. A(claim 검증)의 수치 규칙은 baseline 동결 상태라 건드리지 않는다.
+_FX_CUR = {"달러": "USD", "불": "USD", "USD": "USD", "US$": "USD", "엔": "JPY", "JPY": "JPY",
+           "위안": "CNY", "CNY": "CNY", "유로": "EUR", "EUR": "EUR", "파운드": "GBP", "GBP": "GBP"}
+_FX_MULT = {"억": 1e8, "천만": 1e7, "백만": 1e6, "만": 1e4, "천": 1e3, None: 1}
+_FX_CMPW = r"(이상|이하|초과|미만|이내|까지|부터|넘는|넘게|넘으면|넘을)"
+_FX_TAIL = r"(?:\s*상당액?)?(?:을|를|가|이(?!상|하|내))?\s*" + _FX_CMPW + "?"
+# 통화 뒤는 끝·비한글이거나 조사/비교어여야 한다 ('5만불가능' 같은 오인 방지)
+_FX_AFTER = r"(?=$|[^가-힣A-Za-z]|을|를|이|가|은|는|의|에|로|까지|부터|상당|미만|초과|넘)"
+_FX_RE = re.compile(
+    r"(?<![\d.,])(\d[\d,]*(?:\.\d+)?)\s*(억|천만|백만|만|천)?\s*(US\$|달러|불|USD|엔|JPY|위안|CNY|유로|EUR|파운드|GBP)"
+    + _FX_AFTER + _FX_TAIL)
+_FX_PREFIX_RE = re.compile(      # 'USD 100 이상' 처럼 통화가 앞에 오는 표기
+    r"(US\$|USD|JPY|CNY|EUR|GBP)\s*(\d[\d,]*(?:\.\d+)?)\s*(억|천만|백만|만|천)?" + _FX_TAIL)
+_FX_CMP = {"이상": ">=", "부터": ">=", "초과": ">", "넘는": ">", "넘게": ">", "넘으면": ">", "넘을": ">",
+           "이하": "<=", "이내": "<=", "까지": "<=", "미만": "<"}
+
+
+def extract_fx(text: str) -> list[tuple[float, str, str | None, str]]:
+    """(값, 통화, 비교어, 원문) 목록. 예: '미화 5만불 이하' → (50000, 'USD', '<=', '5만불 이하')."""
+    out = []
+    for m in _FX_RE.finditer(text):
+        try:
+            v = float(m.group(1).replace(",", "")) * _FX_MULT[m.group(2)]
+        except ValueError:
+            continue
+        out.append((v, _FX_CUR[m.group(3)], _FX_CMP.get(m.group(4) or ""), m.group(0).strip()))
+    for m in _FX_PREFIX_RE.finditer(text):
+        try:
+            v = float(m.group(2).replace(",", "")) * _FX_MULT[m.group(3)]
+        except ValueError:
+            continue
+        out.append((v, _FX_CUR[m.group(1)], _FX_CMP.get(m.group(4) or ""), m.group(0).strip()))
+    return out
+
+
+# 원문의 기간어를 숫자로 풀어 쓴 경우: '연간' → '1년에', '매월' → '한 달에'(한글 숫자는 추출 안 됨)
+_PERIOD_EQUIV = {(12.0, "개월"): re.compile(r"연간|매년|년간|해마다|1년"),
+                 (1.0, "개월"): re.compile(r"매월|월간|매달|1개월"),
+                 (7.0, "일"): re.compile(r"매주|주간|1주")}
+
+
+def _period_word_equiv(slot, source_text: str) -> bool:
+    pat = _PERIOD_EQUIV.get((float(slot.value), slot.unit))
+    return bool(pat and not slot.is_range and slot.comparator is None and pat.search(source_text))
+
+
+_SENT_END = re.compile(r"(다|요)[.!]?[\s\)\]\"']*$")
+_HEDGE_POSSIBILITY = HEDGE_GROUPS["가능성"]
+_EXTRA_MAX_LEN = 60   # 목록 외 조건 인용 최대 길이 (공백 제외). 그보다 길면 조건이 아니라 claim 전체를 인용한 것
+
 
 def bv_prompt_hash(version: str = BV_PROMPT_VERSION) -> str:
     return hashlib.sha256("|".join([version, COND_SYSTEM, COND_USER]).encode("utf-8")).hexdigest()[:12]
@@ -130,6 +184,7 @@ class BackVerifier:
         self.known_products = list(known_products or [])
         self.condition_check = condition_check
         self.tag = f"{BV_PROMPT_VERSION}:{bv_prompt_hash()}"
+        self.last_where: dict[str, list[str]] = {}
 
     # ==============================================================
     # 결정적 규칙
@@ -155,12 +210,38 @@ class BackVerifier:
                     continue
                 if compare_slot(s, src_all_slots)[0] in _NUMERIC_OK:
                     continue   # 다른 OK claim 의 수치를 옮긴 것 — 인용 id 만 어긋남
+                if st == MatchStatus.NOT_FOUND and _period_word_equiv(s, src_all):
+                    continue   # '연간' → '1년에' 같은 기간어 풀어쓰기
                 out.append(BVProblem(_NUM_CODE.get(st, BVCode.NUMERIC_CHANGED),
                                      f"{st.value}: {det}", it.item_id))
         for s in src_all_slots:
             st, det = compare_slot(s, cust_slots)
             if st in (MatchStatus.NOT_FOUND, MatchStatus.VALUE_MISMATCH):
                 out.append(BVProblem(BVCode.NUMERIC_DROPPED, f"원문 '{s.raw}' 이(가) 쉬운 설명에 없음"))
+        out += self.check_fx(expl, ctx)
+        return out
+
+    def check_fx(self, expl: SimplifiedExplanation, ctx: BVContext) -> list[BVProblem]:
+        """외화 금액: 값·통화·비교어가 원문과 같은가."""
+        out: list[BVProblem] = []
+        src = extract_fx("\n".join(c.text for c in ctx.ok_claims()))
+        cust_all = []
+        for it in expl.customer_items():
+            for v, cur, cmp_, raw in extract_fx(it.text):
+                cust_all.append((v, cur))
+                if any(v == sv and cur == sc and cmp_ == scm for sv, sc, scm, _ in src):
+                    continue
+                same_val = [r for sv, sc, scm, r in src if v == sv and cur == sc]
+                if same_val:
+                    out.append(BVProblem(BVCode.NUMERIC_CHANGED, f"외화 비교어: '{raw}' ↔ 원문 {same_val}", it.item_id))
+                elif any(cur == sc for _, sc, _, _ in src):
+                    out.append(BVProblem(BVCode.NUMERIC_CHANGED, f"외화 금액: '{raw}' ↔ 원문 "
+                                         f"{[r for _, sc, _, r in src if sc == cur]}", it.item_id))
+                else:
+                    out.append(BVProblem(BVCode.NUMERIC_ADDED, f"원문에 없는 외화 금액 '{raw}'", it.item_id))
+        for sv, sc, _, raw in src:
+            if (sv, sc) not in cust_all:
+                out.append(BVProblem(BVCode.NUMERIC_DROPPED, f"원문 외화 금액 '{raw}' 이(가) 쉬운 설명에 없음"))
         return out
 
     def _informative(self, name: str) -> bool:
@@ -207,9 +288,15 @@ class BackVerifier:
     def check_assertiveness(self, expl: SimplifiedExplanation, ctx: BVContext) -> list[BVProblem]:
         out: list[BVProblem] = []
         for it in expl.customer_items():
-            added = _added_intensifiers(it.text, self._source_text(it, ctx))
+            src = self._source_text(it, ctx)
+            added = _added_intensifiers(it.text, src)
             if added:
                 out.append(BVProblem(BVCode.STRENGTHENED, f"원문에 없는 강조어 {added}", it.item_id))
+            # 약화: 문구에는 가능성 헤지(사건 동사 기준, 엄격)가 있는데 출처 원문에는 어떤 '수 있'도 없음
+            m = _HEDGE_POSSIBILITY.search(it.text)
+            if m and not (_HEDGE_POSSIBILITY.search(src) or _CLAIM_ANY_POSSIBILITY.search(src)):
+                out.append(BVProblem(BVCode.HEDGE_ADDED, f"원문에 없는 '{m.group(0)}' (원문은 확정 표현)",
+                                     it.item_id))
         # 헤지는 claim 단위로 본다: 한 claim 을 두 문구로 나눴을 때 한쪽에만 헤지가 있어도 정상이다.
         for c in ctx.ok_claims():
             groups = _hedges(c.text)
@@ -269,8 +356,13 @@ class BackVerifier:
                 out.append(BVProblem(BVCode.LOST_CHECK, f"안내 금지 claim {cid} 가 제외 목록에 없음"))
         return out
 
+    def check_format(self, expl: SimplifiedExplanation, ctx: BVContext) -> list[BVProblem]:
+        """고객 문구는 완결된 문장이어야 한다 ('환율이 상승하면' 같은 조각 금지)."""
+        return [BVProblem(BVCode.SENTENCE_FRAGMENT, f"'{it.text[:40]}'", it.item_id)
+                for it in expl.customer_items() if not _SENT_END.search(it.text.strip())]
+
     def check_rules(self, expl: SimplifiedExplanation, ctx: BVContext) -> list[BVProblem]:
-        return (self.check_structure(expl, ctx) + self.check_numeric(expl, ctx)
+        return (self.check_structure(expl, ctx) + self.check_format(expl, ctx) + self.check_numeric(expl, ctx)
                 + self.check_product(expl, ctx) + self.check_institution(expl, ctx)
                 + self.check_assertiveness(expl, ctx))
 
@@ -280,6 +372,8 @@ class BackVerifier:
 
     def check_conditions(self, expl: SimplifiedExplanation, ctx: BVContext
                          ) -> tuple[list[BVProblem], dict[str, str]]:
+        """조건마다 PRESERVED/DROPPED/ALTERED. LLM 이 댄 위치는 self.last_where 에 남긴다 (진단용)."""
+        self.last_where: dict[str, list[str]] = {}
         conds = expl.required_conditions
         claims_txt = "\n".join(f"{c.claim_id}: {c.text}" for c in ctx.ok_claims())
         conds_txt = "\n".join(f"{k.cond_id} ({k.claim_id}): {k.text}" for k in conds) or "(없음)"
@@ -303,6 +397,7 @@ class BackVerifier:
             st = str(r.get("status", "")).strip().upper()
             where = [str(w) for w in (r.get("where") or []) if str(w) in item_ids]
             results[k.cond_id] = st if st in ("PRESERVED", "DROPPED", "ALTERED") else "INVALID"
+            self.last_where[k.cond_id] = where
             if st == "PRESERVED" and where:
                 continue
             if st == "PRESERVED":
@@ -317,11 +412,18 @@ class BackVerifier:
                 problems.append(BVProblem(BVCode.CONDITION_UNVERIFIED, f"{k.cond_id} 상태값 '{st}'"))
 
         # 목록 밖 조건: 원문 claim 에 실제로 있는 표현일 때만 받는다 (LLM 이 지어낸 조건은 버린다)
+        # 다음 인용은 버린다 (Identity baseline 에서 b_q019 가 claim 전체를 '빠진 조건'으로 인용해 오탐):
+        #   - 쉬운 설명에 글자 그대로 있는 인용 (빠졌다는 말과 모순)
+        #   - 60자(공백 제외)를 넘는 인용 (조건이 아니라 문장 전체)
         src = {c.claim_id: _ns(c.text) for c in ctx.ok_claims()}
+        cust = _ns(expl.customer_text())
         for n, e in enumerate(data.get("extra") or [], 1):
             if not isinstance(e, dict):
                 continue
             q = _ns(str(e.get("source_quote", "")))
+            if q and (q in cust or len(q) > _EXTRA_MAX_LEN):
+                results[f"extra{n}"] = "REJECTED"
+                continue
             if len(q) >= 2 and any(q in s for s in src.values()):
                 results[f"extra{n}"] = "DROPPED"
                 problems.append(BVProblem(BVCode.CONDITION_DROPPED, f"(목록 외) '{e.get('source_quote')}'"))
@@ -337,13 +439,16 @@ class BackVerifier:
                generation_problems: list[BVProblem] | None = None) -> BackVerification:
         problems = list(generation_problems or [])
         results: dict[str, str] = {}
+        self.last_where = {}
         if not any(p.code == BVCode.SIMPLIFIER_ERROR for p in problems):
             problems += self.check_rules(expl, ctx)
             if self.condition_check:
                 cp, results = self.check_conditions(expl, ctx)
                 problems += cp
         status = decide_bv_status(problems, attempts)
-        return summarize(status, problems, results, attempts, expl)
+        out = summarize(status, problems, results, attempts, expl)
+        out.condition_where = dict(self.last_where)
+        return out
 
 
 def summarize(status: BVStatus, problems: list[BVProblem], results: dict[str, str],
@@ -436,6 +541,6 @@ def claims_from_json(rows: list[dict]) -> list[Claim]:
     return out
 
 
-__all__ = ["BackVerifier", "BVContext", "SimplifyOutcome", "run_simplify", "bv_prompt_hash",
+__all__ = ["BackVerifier", "BVContext", "extract_fx", "SimplifyOutcome", "run_simplify", "bv_prompt_hash",
            "BV_PROMPT_VERSION", "explanation_from_json", "claims_from_json", "summarize"]
 

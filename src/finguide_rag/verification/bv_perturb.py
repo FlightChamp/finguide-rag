@@ -16,6 +16,8 @@
     INTENSIFIER      서술어 앞에 강조어 삽입              규칙 (STRENGTHENED)
     HEDGE_DROP       '~될 수 있습니다' → '~됩니다'        규칙 (HEDGE_LOST)
     CONDITION_DROP   조건 블록에서 한 조건을 담은 문구 삭제   LLM (CONDITION_DROPPED)
+                     ※ 64번 진단(2026-10-15): 놓친 4건 모두 조건이 핵심 설명에 다른 말로 남아 있었다(라벨 잡음).
+                       조건 보존 평가는 66번(LLM 생성 + 사람 확인 교란)을 주 지표로 쓰고, 이 유형은 참고로만 본다.
     CHECK_LEAK       CHECK claim 원문을 핵심 설명 문구로 추가  규칙 (CHECK_LEAK)
 
 알려진 한계
@@ -32,7 +34,7 @@ import random
 import re
 
 from .numeric import extract_numerics
-from .rules import HEDGE_GROUPS, detect_institutions
+from .rules import HEDGE_GROUPS, INTENSIFIER_EQUIV, detect_institutions
 from .schema import SimpleItem, SimplifiedExplanation
 
 TYPES = ["NUM_VALUE", "NUM_UNIT", "NUM_COMPARATOR", "BOUND_DROP", "PRODUCT_SWAP",
@@ -168,30 +170,63 @@ def _institution(e, rng, **_):
     return f"{it.item_id}: '{bank}에서는' 삽입"
 
 
-def _intensifier(e, rng, **_):
+# 서술어 덩어리 앞 어절이 이 어미로 끝나면 함께 묶는다: '처리해야 합니다', '하게 됩니다', '하고 있습니다'
+_BOUND_PREV = re.compile(r"(야|게|고|지|어|아|서|여)$")
+
+
+def _src(it, claim_texts) -> str | None:
+    if not claim_texts:
+        return None
+    return " ".join(claim_texts.get(c, "") for c in it.claim_ids)
+
+
+def _intensifier(e, rng, claim_texts=None, **_):
+    """서술어 덩어리 앞에 강조어를 넣는다.
+
+    2026-10-15 수정 (64번 진단):
+      - '처리해야 반드시 합니다' 처럼 서술어 덩어리를 쪼개던 위치 오류 → 앞 어절이 연결 어미면 그 앞에 넣는다
+      - 출처 원문에 같은 강도의 표현(INTENSIFIER_EQUIV: '해야'≈'반드시')이 있으면 강조가 아니므로 만들지 않는다
+    """
     words = list(_INTENS)
     rng.shuffle(words)
     for it in e.core:
         m = _ENDING.search(it.text)
         if not m:
             continue
-        w = next((x for x in words if x not in it.text), None)
+        src = _src(it, claim_texts)
+        w = next((x for x in words if x not in it.text
+                  and not (src and any(q in src for q in INTENSIFIER_EQUIV.get(x, (x,))))), None)
         if not w:
             continue
-        it.text = it.text[:m.start()] + f"{w} " + it.text[m.start():]
+        pos = m.start()
+        head = it.text[:pos].rstrip()
+        prev = head.rsplit(" ", 1)[-1] if head else ""
+        if prev and _BOUND_PREV.search(prev):
+            pos = len(head) - len(prev)
+        it.text = it.text[:pos] + f"{w} " + it.text[pos:]
         return f"{it.item_id}: '{w}' 삽입"
     return None
 
 
-def _hedge_drop(e, rng, **_):
+def _hedge_drop(e, rng, claim_texts=None, **_):
+    """'~될 수 있습니다' → '~됩니다'.
+
+    2026-10-15 수정 (64번 진단): 놓친 3건은 모두 Simplifier 가 원문에 없던 헤지를 '덧붙인' 문장이었다.
+    그 헤지를 지우면 오히려 원문 뜻으로 돌아가므로 오류 교란이 아니다.
+    → 출처 claim 원문에 가능성 헤지가 있을 때만 만든다. (덧붙인 헤지 자체는 back_verify 의 HEDGE_ADDED 가 잡는다)
+    """
     for it in _items(e):
+        src = _src(it, claim_texts)
+        if src is not None and not HEDGE_GROUPS["가능성"].search(src):
+            continue
         m = _HEDGE_RE.search(it.text)
         if m and HEDGE_GROUPS["가능성"].search(it.text):
             it.text = it.text[:m.start()] + _HEDGE_VERB[m.group(1)] + it.text[m.end():]
             return f"{it.item_id}: '{m.group(0)}' → '{_HEDGE_VERB[m.group(1)]}'"
     for it in _items(e):
+        src = _src(it, claim_texts)
         m = _HEDGE_ADVERB.search(it.text)
-        if m:
+        if m and (src is None or _HEDGE_ADVERB.search(src)):
             it.text = it.text[:m.start()] + it.text[m.end():]
             return f"{it.item_id}: '{m.group(1)}' 삭제"
     return None
@@ -251,7 +286,10 @@ _FN = {"NUM_VALUE": _num_value, "NUM_UNIT": _num_unit, "NUM_COMPARATOR": _num_co
 
 
 def perturb(expl: SimplifiedExplanation, kind: str, seed: int, **kw) -> tuple[SimplifiedExplanation, str] | None:
-    """교란본과 설명. 적용할 곳이 없으면 None."""
+    """교란본과 설명. 적용할 곳이 없으면 None.
+
+    kw: products, known_products, matcher (PRODUCT_SWAP), claim_texts={claim_id: 원문} (INTENSIFIER·HEDGE_DROP 의 원문 확인)
+    """
     e = copy.deepcopy(expl)
     detail = _FN[kind](e, random.Random(seed), **kw)
     if detail is None or e.customer_text() == expl.customer_text():
