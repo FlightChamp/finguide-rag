@@ -131,6 +131,8 @@ def main() -> int:
                 continue
             it = by_id[str(x["item_id"])]
             new = re.sub(r"\s+", " ", str(x.get("text", ""))).strip()
+            if not re.search(r"[가-힣A-Za-z0-9]", new):
+                new = ""          # '""' 처럼 글자 없는 응답은 삭제로 본다
             if new != it.text:
                 changed.append({"item_id": it.item_id, "before": it.text, "after": new})
                 it.text = new

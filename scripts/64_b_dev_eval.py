@@ -42,6 +42,7 @@ import csv
 import hashlib
 import json
 import math
+import re
 import sys
 from collections import Counter, defaultdict
 from datetime import date
@@ -135,6 +136,10 @@ def cond_section(rows, lab, labeled, bv, args, out, detail_rows) -> None:
     for c in use:
         _, _, ctx, _ = rebuild(base_by_id[c["b_id"]])
         e = explanation_from_json(c["explanation"])
+        # 66번 cp-v1 생성기가 '삭제'를 빈 문자열 대신 '""' 로 낸 경우가 있다 (d005·q027·q082·q101).
+        # 그대로 두면 조각 문구 규칙이 '""' 를 잡아 '규칙만' 탐지가 부풀려지므로 삭제로 처리한다.
+        e.core = [it for it in e.core if re.search(r"[가-힣A-Za-z0-9]", it.text)]
+        e.conditions = [it for it in e.conditions if re.search(r"[가-힣A-Za-z0-9]", it.text)]
         r_full = bv.verify(e, ctx) if bv.condition_check else None
         r_rule = rules_only.verify(e, ctx)
         res.append((c, r_full, r_rule))
@@ -233,9 +238,15 @@ def main() -> int:
         out(f"  과차단 (사람 Y 인데 PASS 아님)   {wilson(len(ob), len(ys))}")
         c = Counter(p.code.value for b in ob for p in base_res[b].problems)
         out("    원인: " + (", ".join(f"{k} {v}" for k, v in c.most_common()) or "-"))
+        for b in ob:      # 과차단 사례: 사람 확인용 (어떤 문구·사유로 막혔는가)
+            for p in base_res[b].problems:
+                out(f"      {b} [{p.code.value}] {p.item_id or '-'} {p.detail[:90]}")
     if ns:
         fp = [b for b in ns if base_res[b].status == BVStatus.PASS]
         out(f"  자연 오류 놓침 (사람 N 인데 PASS) {wilson(len(fp), len(ns))}   {fp}")
+        for b in fp:
+            lb = labels.get(b, {})
+            out(f"      {b} 사람 사유 {lb.get('reasons') or '-'}  메모 {(lb.get('memo') or '-')[:60]}")
     st = Counter(base_res[b].status.value for b in base_res)
     out(f"  상태 분포 {dict(st)}")
 
@@ -266,6 +277,7 @@ def main() -> int:
         out("\n[1회 수정 경로 — 기반 중 NEEDS_FIX]")
         sp = Simplifier(CachedLLM(client, MODEL, SP_CACHE))
         fixed = Counter()
+        fix_ids: dict = {}
         for r in rows:
             b = r["b_id"]
             if base_res[b].status != BVStatus.NEEDS_FIX:
@@ -274,11 +286,12 @@ def main() -> int:
             e2, gen = sp.fix(r["question"], expl, ctx.ok_claims(), base_res[b].problems)
             r2 = bv.verify(e2, ctx, attempts=1, generation_problems=gen)
             fixed[(lab[b] or "-", r2.status.value)] += 1
+            fix_ids.setdefault((lab[b] or "-", r2.status.value), []).append(b)
             detail_rows.append({"b_id": b, "kind": "FIX", "label": lab[b] or "-", "status": r2.status.value,
                                 "codes": "|".join(sorted({x.code.value for x in r2.problems})),
                                 "detail": e2.customer_text()[:400]})
         for (lb, s), n in sorted(fixed.items()):
-            out(f"  사람={lb}  수정 후 {s}  {n}건")
+            out(f"  사람={lb}  수정 후 {s}  {n}건   {fix_ids.get((lb, s), [])}")
         out("  ※ 수정본이 실제로 맞는지는 사람이 봐야 한다 (CSV 의 FIX 행 detail).")
         sp.llm.flush()
 
