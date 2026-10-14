@@ -53,7 +53,9 @@ v2-B 역검증 — 개발 평가 (config=full)   ※ 개발 수치. 공식은 �
   사람=N  수정 후 BLOCK  4건   ['b_d018', 'b_q065', 'b_q083', 'b_q087']
   사람=N  수정 후 PASS  9건   ['b_d001', 'b_d012', 'b_d017', 'b_d026', 'b_q007', 'b_q032', 'b_q049', 'b_q067', 'b_q107']
   사람=Y  수정 후 PASS  1건   ['b_d011']
-  → data\eval\v2\b_dev_fix_review_v0.csv  (수정 후 PASS 10건, 확인 0건 — fix_ok 에 Y/N)
+  수정 후 PASS 의 사람 확인: 맞음 10/10=1.00 [0.72–1.00]   틀림 []
+  ※ 틀림이 있으면 그 건은 '수정 경로의 False Pass' — 1회 수정이 오류를 숨긴 것
+  → data\eval\v2\b_dev_fix_review_v0.csv  (수정 후 PASS 10건, 확인 10건 — fix_ok 에 Y/N)
 
 조건 검사 API 0콜 / 캐시 241 · 토큰 0
 ```
