@@ -240,9 +240,10 @@ def main() -> int:
     out(f"  상태 분포 {dict(st)}")
 
     out("\n[교란본 — False Pass (낮을수록 좋음) / 탐지]")
-    allp = [x for t in TYPES for x in pert[t]]
+    # CONDITION_DROP(규칙 교란)은 라벨 잡음이 커서 전체 집계에서 뺀다 (10-15 진단). 조건은 66번 교란으로 본다.
+    allp = [x for t in TYPES if t != "CONDITION_DROP" for x in pert[t]]
     fpass = [x for x in allp if x[2].status == BVStatus.PASS]
-    out(f"  전체 False Pass   {wilson(len(fpass), len(allp))}")
+    out(f"  전체 False Pass (규칙 교란 9종, CONDITION_DROP 제외)   {wilson(len(fpass), len(allp))}")
     for t in TYPES:
         xs = pert[t]
         miss = [x for x in xs if x[2].status == BVStatus.PASS]

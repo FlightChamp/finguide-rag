@@ -55,6 +55,7 @@ from finguide_rag.verification.claim_verifier import CachedLLM  # noqa: E402
 from finguide_rag.verification.numeric import extract_numerics  # noqa: E402
 from finguide_rag.verification.rules import HEDGE_GROUPS, _hedges  # noqa: E402
 from finguide_rag.verification.schema import (  # noqa: E402
+    BVCode,
     BVStatus,
     ReasonCode,
     ReasonHit,
@@ -196,6 +197,7 @@ def main() -> int:
     # ---------- 2. Identity baseline ----------
     out("\n[2] Identity baseline — OK claim 원문을 그대로 넣었을 때 (전부 PASS 여야 정상)")
     id_fail = {"rules": [], "full": []}
+    id_frag = 0
     simp_base, simp_id = [], []
     for r in rows:
         ctx, expl = rebuild(r)
@@ -203,15 +205,22 @@ def main() -> int:
         src = "\n".join(c.text for c in ctx.ok_claims())
         simp_base.append((r["b_id"], simplicity(expl.customer_text(), src)))
         simp_id.append(simplicity(ide.customer_text(), src))
+        # Identity 는 '뜻 보존' 평가기 점검이다. 조각 문구(SENTENCE_FRAGMENT)는 A 의 claim 분해 단위
+        # ('…진행하시고')에서 오는 형식 문제라 따로 센다 (10-15 2차 실행: 9/51 이 이것만으로 실패).
         rr = bv_rules.verify(ide, ctx)
-        if rr.status != BVStatus.PASS:
-            id_fail["rules"].append((r["b_id"], sorted({x.code.value for x in rr.problems}), rr.problems[:2]))
+        sem = [x for x in rr.problems if x.code != BVCode.SENTENCE_FRAGMENT]
+        if len(sem) < len(rr.problems):
+            id_frag += 1
+        if sem:
+            id_fail["rules"].append((r["b_id"], sorted({x.code.value for x in sem}), sem[:2]))
         if not args.offline:
             rf = bv_full.verify(ide, ctx)
-            if rf.status != BVStatus.PASS:
-                id_fail["full"].append((r["b_id"], sorted({x.code.value for x in rf.problems}), rf.problems[:2]))
+            sem = [x for x in rf.problems if x.code != BVCode.SENTENCE_FRAGMENT]
+            if sem:
+                id_fail["full"].append((r["b_id"], sorted({x.code.value for x in sem}), sem[:2]))
+    out(f"  (형식) 원문 claim 자체가 조각 문장인 기반 {id_frag}/{len(rows)} — A 의 claim 분해 단위 문제, 뜻 보존과 별개")
     for cfg in (["rules"] if args.offline else ["rules", "full"]):
-        out(f"  {cfg}: PASS 아님 {len(id_fail[cfg])}/{len(rows)}")
+        out(f"  {cfg}: 뜻 보존 문제 {len(id_fail[cfg])}/{len(rows)}   (0 이어야 정상)")
         for b, codes, probs in id_fail[cfg][:8]:
             out(f"    {b} {codes}  " + " / ".join(p.detail[:70] for p in probs))
 

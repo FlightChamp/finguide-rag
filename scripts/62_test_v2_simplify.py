@@ -650,6 +650,42 @@ def _():
         assert "처리해야 합니다" in t, t
 
 
+@case("G", "개수: '2개 이상' → '2개 초과' 는 NUMERIC_CHANGED, '6개월'은 개수가 아니다")
+def _():
+    src = "성향별로 2개 이상의 모델포트폴리오를 제시합니다."
+    bv, *_ = _one(src, "성향별로 2개 초과의 모델포트폴리오를 보여 드립니다.")
+    assert "NUMERIC_CHANGED" in codes(bv), codes(bv)
+    bv2, *_ = _one(src, "성향마다 모델포트폴리오를 2개 이상 보여 드립니다.")
+    assert bv2.status == BVStatus.PASS, codes(bv2)
+
+
+B_Q022 = "예를 들어, 대출 실행 후 1년 만에 중도상환 시 중도해지 비용이 발생할 수 있으며, 이는 대출 중도상환수수료와 별개로 부과됩니다."
+
+
+def _q022(items):
+    claims = [Claim("c3", B_Q022, (0, 0))]
+    vers = [_v("c3", Verdict.OK, [ReasonCode.SUPPORTED])]
+    data = {"core": [{"text": t, "claim_ids": ["c3"]} for t in items]}
+    e, _, _ = Simplifier(FakeLLM(simplify=data)).simplify(Q, claims, vers)
+    return rules_bv().verify(e, BVContext.build(claims, vers))
+
+
+@case("G", "문구 단위 헤지 소실: 헤지 걸린 절을 옮긴 문구만 확정이면 HEDGE_LOST (65번 b_q022)")
+def _():
+    bv = _q022(["예를 들어, 대출을 받은 지 1년 만에 중도에 갚으면 중도해지 비용이 생깁니다.",
+                "이 비용은 대출 중도상환수수료와 별도로 부과됩니다.",
+                "대출 실행 후 1년 만에 중도상환할 때 중도해지 비용이 발생할 수 있습니다."])
+    hl = [p for p in bv.problems if p.code == BVCode.HEDGE_LOST]
+    assert [p.item_id for p in hl] == ["s1"], [(p.item_id, p.detail) for p in bv.problems]
+
+
+@case("G", "문구 단위 헤지: 헤지 없는 나머지 절('별개로 부과됩니다')을 옮긴 문구는 정상")
+def _():
+    bv = _q022(["예를 들어, 대출을 받은 지 1년 만에 중도에 갚으면 중도해지 비용이 생길 수 있습니다.",
+                "이 비용은 대출 중도상환수수료와 별도로 부과됩니다."])
+    assert bv.status == BVStatus.PASS, [(p.item_id, p.detail) for p in bv.problems]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--verbose", action="store_true")

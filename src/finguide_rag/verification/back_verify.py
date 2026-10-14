@@ -78,6 +78,7 @@ _NUM_CODE = {
 # 한정 묶음의 '쉬운 말' 표현 — 근거 쪽 '에 한해'를 '~인 경우만'으로 옮긴 것은 보존으로 본다
 _LIMIT_LENIENT = re.compile(r"에\s*한(하|해|함|하여)|경우에만|경우만|에만|만\s*해당|한정|해당하는|대상")
 _LEAK_MIN, _LEAK_MARGIN = 0.6, 0.25
+_HEDGE_CLAUSE_MIN = 0.35   # 헤지가 걸린 절의 2-gram 중 문구에 있는 비율. 개발 셋 1건(b_q022)을 보고 정함 → held-out 으로 확인 필요
 
 # 외화 금액 — numeric.extract_numerics 는 '원'만 금액으로 본다. '미화 5만불 이하'가 빠지던 문제(64번 b_q110)를
 # B 안에서만 보완한다. A(claim 검증)의 수치 규칙은 baseline 동결 상태라 건드리지 않는다.
@@ -124,6 +125,21 @@ _PERIOD_EQUIV = {(12.0, "개월"): re.compile(r"연간|매년|년간|해마다|1
 def _period_word_equiv(slot, source_text: str) -> bool:
     pat = _PERIOD_EQUIV.get((float(slot.value), slot.unit))
     return bool(pat and not slot.is_range and slot.comparator is None and pat.search(source_text))
+
+
+# 개수 단위 — '2개 이상' 이 '2개 초과' 로 바뀐 것을 놓쳤다 (65번 b_q019). A 의 수치 규칙에는 개수 단위가 없다.
+_COUNT_RE = re.compile(
+    r"(?<![\d.,])(\d[\d,]*)\s*(개(?!월)|건|명|장|가지|곳|좌|매|종(?!류|목|합))"
+    r"(?:을|를|이|가|의)?\s*(이상|이하|초과|미만|이내|까지|부터|넘는|넘게|넘으면|넘을)?")
+
+
+def extract_counts(text: str) -> list[tuple[float, str, str | None, str]]:
+    """(값, 단위, 비교어, 원문). 예: '2개 이상' → (2, '개', '>=', '2개 이상')."""
+    out = []
+    for m in _COUNT_RE.finditer(text):
+        unit = "개" if m.group(2).startswith("개") else m.group(2)
+        out.append((float(m.group(1).replace(",", "")), unit, _FX_CMP.get(m.group(3) or ""), m.group(0).strip()))
+    return out
 
 
 _SENT_END = re.compile(r"(다|요)[.!]?[\s\)\]\"']*$")
@@ -222,26 +238,29 @@ class BackVerifier:
         return out
 
     def check_fx(self, expl: SimplifiedExplanation, ctx: BVContext) -> list[BVProblem]:
-        """외화 금액: 값·통화·비교어가 원문과 같은가."""
+        """외화 금액·개수: 값·단위·비교어가 원문과 같은가 (A 의 수치 규칙이 못 읽는 단위)."""
         out: list[BVProblem] = []
-        src = extract_fx("\n".join(c.text for c in ctx.ok_claims()))
-        cust_all = []
-        for it in expl.customer_items():
-            for v, cur, cmp_, raw in extract_fx(it.text):
-                cust_all.append((v, cur))
-                if any(v == sv and cur == sc and cmp_ == scm for sv, sc, scm, _ in src):
-                    continue
-                same_val = [r for sv, sc, scm, r in src if v == sv and cur == sc]
-                if same_val:
-                    out.append(BVProblem(BVCode.NUMERIC_CHANGED, f"외화 비교어: '{raw}' ↔ 원문 {same_val}", it.item_id))
-                elif any(cur == sc for _, sc, _, _ in src):
-                    out.append(BVProblem(BVCode.NUMERIC_CHANGED, f"외화 금액: '{raw}' ↔ 원문 "
-                                         f"{[r for _, sc, _, r in src if sc == cur]}", it.item_id))
-                else:
-                    out.append(BVProblem(BVCode.NUMERIC_ADDED, f"원문에 없는 외화 금액 '{raw}'", it.item_id))
-        for sv, sc, _, raw in src:
-            if (sv, sc) not in cust_all:
-                out.append(BVProblem(BVCode.NUMERIC_DROPPED, f"원문 외화 금액 '{raw}' 이(가) 쉬운 설명에 없음"))
+        src_text = "\n".join(c.text for c in ctx.ok_claims())
+        for name, fn in (("외화", extract_fx), ("개수", extract_counts)):
+            src = fn(src_text)
+            cust_all = []
+            for it in expl.customer_items():
+                for v, cur, cmp_, raw in fn(it.text):
+                    cust_all.append((v, cur))
+                    if any(v == sv and cur == sc and cmp_ == scm for sv, sc, scm, _ in src):
+                        continue
+                    same_val = [r for sv, sc, scm, r in src if v == sv and cur == sc]
+                    if same_val:
+                        out.append(BVProblem(BVCode.NUMERIC_CHANGED, f"{name} 비교어: '{raw}' ↔ 원문 {same_val}",
+                                             it.item_id))
+                    elif any(cur == sc for _, sc, _, _ in src):
+                        out.append(BVProblem(BVCode.NUMERIC_CHANGED, f"{name}: '{raw}' ↔ 원문 "
+                                             f"{[r for _, sc, _, r in src if sc == cur]}", it.item_id))
+                    else:
+                        out.append(BVProblem(BVCode.NUMERIC_ADDED, f"원문에 없는 {name} '{raw}'", it.item_id))
+            for sv, sc, _, raw in src:
+                if (sv, sc) not in cust_all:
+                    out.append(BVProblem(BVCode.NUMERIC_DROPPED, f"원문 {name} '{raw}' 이(가) 쉬운 설명에 없음"))
         return out
 
     def _informative(self, name: str) -> bool:
@@ -313,6 +332,34 @@ class BackVerifier:
                 lost.append("한정")
             if lost:
                 out.append(BVProblem(BVCode.HEDGE_LOST, f"{c.claim_id} 의 {lost} 표현 소실"))
+                continue
+            # 문구 단위: 같은 claim 을 옮긴 다른 문구에 헤지가 남아 있어도, '그 헤지가 걸린 절'을 옮긴 문구가
+            # 확정 표현이면 고객 문구 안에서 '생깁니다' / '생길 수 있습니다' 가 충돌한다 (65번 b_q022).
+            if "가능성" in groups:
+                out += self._item_hedge_loss(c, expl)
+        return out
+
+    @staticmethod
+    def _item_hedge_loss(c: Claim, expl: SimplifiedExplanation) -> list[BVProblem]:
+        m = HEDGE_GROUPS["가능성"].search(c.text)
+        if not m:
+            return []
+        start = max(c.text.rfind(sep, 0, m.start()) for sep in (",", "며 ", "고 ", ". ", "나 "))
+        clause = c.text[start + 1 if start >= 0 else 0:m.end()]
+        rest = c.text[:max(start, 0)] + c.text[m.end():]
+        gc, gr = _bigrams(clause), _bigrams(rest)
+        out = []
+        for it in expl.customer_items():
+            if c.claim_id not in it.claim_ids:
+                continue
+            if HEDGE_GROUPS["가능성"].search(it.text) or _CLAIM_ANY_POSSIBILITY.search(it.text):
+                continue
+            gi = _bigrams(it.text)
+            cov_c, cov_r = _contain(gc, gi), _contain(gr, gi)
+            if cov_c >= _HEDGE_CLAUSE_MIN and cov_c > cov_r:
+                out.append(BVProblem(BVCode.HEDGE_LOST,
+                                     f"{c.claim_id} 의 '{m.group(0)}' 절을 옮긴 문구가 확정 표현 (절 겹침 {cov_c:.2f})",
+                                     it.item_id))
         return out
 
     def check_structure(self, expl: SimplifiedExplanation, ctx: BVContext) -> list[BVProblem]:
@@ -541,6 +588,6 @@ def claims_from_json(rows: list[dict]) -> list[Claim]:
     return out
 
 
-__all__ = ["BackVerifier", "BVContext", "extract_fx", "SimplifyOutcome", "run_simplify", "bv_prompt_hash",
+__all__ = ["BackVerifier", "BVContext", "extract_fx", "extract_counts", "SimplifyOutcome", "run_simplify", "bv_prompt_hash",
            "BV_PROMPT_VERSION", "explanation_from_json", "claims_from_json", "summarize"]
 
