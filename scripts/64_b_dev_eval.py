@@ -112,6 +112,35 @@ def rebuild(row: dict):
     return claims, vers, ctx, explanation_from_json(row["explanation"])
 
 
+FIX_REVIEW = V2 / "b_dev_fix_review_v0.csv"
+FIX_FIELDS = ["b_id", "base_label", "ok_claims", "problems_before", "before", "after", "text_sha", "fix_ok", "memo"]
+
+
+def write_fix_review(fix_rows: list[dict], out) -> None:
+    """수정 후 PASS 된 쉬운 설명을 사람이 확인하는 시트. fix_ok: Y(뜻 그대로 · 고객에게 보여도 됨) / N.
+
+    같은 수정본이면 라벨을 보존한다 (text_sha). 라벨이 있으면 '수정 후 PASS 중 실제로 맞은 비율'을 낸다.
+    """
+    prev = {}
+    if FIX_REVIEW.exists():
+        prev = {x["b_id"]: x for x in csv.DictReader(FIX_REVIEW.open(encoding="utf-8-sig"))}
+    for r in fix_rows:
+        old = prev.get(r["b_id"], {})
+        same = old.get("text_sha") == r["text_sha"]
+        r["fix_ok"] = (old.get("fix_ok") or "").strip().upper() if same else ""
+        r["memo"] = old.get("memo", "") if same else ""
+    with FIX_REVIEW.open("w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=FIX_FIELDS)
+        w.writeheader()
+        w.writerows(fix_rows)
+    done = [r for r in fix_rows if r["fix_ok"] in ("Y", "N")]
+    if done:
+        bad = [r["b_id"] for r in done if r["fix_ok"] == "N"]
+        out(f"  수정 후 PASS 의 사람 확인: 맞음 {wilson(len(done) - len(bad), len(done))}   틀림 {bad}")
+        out("  ※ 틀림이 있으면 그 건은 '수정 경로의 False Pass' — 1회 수정이 오류를 숨긴 것")
+    out(f"  → {FIX_REVIEW.relative_to(PROJECT_ROOT)}  (수정 후 PASS {len(fix_rows)}건, 확인 {len(done)}건 — fix_ok 에 Y/N)")
+
+
 CONDPERT = V2 / "b_dev_condpert_v0.jsonl"
 CONDPERT_REVIEW = V2 / "b_dev_condpert_review_v0.csv"
 
@@ -278,6 +307,7 @@ def main() -> int:
         sp = Simplifier(CachedLLM(client, MODEL, SP_CACHE))
         fixed = Counter()
         fix_ids: dict = {}
+        fix_rows: list[dict] = []
         for r in rows:
             b = r["b_id"]
             if base_res[b].status != BVStatus.NEEDS_FIX:
@@ -290,10 +320,18 @@ def main() -> int:
             detail_rows.append({"b_id": b, "kind": "FIX", "label": lab[b] or "-", "status": r2.status.value,
                                 "codes": "|".join(sorted({x.code.value for x in r2.problems})),
                                 "detail": e2.customer_text()[:400]})
+            if r2.status == BVStatus.PASS:      # 수정 후 고객에게 보일 수 있는 것만 사람이 확인한다
+                after = e2.customer_text()
+                fix_rows.append({
+                    "b_id": b, "base_label": lab[b] or "-",
+                    "ok_claims": "\n".join(f"{c.claim_id}: {c.text}" for c in ctx.ok_claims()),
+                    "problems_before": "\n".join(f"[{x.code.value}] {x.detail[:80]}" for x in base_res[b].problems),
+                    "before": expl.customer_text(), "after": after,
+                    "text_sha": hashlib.sha256(after.encode("utf-8")).hexdigest()[:10]})
         for (lb, s), n in sorted(fixed.items()):
             out(f"  사람={lb}  수정 후 {s}  {n}건   {fix_ids.get((lb, s), [])}")
-        out("  ※ 수정본이 실제로 맞는지는 사람이 봐야 한다 (CSV 의 FIX 행 detail).")
         sp.llm.flush()
+        write_fix_review(fix_rows, out)
 
     out(f"\n조건 검사 API {llm.calls}콜 / 캐시 {llm.hits} · 토큰 {llm.tokens:,}")
     if args.config == "full":

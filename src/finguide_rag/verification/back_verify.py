@@ -142,9 +142,35 @@ def extract_counts(text: str) -> list[tuple[float, str, str | None, str]]:
     return out
 
 
+# 쉬운 말 비교어: '2주일 안에' = '2주일 이내에'. A 의 수치 규칙은 '이내'만 읽는다 (64번 b_q027 과차단).
+# B 에서만 양쪽 텍스트를 같은 표기로 맞춘 뒤 수치를 뽑는다.
+_PLAIN_CMP = re.compile(r"(\d[\d,.]*\s*(?:개월|영업일|주일|시간|년|주|일|회|원|%))\s*(안에|안으로|내에|내로)")
+
+
+def _nums(text: str):
+    return extract_numerics(_PLAIN_CMP.sub(r"\1 이내에", text))
+
+
 _SENT_END = re.compile(r"(다|요)[.!]?[\s\)\]\"']*$")
 _HEDGE_POSSIBILITY = HEDGE_GROUPS["가능성"]
+# 원문이 '손실이 가능하나', '손실 가능성이 있습니다'처럼 명사·형용사로 가능성을 말한 경우 (64번 b_q024 과차단).
+# 약화 판정에서 원문 쪽만 너그럽게 본다 — '조회가 가능합니다'(능력)도 걸리지만, 그 결과는 '약화 아님'이라 안전한 방향이다.
+_SRC_POSSIBILITY = re.compile(r"가능성|가능하나|가능하며|가능하지만|우려")
 _EXTRA_MAX_LEN = 60   # 목록 외 조건 인용 최대 길이 (공백 제외). 그보다 길면 조건이 아니라 claim 전체를 인용한 것
+
+
+def _quote_is_covered(q: str, cust: str, claim_texts) -> bool:
+    """목록 외 조건 인용을 버릴지.
+
+    64번 b_q019 과차단: LLM 이 claim 문장 거의 전체('…초과하지 않아야 하며')를 '빠진 조건'으로 인용했는데,
+    쉬운 설명에는 어미만 바뀐 같은 문장('…초과하지 않아야 합니다')이 있었다.
+      - 인용의 2-gram 80% 이상이 쉬운 설명에 있으면 → 빠진 것이 아님
+      - 인용이 어떤 claim 의 80% 이상을 덮으면 → 조건이 아니라 claim 자체 (누락은 CLAIM_UNCOVERED 가 본다)
+    """
+    gq, gc = _bigrams(q), _bigrams(cust)
+    if gq and _contain(gq, gc) >= 0.8:
+        return True
+    return any(_contain(_bigrams(t), gq) >= 0.8 for t in claim_texts if t)
 
 
 def bv_prompt_hash(version: str = BV_PROMPT_VERSION) -> str:
@@ -214,12 +240,12 @@ class BackVerifier:
     def check_numeric(self, expl: SimplifiedExplanation, ctx: BVContext) -> list[BVProblem]:
         out: list[BVProblem] = []
         src_all = "\n".join(c.text for c in ctx.ok_claims())
-        src_all_slots = extract_numerics(src_all)
+        src_all_slots = _nums(src_all)
         cust_slots = []
         for it in expl.customer_items():
-            slots = extract_numerics(it.text)
+            slots = _nums(it.text)
             cust_slots += slots
-            item_src_slots = extract_numerics(self._source_text(it, ctx))
+            item_src_slots = _nums(self._source_text(it, ctx))
             for s in slots:
                 st, det = compare_slot(s, item_src_slots)
                 if st in _NUMERIC_OK:
@@ -313,7 +339,8 @@ class BackVerifier:
                 out.append(BVProblem(BVCode.STRENGTHENED, f"원문에 없는 강조어 {added}", it.item_id))
             # 약화: 문구에는 가능성 헤지(사건 동사 기준, 엄격)가 있는데 출처 원문에는 어떤 '수 있'도 없음
             m = _HEDGE_POSSIBILITY.search(it.text)
-            if m and not (_HEDGE_POSSIBILITY.search(src) or _CLAIM_ANY_POSSIBILITY.search(src)):
+            if m and not (_HEDGE_POSSIBILITY.search(src) or _CLAIM_ANY_POSSIBILITY.search(src)
+                          or _SRC_POSSIBILITY.search(src)):
                 out.append(BVProblem(BVCode.HEDGE_ADDED, f"원문에 없는 '{m.group(0)}' (원문은 확정 표현)",
                                      it.item_id))
         # 헤지는 claim 단위로 본다: 한 claim 을 두 문구로 나눴을 때 한쪽에만 헤지가 있어도 정상이다.
@@ -468,7 +495,7 @@ class BackVerifier:
             if not isinstance(e, dict):
                 continue
             q = _ns(str(e.get("source_quote", "")))
-            if q and (q in cust or len(q) > _EXTRA_MAX_LEN):
+            if q and (q in cust or len(q) > _EXTRA_MAX_LEN or _quote_is_covered(q, cust, src.values())):
                 results[f"extra{n}"] = "REJECTED"
                 continue
             if len(q) >= 2 and any(q in s for s in src.values()):

@@ -19,6 +19,7 @@ LLM 자리에는 가짜 클라이언트를 넣는다. 가짜 조건 검사기는
     E  상태 전이 (1회 수정, BLOCK, 노출 여부)
     F  교란 생성기 자체
     G  2026-10-15 추가 — 64·65번 개발 진단에서 나온 결함 (약화, 외화, 조각 문구, 목록 외 조건, 교란 라벨 잡음)
+    H  2026-10-15 추가 — 사람 라벨(Y37/N14) 기준 과차단 3건의 원인 ('안에' 비교어, '가능성' 원문, 인용 필터)
 
 실행
 ----
@@ -684,6 +685,57 @@ def _():
     bv = _q022(["예를 들어, 대출을 받은 지 1년 만에 중도에 갚으면 중도해지 비용이 생길 수 있습니다.",
                 "이 비용은 대출 중도상환수수료와 별도로 부과됩니다."])
     assert bv.status == BVStatus.PASS, [(p.item_id, p.detail) for p in bv.problems]
+
+
+
+# ---------------- H 사람 라벨 과차단 반영 (2026-10-15, 64번 Y37/N14) ----------------
+@case("H", "'2주일 이내에' ↔ '2주일 안에' 는 같은 상한 (b_q027 과차단)")
+def _():
+    bv, *_ = _one("은행이 오류를 인지한 날부터 2주일 이내에 조사 결과를 이용자에게 알려야 합니다.",
+                  "은행이 오류를 알게 된 날부터 2주일 안에 조사 결과를 이용자에게 알려야 합니다.")
+    assert bv.status == BVStatus.PASS, codes(bv) + [p.detail for p in bv.problems]
+
+
+@case("H", "'2주일 이내' → '2주일 후' 는 여전히 탐지")
+def _():
+    bv, *_ = _one("은행이 오류를 인지한 날부터 2주일 이내에 조사 결과를 이용자에게 알려야 합니다.",
+                  "은행이 오류를 알게 된 날부터 2주일 후에 조사 결과를 이용자에게 알려야 합니다.")
+    assert bv.status != BVStatus.PASS, codes(bv)
+
+
+@case("H", "원문 '손실이 가능하나' → '손실이 날 수 있지만' 은 약화 아님 (b_q024 과차단)")
+def _():
+    bv, *_ = _one("이 등급은 원본 이상의 손실이 가능하나 손실범위가 제한적인 상품에 해당합니다.",
+                  "이 등급은 원금보다 더 큰 손실이 날 수 있지만 손실 범위가 제한된 상품입니다.")
+    assert "HEDGE_ADDED" not in codes(bv), codes(bv)
+
+
+@case("H", "원문 확정 '부과됩니다' → '부과될 수 있습니다' 는 여전히 HEDGE_ADDED")
+def _():
+    bv, *_ = _one("ERP 연계 시에는 월 300,000원이 부과됩니다.", "ERP를 연계하면 월 300,000원이 부과될 수 있습니다.")
+    assert "HEDGE_ADDED" in codes(bv), codes(bv)
+
+
+@case("H", "목록 외 조건: claim 문장을 어미만 바꿔 담았으면 '빠짐'이 아니다 (b_q019 과차단)")
+def _():
+    src = "모델포트폴리오의 가중평균 위험등급은 투자성향별 위험등급을 초과하지 않아야 하며"
+    claims = [Claim("c2", src, (0, 0))]
+    vers = [_v("c2", Verdict.OK, [ReasonCode.SUPPORTED])]
+    data = {"core": [{"text": "모델포트폴리오의 가중평균 위험등급은 투자성향별 위험등급을 초과하지 않아야 합니다.",
+                      "claim_ids": ["c2"]}]}
+    e, _, _ = Simplifier(FakeLLM(simplify=data)).simplify(Q, claims, vers)
+    cond = {"results": [], "extra": [{"source_quote": src, "claim_id": "c2"}]}
+    bv = BackVerifier(FakeLLM(cond=cond), None, KNOWN).verify(e, BVContext.build(claims, vers))
+    assert bv.status == BVStatus.PASS and bv.condition_results.get("extra1") == "REJECTED", codes(bv)
+
+
+@case("H", "목록 외 조건: 짧은 진짜 조건 인용은 여전히 받는다")
+def _():
+    base = {"results": [{"cond_id": "k1", "status": "PRESERVED", "where": ["n1"]},
+                        {"cond_id": "k2", "status": "PRESERVED", "where": ["n2"]}]}
+    cond = dict(base, extra=[{"source_quote": "경과 후 해지 시", "claim_id": "c2"}])
+    bv = BackVerifier(FakeLLM(cond=cond), None, KNOWN).verify(clean_expl(), CTX)
+    assert "CONDITION_DROPPED" in codes(bv), codes(bv)
 
 
 def main() -> int:
