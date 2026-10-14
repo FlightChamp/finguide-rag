@@ -241,6 +241,35 @@ def cmd_questions(args) -> int:
 # 2. answers
 # ==================================================================
 
+ENV_FILE = INTERIM / "heldout_v1_answer_env.json"
+EMBED_MIN_COS = 0.999      # 인덱스 벡터와 이 이상 같아야 대체 인코더를 쓴다
+
+
+def prepare_embedder(pipe) -> dict:
+    """sentence-transformers 를 쓸 수 없으면 transformers 대체 인코더로 바꾸고 동일성을 검사한다.
+
+    2026-10-14 이 환경에서 Windows 애플리케이션 제어 정책이 scipy DLL 을 차단해
+    sentence-transformers import 가 실패했다 (임베딩 계산에는 scipy 가 필요 없다).
+    대체 인코더는 기존 FAISS 인덱스의 청크 벡터를 다시 계산해 코사인 ≥ 0.999 일 때만 쓴다.
+    통과 못 하면 답변 생성을 멈춘다 — 검색이 v1 과 달라지면 v1 답변 분포가 아니게 되기 때문이다.
+    """
+    from finguide_rag.embedding.hf_encoder import TransformersEncoder, check_against_index
+    emb = pipe.retriever.embedder
+    try:
+        _ = emb.model                                  # sentence-transformers 로딩 시도
+        backend = "sentence-transformers"
+    except Exception as e:                             # ImportError, OSError(DLL 차단) 등
+        print(f"  sentence-transformers 사용 불가 ({type(e).__name__}: {str(e)[:80]})")
+        print("  → transformers 대체 인코더로 전환하고 인덱스 벡터와 동일성을 검사합니다")
+        emb._model = TransformersEncoder(emb.spec.model_id, max_length=emb.spec.max_tokens)
+        backend = "transformers-fallback"
+    chk = check_against_index(emb, pipe.retriever.faiss)
+    print(f"  임베딩 백엔드 {backend} · 인덱스 벡터 재현 코사인 min {chk['min_cos']:.5f} / mean {chk['mean_cos']:.5f}"
+          f" (n={chk['n']})")
+    if chk["min_cos"] < EMBED_MIN_COS:
+        sys.exit(f"인덱스 벡터와 일치하지 않습니다 (min {chk['min_cos']:.4f} < {EMBED_MIN_COS}). 답변 생성을 멈춥니다.")
+    return {"backend": backend, **chk}
+
 
 def cmd_answers(args) -> int:
     frozen_guard()
@@ -252,6 +281,8 @@ def cmd_answers(args) -> int:
     if todo:
         from finguide_rag.generation.pipeline import Pipeline    # v1 파이프라인 그대로 (검증 계층 아님)
         pipe = Pipeline.build(PROJECT_ROOT, client=openai_client(), llm_model=MODEL)
+        env = prepare_embedder(pipe)
+        ENV_FILE.write_text(json.dumps(env, ensure_ascii=False, indent=2), encoding="utf-8")
         for i, q in enumerate(todo, 1):
             cache[q["question"]] = pipe.answer(q["question"]).to_dict()
             if i % 10 == 0:
@@ -441,6 +472,7 @@ def cmd_freeze(args) -> int:
         "counts": dict(c),
         "reasons": dict(Counter(x for r in rows if r["human_label"] == "N" for x in r["human_reasons"].split("|"))),
         "code_at_freeze": code_fingerprint(),
+        "answer_env": json.loads(ENV_FILE.read_text(encoding="utf-8")) if ENV_FILE.exists() else None,
         "note": "verifier 결과를 보기 전에 확정한 라벨. 이 파일 이후 첫 eval 이 공식 결과다.",
     }
     FREEZE.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
