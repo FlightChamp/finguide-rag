@@ -350,11 +350,18 @@ def _():
     return got == want, str([g.value for g in got])
 
 
-@case("C.정책", "명세 무결성: 모든 코드에 명세 존재, 초안 수준 코드는 LLM 전용")
+@case("C.정책", "명세 무결성: 모든 코드에 명세 존재, 초안 수준 코드는 claim 검증에서 발급 불가")
 def _():
     missing = [c for c in ReasonCode if c not in REASON_SPECS]
-    draft_bad = [c for c, s in REASON_SPECS.items() if s.level == Level.DRAFT and s.sources != {Source.LLM}]
+    draft_bad = [c for c, s in REASON_SPECS.items() if s.level == Level.DRAFT and c in LLM_CLAIM_EMITTABLE]
     return not missing and not draft_bad, f"missing={missing}, draft={draft_bad}"
+
+
+@case("C.정책", "최종: 전부 OK 이지만 초안 수준 범위 혼합(규칙) → PARTIAL")
+def _():
+    d = aggregate_final(_vers(["SUPPORTED"], ["SUPPORTED"]),
+                        [ReasonHit(ReasonCode.MIXED_SCOPE, Source.RULE)])
+    return d.final == FinalLabel.PARTIAL, d.final.value
 
 
 @case("C.정책", "LLM 이 claim 수준에서 낼 수 있는 코드는 정확히 4개")

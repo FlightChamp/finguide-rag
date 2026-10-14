@@ -31,7 +31,7 @@ from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any
 
-SCHEMA_VERSION = "v2.0-draft2"   # draft2: EvidenceRef 에 doc_name/doc_type/institution 추가
+SCHEMA_VERSION = "v2.0-draft3"   # draft3: 초안 수준 범위 코드(MIXED_SCOPE, SCOPE_MISMATCH) 추가
 
 
 # ==================================================================
@@ -133,6 +133,8 @@ class ReasonCode(str, Enum):
     INSTITUTION_MISMATCH = "INSTITUTION_MISMATCH"
     CONTRADICTED = "CONTRADICTED"
     OMITTED_REQUIRED_INFO = "OMITTED_REQUIRED_INFO"
+    MIXED_SCOPE = "MIXED_SCOPE"
+    SCOPE_MISMATCH = "SCOPE_MISMATCH"
 
 
 # ==================================================================
@@ -196,6 +198,13 @@ REASON_SPECS: dict[ReasonCode, ReasonSpec] = {
     ReasonCode.OMITTED_REQUIRED_INFO: ReasonSpec(
         Verdict.CHECK, frozenset({_L}), Level.DRAFT,
         "질문에 답하려면 필요한 원문 조건이 초안에 없습니다."),
+    # 초안 수준 범위 검사 (scope.py). 규칙이 발급. 개발 셋 근거로 추가 (2026-10-14).
+    ReasonCode.MIXED_SCOPE: ReasonSpec(
+        Verdict.CHECK, frozenset({_R}), Level.DRAFT,
+        "서로 다른 상품·서비스의 규정이 한 답변에 섞였습니다. 상품별로 나눠 안내하세요."),
+    ReasonCode.SCOPE_MISMATCH: ReasonSpec(
+        Verdict.CHECK, frozenset({_R}), Level.DRAFT,
+        "질문과 다른(더 좁은) 상품 기준으로 답했습니다. 적용 범위를 확인하세요."),
 }
 
 # LLM 이 발급할 수 있는 코드 전체 (claim 수준 + 초안 수준)

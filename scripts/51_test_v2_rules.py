@@ -350,6 +350,67 @@ def _():
 
 
 # ==================================================================
+# J. 초안 수준 범위 검사 (scope.py)
+# ==================================================================
+
+from finguide_rag.verification.schema import Claim, Verification  # noqa: E402
+from finguide_rag.verification.scope import DocIndex, DocInfo, check_draft_scope  # noqa: E402
+
+_IDX = DocIndex({
+    "dA": DocInfo("dA", "설명서", "『주택청약종합저축』 상품설명서", "주택청약종합저축", False),
+    "dB": DocInfo("dB", "설명서", "『해외 ATM 출금 서비스』 설명서", "해외 ATM 출금 서비스", False),
+    "dG": DocInfo("dG", "약관", "예금거래 기본약관", "", True),
+    "fq": DocInfo("fq", "FAQ", "국가간 ATM 서비스란?", "", False),
+    "dE": DocInfo("dE", "설명서", "『easy-one 외화송금서비스』 상품설명서", "easy-one 외화송금서비스", False),
+})
+
+
+def _cv(*pairs):
+    claims, vers = [], []
+    for i, (text, docs) in enumerate(pairs, 1):
+        cid = f"c{i}"
+        claims.append(Claim(cid, text, (0, len(text))))
+        vers.append(Verification(cid, Verdict.OK, [], evidence=[
+            EvidenceRef(d, d + "_c1", q) for d, q in docs]))
+    return claims, vers
+
+
+@case("J.범위", "서로 다른 상품 설명서 근거 2개 → MIXED_SCOPE")
+def _():
+    c, v = _cv(("청약은 24회 납입", [("dA", "24회")]), ("해외 출금은 앱에서", [("dB", "앱")]))
+    hits = check_draft_scope("청약이랑 해외출금 알려줘", c, v, _IDX, MATCHER)
+    return [h.code for h in hits][:1] == [ReasonCode.MIXED_SCOPE], str([h.detail for h in hits])
+
+
+@case("J.범위", "상품 1개 + 그 상품을 언급하지 않는 FAQ → MIXED_SCOPE")
+def _():
+    c, v = _cv(("해외 ATM 출금 서비스는 앱 가입", [("dB", "앱")]), ("6개국 가능", [("fq", "국가간 ATM 6개국")]))
+    hits = check_draft_scope("해외 ATM 출금 서비스 어떻게 써요", c, v, _IDX, MATCHER)
+    return ReasonCode.MIXED_SCOPE in [h.code for h in hits], str([h.detail for h in hits])
+
+
+@case("J.범위", "일반 약관 + 상품 1개 (질문이 그 상품 언급) → 경고 없음")
+def _():
+    c, v = _cv(("영업점에서 거래", [("dG", "영업점")]), ("주택청약종합저축은 24회", [("dA", "24회")]))
+    hits = check_draft_scope("주택청약종합저축 납입 횟수", c, v, _IDX, MATCHER)
+    return hits == [], str([h.detail for h in hits])
+
+
+@case("J.범위", "일반 질문에 특정 상품명으로 답함 → SCOPE_MISMATCH")
+def _():
+    c, v = _cv(("easy-one 외화송금서비스는 취소 불가", [("dE", "취소 불가")]),)
+    hits = check_draft_scope("외화 송금한 후에 취소할 수 있나요?", c, v, _IDX, MATCHER)
+    return [h.code for h in hits] == [ReasonCode.SCOPE_MISMATCH], str([h.detail for h in hits])
+
+
+@case("J.범위", "질문이 '어떤 서비스'를 물으면 상품명 답변은 축소 아님")
+def _():
+    c, v = _cv(("easy-one 외화송금서비스가 있습니다", [("dE", "송금")]),)
+    hits = check_draft_scope("외화 송금은 어떤 서비스가 있나요?", c, v, _IDX, MATCHER)
+    return hits == [], str([h.detail for h in hits])
+
+
+# ==================================================================
 # [2] 정상 답변 오탐 사전 점검
 # ==================================================================
 

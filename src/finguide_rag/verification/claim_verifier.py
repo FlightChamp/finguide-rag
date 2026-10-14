@@ -303,7 +303,8 @@ class ClaimVerifier:
     def __init__(self, llm: CachedLLM, matcher: ProductMatcher,
                  promote_customer_slot: bool = False,
                  known_products: list[str] | None = None,
-                 prompt_version: str = PROMPT_VERSION):
+                 prompt_version: str = PROMPT_VERSION,
+                 doc_index=None):
         """promote_customer_slot: LLM 추출 슬롯 needs_customer_data=true 를 사유 코드로 승격할지.
 
         54번 첫 실행(2026-10-14)에서 켜 두었더니 주입 샘플 대상 claim 75개 중 26개에
@@ -320,6 +321,8 @@ class ClaimVerifier:
         if prompt_version not in PROMPTS:
             raise ValueError(f"알 수 없는 프롬프트 버전: {prompt_version}")
         self.prompt_version = prompt_version
+        # scope.DocIndex. 주면 초안 수준 범위 검사(MIXED_SCOPE, SCOPE_MISMATCH)를 켠다.
+        self.doc_index = doc_index
 
     # ---------- 1~2. 추출 + 위치 ----------
     def extract(self, question: str, draft: str) -> tuple[list[Claim], list[str]]:
@@ -431,7 +434,11 @@ class ClaimVerifier:
                     h.detail = "빠진 조건: " + " / ".join(missing) if missing else "빠진 조건: (LLM 미기재)"
             vers.append(v)
 
-        final = aggregate_final(vers, audit_id=uuid.uuid4().hex[:12])
+        draft_hits: list[ReasonHit] = []
+        if self.doc_index is not None:
+            from .scope import check_draft_scope
+            draft_hits = check_draft_scope(question, claims, vers, self.doc_index, self.matcher)
+        final = aggregate_final(vers, draft_hits, audit_id=uuid.uuid4().hex[:12])
         return VerifyResult(claims, vers, final, llm_codes, rule_hits, errors,
                             prompt_hash(self.prompt_version))
 
