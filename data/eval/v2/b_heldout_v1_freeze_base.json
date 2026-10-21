@@ -1,6 +1,6 @@
 {
  "stage": "base",
- "frozen_at": "2026-10-21T23:24:01",
+ "frozen_at": "2026-10-21T23:47:10",
  "set_description": "A 평가에서는 사용되었지만, B 의 simplifier/back-verifier 개발·프롬프트 조정·B 라벨링에는 사용되지 않은 task-specific held-out set (A held-out v1 의 사람 Y 초안)",
  "gates": {
   "rule_perturb_false_pass_max": 0.05,
@@ -11,14 +11,14 @@
  },
  "files": {
   "b_heldout_base_v1.jsonl": "0872a9daa8f78cbd57f7579b4dc2adba583e079149b2e414bfabd69707cef604",
-  "b_heldout_review_v1.csv": "26708fd48ed7f80b34e8a2badf9ba09aad5dcf2cebb1e6616c739151f59e2e85",
+  "b_heldout_review_v1.csv": "7b1e96001f695737b53e1ab25b00f90713032c7933eaf89db8461d351101883e",
   "b_heldout_condpert_v1.jsonl": "9845656906ef86708086f446877b4cfebfbde4951e3cd8f957f6c82fb309d5ef",
   "b_heldout_condpert_review_v1.csv": "88de2b0a50647b69c0496d23dc8c25f5ba303ddc6142d95c979f25959fd51977"
  },
  "labels": {
   "review": {
-   "N": 13,
-   "Y": 23
+   "N": 14,
+   "Y": 22
   },
   "condpert": {
    "Y": 17,
