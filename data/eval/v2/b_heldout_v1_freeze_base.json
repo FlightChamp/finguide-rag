@@ -1,0 +1,54 @@
+{
+ "stage": "base",
+ "frozen_at": "2026-10-21T23:24:01",
+ "set_description": "A 평가에서는 사용되었지만, B 의 simplifier/back-verifier 개발·프롬프트 조정·B 라벨링에는 사용되지 않은 task-specific held-out set (A held-out v1 의 사람 Y 초안)",
+ "gates": {
+  "rule_perturb_false_pass_max": 0.05,
+  "cond_perturb_false_pass_max": 0.2,
+  "overblock_max": 0.3,
+  "fix_path_false_pass_max_count": 0,
+  "readability": "의미 보존(사람 Y · 역검증 PASS) 설명의 평균 문장당 어절 < Identity"
+ },
+ "files": {
+  "b_heldout_base_v1.jsonl": "0872a9daa8f78cbd57f7579b4dc2adba583e079149b2e414bfabd69707cef604",
+  "b_heldout_review_v1.csv": "26708fd48ed7f80b34e8a2badf9ba09aad5dcf2cebb1e6616c739151f59e2e85",
+  "b_heldout_condpert_v1.jsonl": "9845656906ef86708086f446877b4cfebfbde4951e3cd8f957f6c82fb309d5ef",
+  "b_heldout_condpert_review_v1.csv": "88de2b0a50647b69c0496d23dc8c25f5ba303ddc6142d95c979f25959fd51977"
+ },
+ "labels": {
+  "review": {
+   "N": 13,
+   "Y": 23
+  },
+  "condpert": {
+   "Y": 17,
+   "N": 4
+  }
+ },
+ "code": {
+  "all": "012f1c9d72139a74",
+  "files": {
+   "__init__.py": "3b012a0a08",
+   "back_verify.py": "b79a8de3ca",
+   "bv_perturb.py": "1ac28f82f9",
+   "claim_verifier.py": "ea63399f02",
+   "numeric.py": "e5631f8890",
+   "policy.py": "44799a4b1b",
+   "rules.py": "8f56588a9e",
+   "schema.py": "7a9b7f5684",
+   "scope.py": "f323c81af0",
+   "simplify.py": "68bf9dfffb",
+   "product_match.py": "4fe112b0c9",
+   "product_catalog.py": "123067ef00",
+   "67_b_heldout.py": "7062c2431d",
+   "66_b_cond_perturb.py": "2dccce324d",
+   "product_catalog.json": "d9d1cc80f6"
+  },
+  "prompts": {
+   "claim_verifier": "5ebe0746f3a6",
+   "simplifier": "sp-v2:d2ec451732b2",
+   "back_verifier": "cddd51268051",
+   "condpert": "cp-v1:ae28ae3bdbc4"
+  }
+ }
+}
