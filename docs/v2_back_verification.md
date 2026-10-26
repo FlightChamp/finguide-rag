@@ -182,14 +182,25 @@ B 가 평가하는 대상(쉬운 설명이 OK claim 의 뜻을 보존했는가)�
 - **같은 모델 계열.** 쉬운 설명 생성과 조건 보존 검사가 모두 `gpt-4.1-mini` 다.
 - **CHECK 유입의 문구 겹침 검사**는 거의 그대로 옮긴 경우만 잡는다 (2-gram 포함률 0.6 이상, OK 원문보다 0.25 이상 높을 때). 바꿔 말한 유입은 수치·상품 규칙과 출처 id 검사에 기댄다.
 
-## 화면 흐름 (B 평가 후 연결)
+## 화면 (2026-10-26 구현) — `pages/1_v2_상담_답변_검증.py`
+
+v1 화면(`app.py`)은 바꾸지 않고 Streamlit 별도 페이지로 붙였다. 판정 로직은 `verification/service.py`(V2Service)에 있고,
+평가 때와 같은 구성(cv-v1 · sp-v2 · bv-v1)을 쓴다 — 화면이 평가와 다른 설정으로 돌면 공식 수치가 화면 성능을 말해 주지 못하기 때문이다.
 
 ```
-직원 초안 입력 → 검증(A) → 쉬운 설명(B) → 역검증(B) → 직원 확인
-                                  PASS: 고객용 문구 + '꼭 확인하세요' 조건 (직원이 최종 확인 후 사용)
-                                  BLOCK: 고객용 문구 숨김, OK claim 원문 대체 안내
-                     직원 확인 필요(CHECK)·제외(PROHIBITED)는 항상 직원 화면에만
+1. 고객 질문 → 근거 검색 (직접 작성: LLM 미사용 검색만 / v1 답변 불러오기: v1 파이프라인 답변을 초안으로)
+2. 직원 초안 (수정 가능)
+3. 초안 검증(A): claim 별 안내 가능 / 확인 필요 / 안내 금지 + 사유 + 근거 원문
+4. 쉬운 설명(B) → 역검증: PASS 면 고객 안내 초안, BLOCK 이면 OK claim 원문 대체 안내 + 보류 사유
+5. 직원 확인 영역: 확인 필요(CHECK) · 안내 금지(PROHIBITED) 항목 — 고객 문구에서 제외
+6. 직원 확인 체크 → 그때만 복사용 고객 문구 표시 (새 실행마다 체크 해제)
 ```
+
+- **직원 확인은 필수 단계**다. held-out 에서 역검증 PASS 설명의 6/26 이 사람 기준 오류였다.
+- **LLM 호출 상한**: 세션당 `V2_CALL_BUDGET`(기본 30). 상한·오프라인·API 실패 시 각 단계는 fail-closed
+  (claim 추출 실패 → 확인 필요, 쉬운 설명·조건 검사 실패 → 보류). 즉 '틀린 안내'가 아니라 '안내 보류'로 끝난다.
+- 사이드바의 공식 수치는 `reports/` 의 공식 평가 보고서에서 읽는다 (하드코딩 없음). B 실제 오류 놓침도 함께 보여 준다.
+- 검증: `scripts/68_test_v2_service.py` (서비스 층 7건) + Streamlit AppTest 로 직접 작성·v1 답변·v1 보류·캐시 없음 경로 렌더링 확인.
 
 ## 재현
 
@@ -202,4 +213,6 @@ python scripts/66_b_cond_perturb.py              # 조건 교란 생성 → 사�
 python scripts/64_b_dev_eval.py --config rules
 python scripts/64_b_dev_eval.py --config full --with-fix
 python scripts/67_b_heldout.py generate | freeze-base | fixgen | freeze | eval
+python scripts/68_test_v2_service.py             # 화면 서비스 층
+streamlit run app.py                             # 사이드바 → v2 상담 답변 검증
 ```
